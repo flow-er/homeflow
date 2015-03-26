@@ -1,0 +1,104 @@
+\hypertarget{classkookmin_1_1cs_1_1homeflow_1_1_flow_list_activity}{}\section{kookmin.\+cs.\+homeflow.\+Flow\+List\+Activity 클래스 참조}
+\label{classkookmin_1_1cs_1_1homeflow_1_1_flow_list_activity}\index{kookmin.\+cs.\+homeflow.\+Flow\+List\+Activity@{kookmin.\+cs.\+homeflow.\+Flow\+List\+Activity}}
+
+
+an Activity is show workflow list existent(able to edit)  
+
+
+
+
+kookmin.\+cs.\+homeflow.\+Flow\+List\+Activity에 대한 상속 다이어그램 \+: \nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=214pt]{classkookmin_1_1cs_1_1homeflow_1_1_flow_list_activity__inherit__graph}
+\end{center}
+\end{figure}
+
+
+kookmin.\+cs.\+homeflow.\+Flow\+List\+Activity에 대한 협력 다이어그램\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=214pt]{classkookmin_1_1cs_1_1homeflow_1_1_flow_list_activity__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public 멤버 함수}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classkookmin_1_1cs_1_1homeflow_1_1_flow_list_activity_aeefaa220dea7d250602e4e1c4dfff848}{}boolean {\bfseries on\+Create\+Options\+Menu} (Menu menu)\label{classkookmin_1_1cs_1_1homeflow_1_1_flow_list_activity_aeefaa220dea7d250602e4e1c4dfff848}
+
+\item 
+\hypertarget{classkookmin_1_1cs_1_1homeflow_1_1_flow_list_activity_a7a81313dcc21b5d7abc65d93432a9a99}{}boolean {\bfseries on\+Options\+Item\+Selected} (Menu\+Item item)\label{classkookmin_1_1cs_1_1homeflow_1_1_flow_list_activity_a7a81313dcc21b5d7abc65d93432a9a99}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected 멤버 함수}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classkookmin_1_1cs_1_1homeflow_1_1_flow_list_activity_a8e7f4c315f0498cbb846022ddd0df21e}{on\+Create} (Bundle saved\+Instance\+State)
+\begin{DoxyCompactList}\small\item\em Activity init. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{상세한 설명}
+an Activity is show workflow list existent(able to edit) 
+
+\begin{DoxyAuthor}{작성자}
+Jongho Lim, \href{mailto:sloth@kookmin.ac.kr}{\tt sloth@kookmin.\+ac.\+kr} 
+
+Jinsung choi, \href{mailto:bugslife102401@nate.com}{\tt bugslife102401@nate.\+com} 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{버전}
+0.\+0.\+3
+\end{DoxyVersion}
+현재 등록된 workflow의 list를 보여준다. workflow를 새로 만들수 있는 Button이 있고 list를 클릭하면 workflow를 수정 또는 삭제할 수 있다. \begin{DoxyRefDesc}{할일}
+\item[\hyperlink{todo__todo000003}{할일}]develop U\+I, List Item Click, Button Click etc... \end{DoxyRefDesc}
+
+
+\subsection{멤버 함수 문서화}
+\hypertarget{classkookmin_1_1cs_1_1homeflow_1_1_flow_list_activity_a8e7f4c315f0498cbb846022ddd0df21e}{}\index{kookmin\+::cs\+::homeflow\+::\+Flow\+List\+Activity@{kookmin\+::cs\+::homeflow\+::\+Flow\+List\+Activity}!on\+Create@{on\+Create}}
+\index{on\+Create@{on\+Create}!kookmin\+::cs\+::homeflow\+::\+Flow\+List\+Activity@{kookmin\+::cs\+::homeflow\+::\+Flow\+List\+Activity}}
+\subsubsection[{on\+Create}]{\setlength{\rightskip}{0pt plus 5cm}void kookmin.\+cs.\+homeflow.\+Flow\+List\+Activity.\+on\+Create (
+\begin{DoxyParamCaption}
+\item[{Bundle}]{saved\+Instance\+State}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\label{classkookmin_1_1cs_1_1homeflow_1_1_flow_list_activity_a8e7f4c315f0498cbb846022ddd0df21e}
+
+
+Activity init. 
+
+Activity를 init한다. 데이터를 listview로 보여준다. listview의 속성을 변경한다. \begin{DoxyRefDesc}{할일}
+\item[\hyperlink{todo__todo000004}{할일}]read list of workflow xml file and show \end{DoxyRefDesc}
+
+\begin{DoxyCode}
+36                                                      \{
+37     super.onCreate(savedInstanceState);
+38     setContentView(R.layout.activity\_workflow\_list);
+39 
+40     getSupportActionBar().setTitle(\textcolor{stringliteral}{"FlowList"});
+41     \textcolor{comment}{// set data}
+42     ArrayList<String> dashlist = \textcolor{keyword}{new} ArrayList<String>();
+43 
+44     dashlist.add(\textcolor{stringliteral}{"세탁기 workflow"});
+45     dashlist.add(\textcolor{stringliteral}{"집 나갈때 workflow"});
+46     dashlist.add(\textcolor{stringliteral}{"잠 자기 전 workflow"});
+47 
+48     \textcolor{comment}{// set adapter}
+49     ArrayAdapter<String> adapter;
+50     adapter =
+51         \textcolor{keyword}{new} ArrayAdapter<String>(\textcolor{keyword}{this}, android.R.layout.simple\_expandable\_list\_item\_1, dashlist);
+52 
+53     \textcolor{comment}{// connect adapter}
+54     ListView list = (ListView) findViewById(R.id.dash\_list);
+55     list.setAdapter(adapter);
+56 
+57     \textcolor{comment}{// ListView attribute}
+58     list.setChoiceMode(ListView.CHOICE\_MODE\_SINGLE);
+59     list.setDivider(\textcolor{keyword}{new} ColorDrawable(Color.WHITE));
+60     list.setDividerHeight(2);
+61   \}
+\end{DoxyCode}
+
+
+이 클래스에 대한 문서화 페이지는 다음의 파일로부터 생성되었습니다.\+:\begin{DoxyCompactItemize}
+\item 
+D\+:/github/\+Home\+Flow/\+Androidapp/\+Home\+Flow/app/src/main/java/kookmin/cs/homeflow/Flow\+List\+Activity.\+java\end{DoxyCompactItemize}
