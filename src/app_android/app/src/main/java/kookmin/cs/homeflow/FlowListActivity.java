@@ -14,12 +14,16 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import kookmin.cs.homeflow.data.Workflow;
+import kookmin.cs.homeflow.filestream.XMLInput;
 
 /**
  * @author Jongho Lim, sloth@kookmin.ac.kr
  * @author Jinsung choi, bugslife102401@nate.com
- * @version 0.0.3
+ * @version 0.0.5
  * @brief an Activity is show workflow list existent(able to edit)
  * @details 현재 등록된 workflow의 list를 보여준다. workflow를 새로 만들수 있는 Button이 있고 list를 클릭하면 workflow를 수정 또는
  * 삭제할 수 있다.
@@ -30,7 +34,6 @@ public class FlowListActivity extends ActionBarActivity {
   /**
    * @brief Activity init
    * @details Activity를 init한다. 데이터를 listview로 보여준다. listview의 속성을 변경한다.
-   * @todo read list of workflow xml file and show
    */
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -39,19 +42,32 @@ public class FlowListActivity extends ActionBarActivity {
 
     getSupportActionBar().setTitle("FlowList");
     // set data
-    ArrayList<String> dashlist = new ArrayList<String>();
+    ArrayList<Workflow> flowList = new ArrayList<Workflow>();
 
-    dashlist.add("세탁기 workflow");
-    dashlist.add("집 나갈때 workflow");
-    dashlist.add("잠 자기 전 workflow");
+    String[] assetlist = null;
+    try {
+      assetlist = getAssets().list("workflow");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    // parsing
+    Workflow temp = null;
+    try {
+      for (int i = 0; i < assetlist.length; i++) {
+        flowList.add(new XMLInput().parse(getAssets().open("workflow/" + assetlist[i]), temp));
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     // set adapter
-    ArrayAdapter<String> adapter;
+    ArrayAdapter<Workflow> adapter;
     adapter =
-        new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, dashlist);
+        new ArrayAdapter<Workflow>(this, android.R.layout.simple_expandable_list_item_1, flowList);
 
     // connect adapter
-    ListView list = (ListView) findViewById(R.id.dash_list);
+    ListView list = (ListView) findViewById(R.id.work_list);
     list.setAdapter(adapter);
 
     // ListView attribute

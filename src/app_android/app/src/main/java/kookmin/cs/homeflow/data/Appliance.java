@@ -10,26 +10,34 @@ import java.util.ArrayList;
 /**
  * @author Jongho Lim, sloth@kookmin.ac.kr
  * @author Jinsung choi, bugslife102401@nate.com
- * @version 0.0.1
- * @brief an Class is data of Device
+ * @version 0.0.3
+ * @brief an Class is data of Device (appliance)
  * @details Device의 data를 가지고 있는 class이다. device의 이름과 기능들의 리스트를 담고 있다.
  */
-public class Device {
+public class Appliance {
 
   public String name;
   public ArrayList<Function> listFunction;
 
-  public Device(String deviceName) {
-    name = deviceName;
+  public Appliance() {
     listFunction = new ArrayList<>();
   }
 
-  public void addFunction(Function func) {
-    listFunction.add(func);
+  public void addFunction(String funcName, int funcId) {
+    listFunction.add(Function.newInstance(funcName, funcId));
+
   }
 
-  public String getName() {
+  public String toString() {
     return name;
+  }
+
+  public ArrayList<Function> getDevice() {
+    return listFunction;
+  }
+
+  public void setName(String devName) {
+    name = devName;
   }
 
   /**
