@@ -1,0 +1,38 @@
+<flow
+	id="7"
+	name="자동 세탁"
+	description="월요일, 목요일 아침 자동 세탁 후 알림"
+	isAuto="true">
+	
+	<trigger>
+		<timeset
+			dayweek="Tue, Thu"
+			time="07:00:00"/>
+		<timeset
+			dayweek="Sat"
+			time="10:00:00"/>
+	</trigger>
+	
+	<action
+		appid=""
+		command=""/>
+	<loop
+		count="3">
+		<action
+			appid=""
+			command=""/>
+	</loop>
+	<notification
+		appid=""
+		command=""/>
+	<condition
+		type="VALUE"
+		cond="ISEQUAL">
+		<action
+			appid=""
+			command=""/>
+		<notification
+			appid=""
+			command=""/>
+	</condition>
+</flow>
