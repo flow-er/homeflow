@@ -36,6 +36,14 @@ public class Appliance {
     return listFunction;
   }
 
+  public String getFuncName(int index) {
+    return listFunction.get(index).functionName;
+  }
+
+  public int getFuncId(int index) {
+    return listFunction.get(index).getId();
+  }
+
   public void setName(String devName) {
     name = devName;
   }

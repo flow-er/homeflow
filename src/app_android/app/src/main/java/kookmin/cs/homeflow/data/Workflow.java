@@ -35,6 +35,14 @@ public class Workflow {
     return workflow;
   }
 
+  public String getWorkName(int index) {
+    return workflow.get(index).getName();
+  }
+
+  public int getWorkId(int index) {
+    return workflow.get(index).getId();
+  }
+
   public void setName(String name) {
     fName = name;
   }
