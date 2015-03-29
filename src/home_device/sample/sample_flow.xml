@@ -4,20 +4,18 @@
 	description="월요일, 목요일 아침 자동 세탁 후 알림"
 	isAuto="true">
 	
-	<trigger>
-		<timeset
-			dayweek="Tue, Thu"
-			time="07:00:00"/>
-		<timeset
-			dayweek="Sat"
-			time="10:00:00"/>
-	</trigger>
+	<trigger
+		appid="SYS_TIMER"
+		command="---"
+		cond="ISEQUAL"
+		value="10:00:16"/>
 	
 	<action
 		appid=""
 		command=""/>
 	<loop
-		count="3">
+		appid="SYS_COUNTER"
+		command="---">
 		<action
 			appid=""
 			command=""/>
@@ -26,8 +24,10 @@
 		appid=""
 		command=""/>
 	<condition
-		type="VALUE"
-		cond="ISEQUAL">
+		appid="SYS_TIMER"
+		command="---"
+		cond="LESS_OR_EQUAL"
+		value="12:00:00">
 		<action
 			appid=""
 			command=""/>

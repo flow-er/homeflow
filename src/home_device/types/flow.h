@@ -12,75 +12,37 @@
 	#define false 0
 #endif
 
-//types for flow node
-#define FN_ACTN 0
-#define FN_NOTI 1
-#define FN_COND 2
-#define FN_LOOP 3
+//types of node
+enum nType {DOACT = 0, NOTIFY, CONDITION, LOOP, TRIGGER};
+extern const char *nTypeName[5];
 
-//types for flow trigger
-#define FT_TIME 0
+//types of condition
+enum cType {EQUAL = 0, LESS, LESS_OR_EQUAL, MORE, MORE_OR_EQUAL};
 
-typedef xmlNode node;
-
-enum dayweek {SUN = 0, MON, TUE, WED, THU, FRI, SAT};
-
-struct trigger {
-	//properties
-	//by union
+struct node {
+	enum nType type;
 	
-	struct trigger *next;
+	char *appid;
+	char *command;
+	
+	struct node *next;
+	
+	enum cType cond;
+	char *value;
+	
+	struct node *child;
 };
 
 struct flow {
+	struct tm *modi;
+	
 	int id;
 	char *name;
 	char *description;
 	bool isAuto;
-	struct tm *modi;
 	
-	struct trigger *trig;
-	
-	node *head;
+	struct node *head;
 };
 
 void parseFlow(struct flow *flow, const char *path, struct tm *time);
-void freeFlow(struct flow *flow);
-
-
-
-//OLD DEFINITIONS
-//
-//union properties {
-//	//action * notification
-//	struct {
-//		int appid;
-//		int command;
-//	};
-//	//condition
-//	struct {
-//		//
-//	};
-//	//loop
-//	struct {
-//		int count;
-//	};
-//};
-//
-//struct node {
-//	int type;
-//	union properties prop;
-//
-//	struct node *next;
-//	struct node *include;
-//};
-//
-//struct trigger {
-//	int type;
-//};
-//
-//struct flow {
-//	int id;
-//
-//	struct node *head;
-//};
+void printFlow(struct flow *flow);
