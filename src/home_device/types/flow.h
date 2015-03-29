@@ -37,13 +37,14 @@ struct flow {
 	char *name;
 	char *description;
 	bool isAuto;
+	struct tm *modi;
 	
 	struct trigger *trig;
 	
 	node *head;
 };
 
-void parseFlow(const char *xml, struct flow *flow);
+void parseFlow(struct flow *flow, const char *path, struct tm *time);
 void freeFlow(struct flow *flow);
 
 

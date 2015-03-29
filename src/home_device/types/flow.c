@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void parseFlow(const char *path, struct flow *flow) {
+void parseFlow(struct flow *flow, const char *path, struct tm *time) {
 	xmlDocPtr doc;
 	xmlNode *root = NULL;
 	
@@ -23,11 +23,14 @@ void parseFlow(const char *path, struct flow *flow) {
 	flow->description = (char *)xmlGetProp(root, (xmlChar *)"description");
 	flow->isAuto = (!strcmp((const char *)xmlGetProp(root, (xmlChar *)"isAuto"), "true"));
 	
+	memcpy(flow->modi, time, sizeof(struct tm));
+	
 	if(flow->isAuto) {
 		root = root->children;
 		while(strcmp((const char *)root->name, "trigger")) root = root->next;
 		
-		
+		//put trigger in.
+		//set flow->head as first node to do.
 	}
 }
 
