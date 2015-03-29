@@ -19,8 +19,7 @@ import android.widget.EditText;
  * @author Jinsung choi, bugslife102401@nate.com
  * @version 0.0.1
  * @brief an Activity for Login
- * @details ActionBar를 가지고있고 Login 기능을 지원하는 Activity Class이다. UI로는 id와 password를 적을 수 있는 EditText 가
- * 두 개 있고 sign in(login) 기능을 지원하는 Button이 한 개 있다.
+ * @details ActionBar를 가지고있고 Login 기능을 지원하는 Activity Class이다. UI로는 id와 password를 적을 수 있는 EditText 가 두 개 있고 sign in(login) 기능을 지원하는 Button이 한 개 있다.
  * @todo function develop user check with server communication
  */
 public class LoginActivity extends ActionBarActivity implements View.OnClickListener {

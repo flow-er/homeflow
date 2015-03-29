@@ -20,8 +20,7 @@ import kookmin.cs.homeflow.data.Workflow;
  * @author Jinsung choi, bugslife102401@nate.com
  * @version 0.0.1
  * @brief an class read XML file and parsing it
- * @details XML 파일을 읽어서 필요한 부분을 파싱하는 클래스이다. Workflow xml 파일을 파싱하는 함수와 Appliance xml 파일을 파싱하는 함수가
- * 오버로딩 되어있다.
+ * @details XML 파일을 읽어서 필요한 부분을 파싱하는 클래스이다. Workflow xml 파일을 파싱하는 함수와 Appliance xml 파일을 파싱하는 함수가 오버로딩 되어있다.
  * @todo develop ...
  */
 public class XMLInput {
@@ -33,8 +32,7 @@ public class XMLInput {
 
   /**
    * @brief Workflow xml file parsing
-   * @details Workflow xml 파일을 파싱한다. XMLPullParser 를 이용하여 태그의 시작 혹은 끝 일 때 원하는 동작을 한다. Appliance xml
-   * 파일을 파싱하는 함수와 오버로딩 되어있다.
+   * @details Workflow xml 파일을 파싱한다. XMLPullParser 를 이용하여 태그의 시작 혹은 끝 일 때 원하는 동작을 한다. Appliance xml 파일을 파싱하는 함수와 오버로딩 되어있다.
    */
   public Workflow parse(InputStream is, Workflow flow) {
     XmlPullParserFactory factory;
@@ -97,8 +95,7 @@ public class XMLInput {
 
   /**
    * @brief Appliance xml file parsing
-   * @details Appliance xml 파일을 파싱한다. XMLPullParser 를 이용하여 태그의 시작 혹은 끝 일 때 원하는 동작을 한다. Workflow xml
-   * 파일을 파싱하는 함수와 오버로딩 되어있다.
+   * @details Appliance xml 파일을 파싱한다. XMLPullParser 를 이용하여 태그의 시작 혹은 끝 일 때 원하는 동작을 한다. Workflow xml 파일을 파싱하는 함수와 오버로딩 되어있다.
    */
   public Appliance parse(InputStream is, Appliance dev) {
     XmlPullParserFactory factory;

@@ -20,10 +20,9 @@ import java.util.ArrayList;
 /**
  * @author Jongho Lim, sloth@kookmin.ac.kr
  * @author Jinsung choi, bugslife102401@nate.com
- * @version 0.0.1
+ * @version 0.0.3
  * @brief an Activity is dashboard of the progress of workflow
- * @details workflow 의 진행상황을 보여주는 Activity Class이다. ActionBar의 메뉴에서 workflow edit와 device edit 등을 할
- * 수 있다.
+ * @details workflow 의 진행상황을 보여주는 Activity Class이다. ActionBar의 메뉴에서 workflow edit와 appliance edit 등을 할 수 있다.
  * @todo Read workflow file(xml parse), check progress of workflow, etc...
  */
 public class DashboardActivity extends ActionBarActivity {

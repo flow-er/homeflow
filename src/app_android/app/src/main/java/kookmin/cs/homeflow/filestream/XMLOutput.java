@@ -26,12 +26,6 @@ import kookmin.cs.homeflow.data.Workflow;
  */
 public class XMLOutput {
 
-  private final static String FLOW_NAME = "flowname";
-  private final static String WORK = "work";
-  private final static String APPLIANCE_NAME = "appname";
-  private final static String FUNCTION = "function";
-  private final static String NAME = "name";
-  private final static String ID = "id";
 
   private XmlSerializer serializer;
   private StringWriter writer;
@@ -49,19 +43,19 @@ public class XMLOutput {
 
       serializer.startTag("", "workflow");
 
-      serializer.startTag("", FLOW_NAME);
+      serializer.startTag("", FileContent.FLOW_NAME);
       serializer.text(workflow.toString());
-      serializer.endTag("", FLOW_NAME);
+      serializer.endTag("", FileContent.FLOW_NAME);
 
       for (int i = 0; i < workflow.getFlow().size(); i++) {
-        serializer.startTag("", WORK);
-        serializer.startTag("", NAME);
+        serializer.startTag("", FileContent.WORK);
+        serializer.startTag("", FileContent.NAME);
         serializer.text(workflow.getWorkName(i));
-        serializer.endTag("", NAME);
-        serializer.startTag("", ID);
+        serializer.endTag("", FileContent.NAME);
+        serializer.startTag("", FileContent.ID);
         serializer.text(String.valueOf(workflow.getWorkId(i)));
-        serializer.endTag("", ID);
-        serializer.endTag("", WORK);
+        serializer.endTag("", FileContent.ID);
+        serializer.endTag("", FileContent.WORK);
       }
 
       serializer.endTag("", "workflow");
@@ -86,19 +80,19 @@ public class XMLOutput {
 
       serializer.startTag("", "appliance");
 
-      serializer.startTag("", APPLIANCE_NAME);
+      serializer.startTag("", FileContent.APPLIANCE_NAME);
       serializer.text(appliance.toString());
-      serializer.endTag("", APPLIANCE_NAME);
+      serializer.endTag("", FileContent.APPLIANCE_NAME);
 
       for (int i = 0; i < appliance.getDevice().size(); i++) {
-        serializer.startTag("", FUNCTION);
-        serializer.startTag("", NAME);
+        serializer.startTag("", FileContent.FUNCTION);
+        serializer.startTag("", FileContent.NAME);
         serializer.text(appliance.getFuncName(i));
-        serializer.endTag("", NAME);
-        serializer.startTag("", ID);
+        serializer.endTag("", FileContent.NAME);
+        serializer.startTag("", FileContent.ID);
         serializer.text(String.valueOf(appliance.getFuncId(i)));
-        serializer.endTag("", ID);
-        serializer.endTag("", FUNCTION);
+        serializer.endTag("", FileContent.ID);
+        serializer.endTag("", FileContent.FUNCTION);
       }
 
       serializer.endTag("", "appliance");
