@@ -1,6 +1,0 @@
-<map id="그래픽컬한 클래스 계통도" name="그래픽컬한 클래스 계통도">
-<area shape="rect" id="node2" href="$classkookmin_1_1cs_1_1homeflow_1_1_dashboard_activity.html" title="an Activity is dashboard of the progress of workflow " alt="" coords="175,5,388,47"/>
-<area shape="rect" id="node3" href="$classkookmin_1_1cs_1_1homeflow_1_1_device_list_activity.html" title="an Activity is show device and able to function " alt="" coords="187,71,376,112"/>
-<area shape="rect" id="node4" href="$classkookmin_1_1cs_1_1homeflow_1_1_flow_list_activity.html" title="an Activity is show workflow list existent(able to edit) " alt="" coords="192,136,371,177"/>
-<area shape="rect" id="node5" href="$classkookmin_1_1cs_1_1homeflow_1_1_login_activity.html" title="an Activity for Login " alt="" coords="190,201,373,243"/>
-</map>
