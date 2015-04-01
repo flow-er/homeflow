@@ -3,89 +3,107 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define NEWSTRING(x, y) (strcpy((x = (char *) malloc(strlen(y))), y))
+const char *nTypeName[6] = { "action", "notification", "condition", "loop",
+		"cowork", "trigger" };
 
-const char *nTypeName[5] = {"action",
-							"notification",
-							"condition",
-							"loop",
-							"trigger"};
-
-void parseProperties(struct node *node, int type, xmlNode *elem);
+void parseProperties(struct node *node, enum nType type, xmlNode *elem);
 struct node *parseNode(xmlNode *elem);
 
 void parseFlow(struct flow *flow, const char *path, struct tm *time) {
 	xmlDocPtr doc;
 	xmlNode *root = NULL;
-	
+
 	xmlInitParser();
-	
+
 	doc = xmlReadFile(path, NULL, XML_PARSE_NOBLANKS);
-	
-	if(doc == NULL) {
+
+	if (doc == NULL) {
 		printf("ERROR : Can't parse file \'%s\'\n", path);
 		return;
 	}
-	
+
 	root = xmlDocGetRootElement(doc);
-	
-	flow->id = atoi((const char *)xmlGetProp(root, (xmlChar *)"id"));
-	flow->name = (char *)xmlGetProp(root, (xmlChar *)"name");
-	flow->description = (char *)xmlGetProp(root, (xmlChar *)"description");
-	flow->isAuto = (!strcmp((const char *)xmlGetProp(root, (xmlChar *)"isAuto"), "true"));
-	if(time) memcpy(flow->modi, time, sizeof(struct tm));
-	
+
+	flow->id = atoi((const char *) xmlGetProp(root, (xmlChar *) "id"));
+	flow->name = (char *) xmlGetProp(root, (xmlChar *) "name");
+	flow->description = (char *) xmlGetProp(root, (xmlChar *) "description");
+	flow->isAuto = (!strcmp(
+			(const char *) xmlGetProp(root, (xmlChar *) "isAuto"), "true"));
+	if (time)
+		memcpy(flow->modi, time, sizeof(struct tm));
+
 	flow->head = parseNode(root->children);
-	
+
 	xmlFree(doc);
 	xmlFree(root);
 }
 
 struct node *parseNode(xmlNode *elem) {
 	struct node *node = NULL;
-	int i;
-	
-	for(i = 0; i < 5; i++) {
-		if(!strcmp((const char *) elem->name, nTypeName[i])) {
+	enum nType i;
+
+	for (i = T_ACTION; i <= T_TRIGGER; i++) {
+		if (!strcmp((const char *) elem->name, nTypeName[i])) {
 			node = (struct node *) malloc(sizeof(struct node));
+			node->child = node->next = NULL;
+
 			parseProperties(node, i, elem);
 			break;
 		}
 	}
-	
-	if(elem->children) node->child = parseNode(elem->children);
-	if(elem->next) node->next = parseNode(elem->next);
-	
+
+	if (elem->children)
+		node->child = parseNode(elem->children);
+	if (elem->next)
+		node->next = parseNode(elem->next);
+
 	return node;
 }
 
-void parseProperties(struct node *node, int type, xmlNode *elem) {
-	switch(type) {
-		case CONDITION :
-		case TRIGGER :
-			node->cond = atoi((const char *)xmlGetProp(elem, (xmlChar *)"cond"));
-			NEWSTRING(node->value, (const char *)xmlGetProp(elem, (xmlChar *)"value"));
-			
-		default :
+void parseProperties(struct node *node, enum nType type, xmlNode *elem) {
+	const char *temp;
+
+	node->appid = node->command = node->value = NULL;
+	node->child = node->next = NULL;
+
+	switch (type) {
+		case T_CONDITION:
+		case T_TRIGGER:
+			temp = (const char *) xmlGetProp(elem, (xmlChar *) "cond");
+			node->cond = atoi(temp);
+
+			temp = (const char *) xmlGetProp(elem, (xmlChar *) "value");
+			strcpy((node->value = (char *) malloc(strlen(temp))), temp);
+
+		case T_ACTION:
+		case T_NOTIFY:
+			temp = (const char *) xmlGetProp(elem, (xmlChar *) "appid");
+			strcpy((node->appid = (char *) malloc(strlen(temp))), temp);
+
+			temp = (const char *) xmlGetProp(elem, (xmlChar *) "command");
+			strcpy((node->command = (char *) malloc(strlen(temp))), temp);
+
+		default:
 			node->type = type;
-			NEWSTRING(node->appid, (const char *)xmlGetProp(elem, (xmlChar *)"appid"));
-			NEWSTRING(node->command, (const char *)xmlGetProp(elem, (xmlChar *)"command"));
 			break;
 	}
 }
 
 void printNode(struct node *node, int level) {
 	int i;
-	
-	for(i = 0; i < level; i++) printf("   ");
-	printf("|- %s\n", nTypeName[node->type]);
-	
-	if(node->child) printNode(node->child, level+1);
-	if(node->next) printNode(node->next, level);
+
+	for (i = 0; i < level; i++)
+		printf("   ");
+	printf("|%c %s\n", (node->next ? '-' : '_'), nTypeName[node->type]);
+
+	if (node->child)
+		printNode(node->child, level + 1);
+	if (node->next)
+		printNode(node->next, level);
 }
 
 void printFlow(struct flow *flow) {
 	printf("flow\n");
-	
 	printNode(flow->head, 0);
+	printf("\n");
 }

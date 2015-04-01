@@ -28,10 +28,17 @@
 		command="---"
 		cond="LESS_OR_EQUAL"
 		value="12:00:00">
+		<loop
+			appid="SYS_COUNTER"
+			command="---">
+			<action
+				appid=""
+				command=""/>
+			<notification
+				appid=""
+				command=""/>
+		</loop>
 		<action
-			appid=""
-			command=""/>
-		<notification
 			appid=""
 			command=""/>
 	</condition>
