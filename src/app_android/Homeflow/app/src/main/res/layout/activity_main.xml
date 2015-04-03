@@ -1,34 +1,58 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
 
-    <Button
-            android:id="@+id/home"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Home"
-            android:textColor="#FFFFFFFF"
-            android:background="#FF2A3F13"/>
+    <TabHost android:id="@+id/tab_host"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent">
 
-    <Button
-            android:id="@+id/editor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Editor"
-            android:textColor="#FF2A3F13"
-            android:background="#FFFFFFFF"/>
+        <TabWidget android:id="@android:id/tabs"
+                   android:layout_gravity="top"
+                   android:layout_width="fill_parent"
+                   android:layout_height="wrap_content"/>
 
-    <Button
-            android:id="@+id/dashboard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Dashboard"
-            android:textColor="#FF2A3F13"
-            android:background="#FFFFFFFF"/>
+        <FrameLayout android:id="@android:id/tabcontent"
+                     android:layout_width="fill_parent"
+                     android:layout_height="match_parent">
+
+            <LinearLayout android:id="@+id/tab_view1"
+                          android:orientation="vertical"
+                          android:layout_width="fill_parent"
+                          android:layout_height="fill_parent">
+
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/tab_view2"
+                          android:orientation="vertical"
+                          android:layout_width="fill_parent"
+                          android:layout_height="fill_parent"
+                          android:gravity="center">
+
+                <Button
+                        android:id="@+id/button1"
+                        android:layout_width="200dp"
+                        android:layout_height="80dp"
+                        android:text="가전 기기 등록/편집"/>
+
+                <Button
+                        android:id="@+id/button2"
+                        android:layout_width="200dp"
+                        android:layout_height="80dp"
+                        android:text="작업 흐름 등록/편집"
+                        android:layout_marginTop="50dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/tab_view3"
+                          android:orientation="vertical"
+                          android:layout_width="fill_parent"
+                          android:layout_height="fill_parent">
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </TabHost>
 
 </LinearLayout>
