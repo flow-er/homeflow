@@ -9,7 +9,9 @@ const char *nTypeName[6] = { "action", "notification", "condition", "loop",
 void parseProperties(struct node *node, enum nType type, xmlNode *elem);
 struct node *parseNode(xmlNode *elem);
 
-void parseFlow(struct flow *flow, const char *path, struct tm *time) {
+struct flow *parseFlow(const char *path) {
+	struct flow *flow = (struct flow *) malloc(sizeof(struct flow));
+
 	xmlDocPtr doc;
 	xmlNode *root = NULL;
 
@@ -19,7 +21,7 @@ void parseFlow(struct flow *flow, const char *path, struct tm *time) {
 
 	if (doc == NULL) {
 		printf("ERROR : Can't parse file \'%s\'\n", path);
-		return;
+		return NULL;
 	}
 
 	root = xmlDocGetRootElement(doc);
@@ -29,13 +31,13 @@ void parseFlow(struct flow *flow, const char *path, struct tm *time) {
 	flow->description = (char *) xmlGetProp(root, (xmlChar *) "description");
 	flow->isAuto = (!strcmp(
 			(const char *) xmlGetProp(root, (xmlChar *) "isAuto"), "true"));
-	if (time)
-		memcpy(flow->modi, time, sizeof(struct tm));
 
 	flow->head = parseNode(root->children);
 
 	xmlFree(doc);
 	xmlFree(root);
+
+	return flow;
 }
 
 struct node *parseNode(xmlNode *elem) {

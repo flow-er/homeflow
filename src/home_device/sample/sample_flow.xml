@@ -7,26 +7,28 @@
 	<trigger
 		appid="SYS_TIMER"
 		command="---"
-		cond="ISEQUAL"
+		cond="0"
 		value="10:00:16"/>
 	
-	<action
-		appid=""
-		command=""/>
-	<loop
-		appid="SYS_COUNTER"
-		command="---">
+	<cowork>
 		<action
 			appid=""
 			command=""/>
-	</loop>
+		<loop
+			appid="SYS_COUNTER"
+			command="---">
+			<notification
+				appid=""
+				command=""/>
+		</loop>
+	</cowork>
 	<notification
 		appid=""
 		command=""/>
 	<condition
 		appid="SYS_TIMER"
 		command="---"
-		cond="LESS_OR_EQUAL"
+		cond="2"
 		value="12:00:00">
 		<loop
 			appid="SYS_COUNTER"

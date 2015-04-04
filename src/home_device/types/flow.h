@@ -42,8 +42,6 @@ struct node {
 };
 
 struct flow {
-	struct tm *modi;
-
 	int id;
 	char *name;
 	char *description;
@@ -52,5 +50,5 @@ struct flow {
 	struct node *head;
 };
 
-void parseFlow(struct flow *flow, const char *path, struct tm *time);
+struct flow *parseFlow(const char *path);
 void printFlow(struct flow *flow);
