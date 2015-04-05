@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+                android:id="@+id/appli_name_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
+                android:layout_marginLeft="30dp"
+                android:text="기기 이름:"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+        <EditText
+                android:id="@+id/appli_name_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"/>
+    </LinearLayout>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+                android:id="@+id/srn_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
+                android:layout_marginLeft="30dp"
+                android:text="시리얼 번호:"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+        <EditText
+                android:id="@+id/srn_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"/>
+    </LinearLayout>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+        <Button
+                android:id="@+id/add_appli_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="등록 완료"
+                android:background="#FF000000"
+                android:textColor="#FFFFFFFF"/>
+    </LinearLayout>
+</LinearLayout>

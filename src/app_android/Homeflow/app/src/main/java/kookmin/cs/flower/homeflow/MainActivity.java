@@ -1,39 +1,37 @@
 package kookmin.cs.flower.homeflow;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.widget.TabHost;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTabHost;
 import android.widget.TabHost.TabSpec;
 
-public class MainActivity extends Activity {
+/**
+ * @author Jinsung Choi, bugslife102401@nate.com
+ * @version 0.0.2
+ * @date 2015-04-06
+ */
+public class MainActivity extends FragmentActivity {
 
-  /**
-   * Called when the activity is first created.
-   */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    TabHost tabHost = (TabHost) findViewById(R.id.tab_host);
-    tabHost.setup();
+    FragmentTabHost tabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
+    tabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 
-    // Home Tab
     TabSpec tabSpec1 = tabHost.newTabSpec("Tab1");
-    tabSpec1.setIndicator("Home"); // Tab Subject
-    tabSpec1.setContent(R.id.tab_view1); // Tab Content
-    tabHost.addTab(tabSpec1);
+    tabSpec1.setIndicator("Home");
+    tabHost.addTab(tabSpec1, HomeTab.class, null);
 
     // Editor Tab
     TabSpec tabSpec2 = tabHost.newTabSpec("Tab2");
     tabSpec2.setIndicator("Editor"); // Tab Subject
-    tabSpec2.setContent(R.id.tab_view2); // Tab Content
-    tabHost.addTab(tabSpec2);
+    tabHost.addTab(tabSpec2, EditTab.class, null);
 
     // Dashboard Tab
     TabSpec tabSpec3 = tabHost.newTabSpec("Tab3");
     tabSpec3.setIndicator("Dashboard"); // Tab Subject
-    tabSpec3.setContent(R.id.tab_view3); // Tab Content
-    tabHost.addTab(tabSpec3);
+    tabHost.addTab(tabSpec3, DashTab.class, null);
 
     // show First Tab Content
     tabHost.setCurrentTab(0);
