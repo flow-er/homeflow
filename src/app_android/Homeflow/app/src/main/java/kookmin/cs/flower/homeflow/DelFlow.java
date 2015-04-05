@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-import java.util.ArrayList;
+import kookmin.cs.flower.homeflow.filestream.FileContent;
 
 /**
  * @author Jinsung Choi, bugslife102401@nate.com
@@ -19,15 +19,6 @@ import java.util.ArrayList;
 public class DelFlow extends Fragment implements View.OnClickListener {
 
   ListView listView;
-  static ArrayList<String> list4 = new ArrayList<String>();
-
-  static {
-    list4.add("flow1");
-    list4.add("flow2");
-    list4.add("flow3");
-    list4.add("flow4");
-    list4.add("flow5");
-  }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,7 +31,8 @@ public class DelFlow extends Fragment implements View.OnClickListener {
     del_flow_btn.setOnClickListener(this);
 
     listView = (ListView) rootView.findViewById(R.id.del_flow_list);
-    ArrayAdapter adapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, list4);
+    ArrayAdapter adapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1,
+                                                    FileContent.getFlowList());
     listView.setAdapter(adapter);
 
     return rootView;

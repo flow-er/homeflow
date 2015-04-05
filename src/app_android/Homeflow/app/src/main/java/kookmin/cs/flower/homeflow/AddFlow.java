@@ -21,15 +21,7 @@ import java.util.ArrayList;
 public class AddFlow extends Fragment implements OnItemClickListener, View.OnClickListener {
 
   ListView listView;
-  static ArrayList<String> list5 = new ArrayList<String>();
-
-  static {
-    list5.add("공기청정기 끄기");
-    list5.add("가습기 끄기");
-    list5.add("청소기 돌리기");
-    list5.add("가습기 켜기");
-    list5.add("공기청정기 켜기");
-  }
+  ArrayList<String> list5 = new ArrayList<String>();
 
   // OnItemClickListener
   @Override
@@ -37,6 +29,7 @@ public class AddFlow extends Fragment implements OnItemClickListener, View.OnCli
                            Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.addflow, container, false);
 
+    list5.add("");
     listView = (ListView) rootView.findViewById(R.id.add_flow_list);
     ArrayAdapter adapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, list5);
     listView.setAdapter(adapter);

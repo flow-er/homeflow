@@ -3,7 +3,7 @@
  * @brief data classes of HomeFlow app
  * @details HomeFlow의 data class files
  */
-package kookmin.cs.homeflow.data;
+package kookmin.cs.flower.homeflow.data;
 
 import java.util.ArrayList;
 

@@ -3,7 +3,7 @@
  * @brief java package of HomeFlow app
  * @details XML 파일을 읽는데 필요한 모듈
  */
-package kookmin.cs.homeflow.filestream;
+package kookmin.cs.flower.homeflow.filestream;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -12,8 +12,8 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
 
-import kookmin.cs.homeflow.data.Appliance;
-import kookmin.cs.homeflow.data.Workflow;
+import kookmin.cs.flower.homeflow.data.Appliance;
+import kookmin.cs.flower.homeflow.data.Workflow;
 
 /**
  * @author Jongho Lim, sloth@kookmin.ac.kr

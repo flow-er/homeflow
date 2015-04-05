@@ -3,7 +3,7 @@
  * @brief java package of HomeFlow app
  * @details XML 파일을 읽고 쓰는데 필요한 모듈
  */
-package kookmin.cs.homeflow.filestream;
+package kookmin.cs.flower.homeflow.filestream;
 
 import android.util.Xml;
 
@@ -13,8 +13,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import kookmin.cs.homeflow.data.Appliance;
-import kookmin.cs.homeflow.data.Workflow;
+import kookmin.cs.flower.homeflow.data.Appliance;
+import kookmin.cs.flower.homeflow.data.Workflow;
 
 /**
  * @author Jongho Lim, sloth@kookmin.ac.kr

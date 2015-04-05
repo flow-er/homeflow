@@ -1,6 +1,7 @@
-package kookmin.cs.homeflow.filestream;
+package kookmin.cs.flower.homeflow.filestream;
 
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,8 +10,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import kookmin.cs.homeflow.data.Appliance;
-import kookmin.cs.homeflow.data.Workflow;
+import kookmin.cs.flower.homeflow.data.Appliance;
+import kookmin.cs.flower.homeflow.data.Workflow;
 
 public class FileContent {
 
@@ -69,12 +70,20 @@ public class FileContent {
     if (!existFlowDir) {
       mkFlowDir("workflow");
       existFlowDir = true;
+      Log.i("mytag", "mkdir");
     }
 
     File
         file =
         new File(Environment.getExternalStorageDirectory().getPath() + "/HomeFlow/workflow");
     String[] flowlist = file.list();
+
+    Log.i("mytag", file.getPath());
+
+    if(flowlist == null) {
+      return;
+    }
+    Log.i("mytag", "flow list num : " + flowlist.length);
 
     for (int i = 0; i < flowlist.length; i++) {
       workflow.add(flowlist[i].substring(0, flowlist[i].length() - 4));
@@ -93,9 +102,15 @@ public class FileContent {
 
     File
         file =
-        new File(Environment.getExternalStorageDirectory().getPath() + "/HomeFlow/appliance");
+        new File(Environment.getExternalStorageDirectory().getPath() + "/HomeFlow/appliance/");
     String[] appliancelist = file.list();
 
+    Log.i("mytag", file.getPath());
+    if(appliancelist == null) {
+      return ;
+    }
+
+    Log.i("mytag", "appliance list num : " + appliancelist.length);
     for (int i = 0; i < appliancelist.length; i++) {
       try {
         Appliance app = new Appliance();

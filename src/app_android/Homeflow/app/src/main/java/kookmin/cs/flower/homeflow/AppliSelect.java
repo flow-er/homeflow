@@ -11,6 +11,8 @@ import android.widget.Spinner;
 
 import java.util.ArrayList;
 
+import kookmin.cs.flower.homeflow.filestream.FileContent;
+
 /**
  * @author Jinsung Choi, bugslife102401@nate.com
  * @version 0.0.2
@@ -20,16 +22,11 @@ public class AppliSelect extends Fragment implements View.OnClickListener {
 
   Spinner sel_appli_name_spin, sel_appli_func_spin, alarm_config_spin, alarm_time_spin;
 
-  static ArrayList<String> list7 = new ArrayList<String>();
   static ArrayList<String> list8 = new ArrayList<String>();
   static ArrayList<String> list9 = new ArrayList<String>();
   static ArrayList<String> list10 = new ArrayList<String>();
 
   static {
-    list7.add("전등");
-    list7.add("블라인드");
-    list7.add("커피 포트");
-
     list8.add("ON");
     list8.add("OFF");
 
@@ -50,7 +47,8 @@ public class AppliSelect extends Fragment implements View.OnClickListener {
     alarm_config_spin = (Spinner) rootView.findViewById(R.id.alarm_config_spin);
     alarm_time_spin = (Spinner) rootView.findViewById(R.id.alarm_time_spin);
 
-    ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, list7);
+    ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1,
+                                                             FileContent.getApplianceList());
     sel_appli_name_spin.setAdapter(adapter2);
     ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, list8);
     sel_appli_func_spin.setAdapter(adapter3);
