@@ -5,49 +5,76 @@
 
 #include "scheduler.h"
 
-#define E_NOFIL "scheduler : %s : No such file or directory\n"
-#define E_PERMD "scheduler : %s : Permission denied\n"
-
-void scheduleEvents(struct scheduler *scheduler) {
+void scheduleEvents(struct scheduler *scheduler, int mode) {
 	const char *path = "./user/flows/";
-	DIR *flows;
+	DIR *dir;
 	struct dirent *eBuf;
 
 	struct event *curr = NULL;
 
-	if (!(flows = opendir(path))) {
-		//exception for no source file.
-		if (errno == ENOENT)
-			printf(E_NOFIL, path);
-		//exception for permission denied.
-		else if (errno == EACCES)
-			printf(E_PERMD, path);
-		//exception for no directory.
-		else if (errno == ENOTDIR)
-			printf("%s\n", path);
+	if (mode == REDO) {
+		path = "./user/temp/flows/";
 
+		if (scheduler->head)
+			curr = scheduler->tail;
+		else
+			mode = INIT;
+	}
+
+	if (!(dir = opendir(path))) {
+		printf("flow manager : failed to open \'flows directory\'\n");
 		return;
 	}
 
-	while ((eBuf = readdir(flows))) {
+	while ((eBuf = readdir(dir))) {
 		char full[BUFSIZ];
 
-		if (eBuf->d_name[0] == '.')
-			continue;
-		strcpy(full, path);
-		strcat(full, eBuf->d_name);
+		if (eBuf->d_name[0] == '.') continue;
 
-		printf("%s\n", eBuf->d_name);
+		sprintf(full, "%s%s", path, eBuf->d_name);
 
 		if (curr) {
 			curr->next = (struct event *) malloc(sizeof(struct event));
+			curr->next->prev = curr;
 			curr = curr->next;
 		} else {
 			scheduler->head = (struct event *) malloc(sizeof(struct event));
 			curr = scheduler->head;
+			curr->prev = NULL;
 		}
 
+		curr->pid = 0;
 		curr->next = NULL;
 		curr->flow = parseFlow(full);
+
+		if (mode == REDO) {
+			char origin[BUFSIZ];
+			char *ptr = strpbrk(eBuf->d_name, ".");
+			int id;
+
+			sprintf(origin, "./user/flows/%s", eBuf->d_name);
+
+			struct event *old;
+
+			*ptr = '\0';
+			id = atoi(eBuf->d_name);
+			*ptr = '.';
+
+			for (old = scheduler->head; old != NULL; old = old->next) {
+				if (old->flow->id == id) {
+					old->prev->next = old->next;
+					old->next->prev = old->prev;
+
+					free(old);
+
+					remove(origin);
+					break;
+				}
+			}
+
+			rename(full, origin);
+		}
 	}
+
+	scheduler->tail = curr;
 }

@@ -7,7 +7,6 @@
 #define TRUE 1
 #define FALSE 0
 
-//types of node
 enum nType {
 	T_ACTION = 0,
 	T_NOTIFY,
@@ -18,7 +17,6 @@ enum nType {
 };
 extern const char *nTypeName[6];
 
-//types of condition
 enum cType {
 	EQUAL = 0,
 	LESS,
@@ -51,4 +49,5 @@ struct flow {
 };
 
 struct flow *parseFlow(const char *path);
+void freeFlow(struct flow *flow);
 void printFlow(struct flow *flow);

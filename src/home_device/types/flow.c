@@ -19,10 +19,7 @@ struct flow *parseFlow(const char *path) {
 
 	doc = xmlReadFile(path, NULL, XML_PARSE_NOBLANKS);
 
-	if (doc == NULL) {
-		printf("ERROR : Can't parse file \'%s\'\n", path);
-		return NULL;
-	}
+	if (doc == NULL) return NULL;
 
 	root = xmlDocGetRootElement(doc);
 
@@ -54,10 +51,8 @@ struct node *parseNode(xmlNode *elem) {
 		}
 	}
 
-	if (elem->children)
-		node->child = parseNode(elem->children);
-	if (elem->next)
-		node->next = parseNode(elem->next);
+	if (elem->children) node->child = parseNode(elem->children);
+	if (elem->next) node->next = parseNode(elem->next);
 
 	return node;
 }
@@ -91,6 +86,17 @@ void parseProperties(struct node *node, enum nType type, xmlNode *elem) {
 	}
 }
 
+void freeNode(struct node *node) {
+	if (node->child) freeNode(node->child);
+	if (node->next) freeNode(node->next);
+	
+	free(node);
+}
+
+void freeFlow(struct flow *flow) {
+	freeNode(flow->head);
+}
+
 void printNode(struct node *node, int level) {
 	int i;
 
@@ -98,10 +104,8 @@ void printNode(struct node *node, int level) {
 		printf("   ");
 	printf("|%c %s\n", (node->next ? '-' : '_'), nTypeName[node->type]);
 
-	if (node->child)
-		printNode(node->child, level + 1);
-	if (node->next)
-		printNode(node->next, level);
+	if (node->child) printNode(node->child, level + 1);
+	if (node->next) printNode(node->next, level);
 }
 
 void printFlow(struct flow *flow) {

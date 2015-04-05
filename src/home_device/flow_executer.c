@@ -1,18 +1,21 @@
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
+
 #include "types/flow.h"
 
 int main(int argc, const char *argv[]) {
 	struct flow *flow;
-	char file[BUFSIZ];
+	char path[BUFSIZ];
 	
 	if(argc < 2) return 0;
 	
-	strcpy(file, argv[1]);
-	strcat(file, ".xml");
+	sprintf(path, "./user/flow/%s.xml", argv[1]);
 	
-	flow = parseFlow(file);
+	flow = parseFlow(path);
 	
-	printFlow(flow);
+	
+	
+	free(flow);
 	return 0;
 }
