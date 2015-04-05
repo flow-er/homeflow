@@ -25,6 +25,8 @@ enum cType {
 	MORE_OR_EQUAL
 };
 
+extern const char *cTypeName[6];
+
 struct node {
 	enum nType type;
 

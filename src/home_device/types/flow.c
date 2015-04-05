@@ -5,6 +5,7 @@
 
 const char *nTypeName[6] = { "action", "notification", "condition", "loop",
 		"cowork", "trigger" };
+const char *cTypeName[6] = { "==", "<", "<=", ">", ">=" };
 
 void parseProperties(struct node *node, enum nType type, xmlNode *elem);
 struct node *parseNode(xmlNode *elem);
@@ -66,6 +67,7 @@ void parseProperties(struct node *node, enum nType type, xmlNode *elem) {
 	switch (type) {
 		case T_CONDITION:
 		case T_TRIGGER:
+		case T_LOOP:
 			temp = (const char *) xmlGetProp(elem, (xmlChar *) "cond");
 			node->cond = atoi(temp);
 
@@ -89,12 +91,13 @@ void parseProperties(struct node *node, enum nType type, xmlNode *elem) {
 void freeNode(struct node *node) {
 	if (node->child) freeNode(node->child);
 	if (node->next) freeNode(node->next);
-	
+
 	free(node);
 }
 
 void freeFlow(struct flow *flow) {
 	freeNode(flow->head);
+	free(flow);
 }
 
 void printNode(struct node *node, int level) {
