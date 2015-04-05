@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
+    <ListView
+            android:id="@+id/del_appli_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="10">
+    </ListView>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
+        <Button
+                android:id="@+id/del_appli_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="삭제 완료"
+                android:background="#FF000000"
+                android:textColor="#FFFFFFFF"/>
+    </LinearLayout>
+</LinearLayout>

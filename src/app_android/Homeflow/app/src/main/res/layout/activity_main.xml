@@ -1,58 +1,32 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent">
+<android.support.v4.app.FragmentTabHost
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@android:id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TabHost android:id="@+id/tab_host"
-             android:layout_width="fill_parent"
-             android:layout_height="fill_parent">
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TabWidget android:id="@android:id/tabs"
-                   android:layout_gravity="top"
-                   android:layout_width="fill_parent"
-                   android:layout_height="wrap_content"/>
+        <TabWidget
+                android:id="@android:id/tabs"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"/>
 
-        <FrameLayout android:id="@android:id/tabcontent"
-                     android:layout_width="fill_parent"
-                     android:layout_height="match_parent">
+        <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="0"/>
 
-            <LinearLayout android:id="@+id/tab_view1"
-                          android:orientation="vertical"
-                          android:layout_width="fill_parent"
-                          android:layout_height="fill_parent">
+        <FrameLayout
+                android:id="@+id/realtabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
 
-            </LinearLayout>
-
-            <LinearLayout android:id="@+id/tab_view2"
-                          android:orientation="vertical"
-                          android:layout_width="fill_parent"
-                          android:layout_height="fill_parent"
-                          android:gravity="center">
-
-                <Button
-                        android:id="@+id/button1"
-                        android:layout_width="200dp"
-                        android:layout_height="80dp"
-                        android:text="가전 기기 등록/편집"/>
-
-                <Button
-                        android:id="@+id/button2"
-                        android:layout_width="200dp"
-                        android:layout_height="80dp"
-                        android:text="작업 흐름 등록/편집"
-                        android:layout_marginTop="50dp"/>
-
-            </LinearLayout>
-
-            <LinearLayout android:id="@+id/tab_view3"
-                          android:orientation="vertical"
-                          android:layout_width="fill_parent"
-                          android:layout_height="fill_parent">
-
-            </LinearLayout>
-
-        </FrameLayout>
-
-    </TabHost>
-
-</LinearLayout>
+    </LinearLayout>
+</android.support.v4.app.FragmentTabHost>

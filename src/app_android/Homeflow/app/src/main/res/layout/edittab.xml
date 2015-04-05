@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center">
+
+    <Button
+            android:id="@+id/appli_reg_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="가전 기기 등록/편집"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:background="#FF000000"
+            android:textColor="#FFFFFFFF"/>
+
+    <Button
+            android:id="@+id/flow_reg_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="작업 흐름 등록/편집"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:background="#FF000000"
+            android:textColor="#FFFFFFFF"/> 그럼 이제 에딧클래스에다가 버튼이벤트 만들어봐 클래스에 view.onclicklisterner 구현
+
+</LinearLayout>
