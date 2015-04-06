@@ -1,4 +1,4 @@
-ï»¿#include <stdio.h> 
+#include <stdio.h> 
 #include <stdlib.h> 
 #include <string.h> 
 #include <sys/types.h> 
@@ -8,173 +8,171 @@
 #include <fcntl.h> 
 #include <sys/ipc.h>
 #include <sys/msg.h>
-
 #define MAXLINE 127 
-#define PORT 5555
 #define BUFSIZE 1024
 
-int main() {
+int main(int argc, char *argv[]) 
+{ 
 	typedef struct {
-		long data_type;
-		int data_num;
-		char data_buff[BUFSIZE];
+		long  data_type;
+		int   data_num;
+		char  data_buff[BUFSIZE];
 	} t_data;
-	int msqid;
-	t_data data;
+	int      msqid;
+	t_data   data;
 
-	struct sockaddr_in servaddr, cliaddr;
-	int serv_sock, client_sock,  // socket number
-			addrlen = sizeof(cliaddr), nbyte, nbuf;
-	char buf[MAXLINE + 1];
-	char cli_ip[20];
-	char flowpath[40] = "./user/temp/flows/";
-	char applpath[40] = "./user/temp/appliances/";
-	char filename[20];
-	char path[60];
-	int filesize = 0;
-	int total = 0, sread, fp;
-	//int count=0;
-	fd_set readfds, writefds, tmpfds, tmp2fds;
-	int fd_max, fd;
+	fd_set readfds, temps;
+	int fd_max,fd;
 	struct timeval timeout;
 	char* flag;
 
+	char flowpath[40]="./user/temp/flows/";
+	char applpath[40]="./user/temp/appliances/";
+	char path[60];
+
+	struct sockaddr_in serv_addr, clnt_addr; 
+	int serv_sock, clnt_sock,clnt_len, // ¼ÒÄÏ¹øÈ£ 
+		addrlen = sizeof(clnt_addr), // ÁÖ¼Ò±¸Á¶Ã¼ ±æÀÌ 
+		nbyte, nbuf; 
+	char buf[MAXLINE+1]; 
+	char cli_ip[20]; 
+	char filename[20]; 
+	int filesize=0; 
+	int total=0, sread, fp; 
+	int str_len;
 	// message queue //////////////////////////////////////////////////////////
-	if ( -1 == ( msqid = msgget( (key_t)1234, IPC_CREAT Â¦ 0666))) {
-		perror("msgget() ì‹¤íŒ¨");
-		exit(1);
+	
+	if ( -1 == ( msqid = msgget( (key_t)1234, IPC_CREAT | 0666)))
+	{
+		perror( "msgget() ½ÇÆĞ");
+		exit( 1);
 	}
 
-	while (1) {
-		// ë©”ì‹œì§€ í ì¤‘ì— data_type ì´ 2 ì¸ ìë£Œë§Œ ìˆ˜ì‹ 
-		if (-1 == msgrcv(msqid, &data, sizeof(t_data) - sizeof(long), 2, 0)) {
-			perror("msgrcv() ì‹¤íŒ¨");
-			exit(1);
+	while( 1 )
+	{
+		// Receive data whish data_type is 2 
+		if ( -1 == msgrcv( msqid, &data, sizeof( t_data) - sizeof( long), 2, 0))
+		{
+			perror( "msgrcv() ½ÇÆĞ");
+			exit( 1);
 		}
-		printf("%d - %s\n", data.data_num, data.data_buff);
+		printf( "%d - %s\n", data.data_num, data.data_buff);
 	}
+	
 	///////////////////////////////////////////////////////////////////////
 
-	if ((serv_sock = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
-		perror("socket fail");
-		exit(0);
-	}
-	// initialization
-	bzero((char *) &servaddr, sizeof(servaddr));
-	// set the server address
-	servaddr.sin_family = AF_INET;
-	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	servaddr.sin_port = htons(PORT)
-	);
+	if(argc != 2) { 
+		printf("usage: %s port ", argv[0]); 
+		exit(0); 
+	} 
+	// Create socket
+	if((serv_sock = socket(PF_INET, SOCK_STREAM, 0)) < 0) { 
+		perror("socket fail"); 
+		exit(0); 
+	} 
+	
+	bzero((char *)&serv_addr, sizeof(serv_addr)); 
+	// Set the serv_addr 
+	serv_addr.sin_family = AF_INET; 
+	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY); 
+	serv_addr.sin_port = htons(atoi(argv[1])); 
 
-	/*
-	 bind()
-	 */
-	if (bind(serv_sock, (struct sockaddr *) &servaddr, sizeof(servaddr)) < 0) {
-		perror("bind fail");
-		exit(0);
-	}
-	/*
-	 listen()
-	 */
-	if (listen(serv_sock, 5) < 0) {
-		perror("listen fail");
-		exit(0);
-	}
+	// bind()  
+	if(bind(serv_sock, (struct sockaddr *)&serv_addr, 
+		sizeof(serv_addr)) < 0) 
+	{ 
+		perror("bind fail"); 
+		exit(0); 
+	} 
+	// listen()
+	listen(serv_sock, 5); 
 
 	FD_ZERO(&readfds);
-	FD_ZERO(&writefds);
 	FD_SET(serv_sock, &readfds);
-	fd_max = serv_sock;
+	fd_max=serv_sock;
 
-	while (1) {
-		//printf("...\n");
+	while(1) 
+	{ 
+		puts("waiting connection..\n"); 
 
+		temps=readfds;
 		timeout.tv_sec = 5;
-		timeout.tv_usec = 0;
+		timeout.tv_usec = 0; 
 
-		tmpfds = readfds;
-		tmp2fds = writefds;
-
-		if (select(fd_max + 1, &tmpfds, &tmp2fds, 0, &timeout) == -1) {
-			perror("select fail");
+		if(select(fd_max+1, &temps, 0, 0, &timeout)==-1)
+		{
+			printf("select error\n");
 			exit(0);
 		}
 
-		for (fd = 0; fd < fd_max + 1; fd++) {
-			if (FD_ISSET(fd, &tmpfds)) {
-				if (fd == serv_sock) {
-					/*
-					 accept()
-					 */
-					client_sock = accept(serv_sock,
-											(struct sockaddr *) &cliaddr,
-											&addrlen);
-					FD_SET(client_sock, &readfds);
-					if (client_sock < 0) {
-						perror("accept fail");
-						exit(0);
-					}
+		for(fd=0; fd<fd_max+1; fd++)
+		{
+			if(FD_ISSET(fd, &temps))
+			{
+				if(fd==serv_sock)
+				{
+					clnt_len = sizeof(clnt_addr);
+					clnt_sock = accept(serv_sock, 
+						(struct sockaddr *)&clnt_addr, &addrlen);
 
-					printf("Connecting success\n");
-
-					inet_ntop(AF_INET, &cliaddr.sin_addr.s_addr, cli_ip,
-								sizeof(cli_ip));
-					// print cli's info
-					printf("IP : %s ", cli_ip);
-					printf("Port : %x ", ntohs(cliaddr.sin_port));
-				} else {
-					bzero(filename, 20);
-					recv(client_sock, filename, sizeof(filename), 0);
-					printf("%s ", filename);
-
-					// recv( client_sock, &filesize, sizeof(filesize), 0 ); 
-					read(client_sock, &filesize, sizeof(filesize));
-					printf("%d ", filesize);
-
-					read(client_sock, flag, sizeof(flag));
-					if (strcmp(flag, "f")) {
-						strcat(path, flowpath);
-						strcat(path, filename);
-					} else {
-						strcat(path, applpath);
-						strcat(path, filename);
-					}
-
-					fp = open(path, O_WRONLY | O_CREAT | O_TRUNC);
-
-					while (total != filesize) {
-						sread = recv(client_sock, buf, 100, 0);
-						printf("file is receiving now.. \n");
-						total += sread;
-						buf[sread] = 0;
-						write(fp, buf, sread);
-						bzero(buf, sizeof(buf));
-						printf("processing : %4.2f%% ",
-								total * 100 / (float) filesize);
-						usleep(1000);
-
-					}
-					printf("file traslating is completed \n");
-					printf("filesize : %d, received : %d \n", filesize, total);
-
-					FD_CLR(fd, &readfds);
-					//close(fp); 
-					close(client_sock);
-				}  //end else
-			}  //end if 
-			else if (FD_ISSET(fd, &tmp2fds)) {
-				if (connect(serv_sock, (struct sockaddr *) &servaddr,
-							sizeof(servaddr)) < 0) {
-					perror("connect fail");
-					exit(0);
+					if(clnt_sock < 0) 
+					{ 
+						perror("accept fail"); 
+						exit(0); 
+					} 
+					FD_SET(clnt_sock, &readfds);
+					if(fd_max<clnt_sock)
+						fd_max=clnt_sock;
+					printf("Connection : file descripter %d \n", clnt_sock);
+					inet_ntop(AF_INET, &clnt_addr.sin_addr.s_addr, cli_ip, sizeof(cli_ip)); 
+					printf( "IP : %s ", cli_ip ); 
+					printf( "Port : %x \n", ntohs( clnt_addr.sin_port) ); 
 				}
-				write(serv_sock, data.data_buff, strlen(data.data_buff) + 1);
+				else 
+				{
+					bzero( filename, 20 ); 
+					recv( clnt_sock, filename, sizeof(filename), 0 ); 
+					printf( "%s ", filename ); 
 
-			}  //end else if
-		}  //end for
-	}  //end while
+					// recv( clnt_sock, &filesize, sizeof(filesize), 0 ); 
+					read( clnt_sock, &filesize, sizeof(filesize) ); 
+					printf( "%d \n", filesize ); 
 
-	close(serv_sock);
-	return 0;
-}
+					strcat( filename, "_backup" ); 
+					fp = open( filename, O_WRONLY | O_CREAT | O_TRUNC); 
+
+					while( total != filesize ) 
+					{ 
+						sread = recv( clnt_sock, buf, 100, 0 ); 
+						printf( "file is receiving now.. " ); 
+						total += sread; 
+						buf[sread] = 0; 
+						write( fp, buf, sread ); 
+						bzero( buf, sizeof(buf) ); 
+						printf( "processing : %4.2f%% ", total*100 / (float)filesize ); 
+						usleep(1000); 
+
+					} 
+					printf( "file traslating is completed " ); 
+					printf( "filesize : %d, received : %d ", filesize, total ); 
+
+					
+					if(sread ==0)
+					{ /* if end of connection  */
+						FD_CLR(fd, &readfds);
+						close(fp); 
+						close(clnt_sock); 
+						printf("End connection : file descripter %d \n", fd);
+					}
+					else
+					{
+						write(serv_sock,data.data_buff,strlen(data.data_buff)+1);
+					}	
+				} // end else
+			} // end if
+		} // end for			
+	} // end while
+
+	close( serv_sock ); 
+	return 0; 
+} // end main
