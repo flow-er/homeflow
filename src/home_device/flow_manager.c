@@ -15,13 +15,22 @@
 #include <sys/types.h>
 
 #include "types/scheduler.h"
+#include "types/msg.h"
 
 #define MAXLINE 127
 
+int executeMsgManager(int *fd);
 int executeFlow();
 void signalHandler(int);
 
+enum fdType {
+	R_PIPE = 0,
+	W_PIPE,
+	R_CONN
+};
+
 struct scheduler scheduler;
+int fd[3];
 
 int main(int argc, const char *argv[]) {
 	typedef struct {
@@ -35,7 +44,7 @@ int main(int argc, const char *argv[]) {
 
 	struct sockaddr_in serv_addr, clnt_addr;
 	struct timeval timeout;
-	int serv_sock, clnt_sock;
+	int clnt_sock;
 	socklen_t addrlen = sizeof(clnt_addr);
 
 	fd_set readfds;
@@ -51,7 +60,16 @@ int main(int argc, const char *argv[]) {
 
 	char cli_ip[20], filename[20], path[60];
 
-	if ((serv_sock = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
+	signal(SIGINT, signalHandler);
+
+	scheduleEvents(&scheduler, INIT);
+
+	if (executeMsgManager(fd) == -1) {
+		printf("flow_manger : failed to execute \'msg_manager\'\n");
+		return 0;
+	}
+
+	if ((fd[R_CONN] = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
 		printf("Error on creating socket.\n");
 		return 0;
 	}
@@ -61,23 +79,21 @@ int main(int argc, const char *argv[]) {
 	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	serv_addr.sin_port = htons(0);  //use android port instead of 0
 
-	if (bind(serv_sock, (const struct sockaddr *) &serv_addr, sizeof(serv_addr))
-			< 0) {
+	if (bind(fd[R_CONN], (const struct sockaddr *) &serv_addr,
+				sizeof(serv_addr)) < 0) {
 		printf("Error on binding socket.\n");
 		return 0;
 	}
 
-	listen(serv_sock, 5);
+	listen(fd[R_CONN], 5);
 
 	FD_ZERO(&readfds);
-	FD_SET(serv_sock, &readfds);
-	fd_max = serv_sock;
-
-	scheduleEvents(&scheduler, INIT);
+	FD_SET(fd[R_CONN], &readfds);
+	fd_max = fd[R_CONN];
 
 	while (1) {
 		fd_set temp = readfds;
-		int fd;
+		int i;
 		timeout.tv_sec = 5;
 		timeout.tv_usec = 0;
 
@@ -91,11 +107,11 @@ int main(int argc, const char *argv[]) {
 			return 0;
 		}
 
-		for (fd = 0; fd < fd_max + 1; fd++) {
-			if (FD_ISSET(fd, &temp)) {
-				if (fd == serv_sock) {
+		for (i = 0; i < fd_max + 1; i++) {
+			if (FD_ISSET(i, &temp)) {
+				if (i == fd[R_CONN]) {
 					int clnt_len = sizeof(clnt_addr);
-					int clnt_sock = accept(serv_sock,
+					int clnt_sock = accept(fd[R_CONN],
 											(struct sockaddr *) &clnt_addr,
 											&addrlen);
 
@@ -150,14 +166,14 @@ int main(int argc, const char *argv[]) {
 					printf("filesize : %d, received : %d ", filesize, total);
 
 					if (sread == 0) {  //if end of connection
-						FD_CLR(fd, &readfds);
+						FD_CLR(i, &readfds);
 						close(fp);
 						close(clnt_sock);
-						printf("End connection : file descripter %d \n", fd);
+						printf("End connection : file descripter %d \n", i);
 					} else {
 						// Send the flow statue to android
 						while (count > 0) {
-							write(serv_sock, data.data_buff,
+							write(fd[R_CONN], data.data_buff,
 									strlen(data.data_buff) + 1);
 						}
 						//initialize the message buffer
@@ -168,7 +184,42 @@ int main(int argc, const char *argv[]) {
 		}
 	}
 
-	close(serv_sock);
+	return 0;
+}
+
+int executeMsgManager(int *fd) {
+	int fd1[2], fd2[2];
+	int pid;
+	char *argv[4];
+
+	pipe(fd1);
+	pipe(fd2);
+
+	argv[0] = "msg_manager";
+	argv[1] = (char *) malloc(sizeof(char) * 5);
+	argv[2] = (char *) malloc(sizeof(char) * 5);
+	argv[3] = NULL;
+
+	sprintf(argv[1], "%d", fd1[1]);
+	sprintf(argv[1], "%d", fd2[0]);
+
+	if ((pid = fork())) {
+		close(fd1[1]);
+		close(fd2[0]);
+		printf("msg_manager : %d\n", pid);
+	} else {
+		close(fd1[0]);
+		close(fd2[1]);
+
+		if (execv("./msg_manager", argv) == -1) {
+			return 1;
+		}
+	}
+
+	fd[R_PIPE] = fd1[0];
+	fd[W_PIPE] = fd2[1];
+
+	free(argv[1]);
 	return 0;
 }
 
@@ -178,9 +229,6 @@ int executeFlow() {
 	for (event = scheduler.head; event != NULL; event = event->next) {
 		char *argv[3];
 
-		if (completed && completed == event->pid) {
-			event->pid = 0;
-		}
 		if (event->pid != 0) continue;
 		if (!event->flow->isAuto) continue;
 
@@ -206,16 +254,13 @@ int executeFlow() {
 
 void signalHandler(int signal) {
 	struct event *event = NULL;
+	int i;
 
-	switch (signal) {
-		case SIGUSR1:
-			printf("flow_manager : Do re-schedule!\n");
-			scheduleEvents(&scheduler, REDO);
-			break;
-		default:
-			for (event = scheduler.tail; event != NULL; event = event->prev) {
-				freeFlow(event->flow);
-				free(event);
-			}
+	for (event = scheduler.tail; event != NULL; event = event->prev) {
+		freeFlow(event->flow);
+		free(event);
 	}
+
+	for (i = 0; i < 3; i++)
+		close(fd[i]);
 }
