@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-import java.util.ArrayList;
+import kookmin.cs.flower.homeflow.FileManagement.FileManager;
 
 /**
  * @author Jinsung Choi, bugslife102401@nate.com
@@ -19,15 +19,6 @@ import java.util.ArrayList;
 public class AppliReg extends Fragment implements View.OnClickListener {
 
   ListView listView;
-  static ArrayList<String> list1 = new ArrayList<String>();
-
-  static {
-    list1.add("appliance1");
-    list1.add("appliance2");
-    list1.add("appliance3");
-    list1.add("appliance4");
-    list1.add("appliance5");
-  }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +35,8 @@ public class AppliReg extends Fragment implements View.OnClickListener {
     appli_reg_del.setOnClickListener(this);
 
     listView = (ListView) rootView.findViewById(R.id.appli_reg_list);
-    ArrayAdapter adapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, list1);
+    ArrayAdapter adapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1,
+                                                    FileManager.getApplianceList());
     listView.setAdapter(adapter);
 
     return rootView;

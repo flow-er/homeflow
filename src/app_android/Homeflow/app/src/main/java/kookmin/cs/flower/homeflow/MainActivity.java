@@ -1,9 +1,12 @@
 package kookmin.cs.flower.homeflow;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.widget.TabHost.TabSpec;
+
+import kookmin.cs.flower.homeflow.Service.SocketService;
 
 /**
  * @author Jinsung Choi, bugslife102401@nate.com
