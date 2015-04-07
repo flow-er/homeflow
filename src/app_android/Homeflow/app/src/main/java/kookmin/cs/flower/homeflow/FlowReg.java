@@ -1,6 +1,5 @@
 package kookmin.cs.flower.homeflow;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import kookmin.cs.flower.homeflow.FileManagement.FileManager;
-import kookmin.cs.flower.homeflow.Service.SocketService;
 
 /**
  * @author Jinsung Choi, bugslife102401@nate.com

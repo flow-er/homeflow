@@ -22,7 +22,7 @@ public class EditTab extends Fragment implements View.OnClickListener {
 
     Button appli_reg_btn = (Button) rootView.findViewById(R.id.appli_reg_btn);
     Button flow_reg_btn = (Button) rootView.findViewById(R.id.flow_reg_btn);
-    //이벤트 등록
+
     appli_reg_btn.setOnClickListener(this);
     flow_reg_btn.setOnClickListener(this);
 
@@ -33,11 +33,11 @@ public class EditTab extends Fragment implements View.OnClickListener {
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.appli_reg_btn:
-        AppliReg appliReg = new AppliReg(); // 프래그먼트 생성
+        AppliReg appliReg = new AppliReg();
         getFragmentManager().beginTransaction().replace(R.id.realtabcontent, appliReg).commit();
         break;
       case R.id.flow_reg_btn:
-        FlowReg flowReg = new FlowReg(); // 프래그먼트 생성
+        FlowReg flowReg = new FlowReg();
         getFragmentManager().beginTransaction().replace(R.id.realtabcontent, flowReg).commit();
         break;
     }

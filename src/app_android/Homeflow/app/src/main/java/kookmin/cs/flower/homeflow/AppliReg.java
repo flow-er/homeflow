@@ -50,7 +50,7 @@ public class AppliReg extends Fragment implements View.OnClickListener {
         getFragmentManager().beginTransaction().replace(R.id.realtabcontent, editTab).commit();
         break;
       case R.id.appli_reg_add:
-        AddAppli addAppli = new AddAppli(); // 프래그먼트 생성
+        AddAppli addAppli = new AddAppli();
         getFragmentManager().beginTransaction().replace(R.id.realtabcontent, addAppli).commit();
         break;
       case R.id.appli_reg_del:

@@ -22,6 +22,5 @@
             android:text="작업 흐름 등록/편집"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:background="#FF000000"
-            android:textColor="#FFFFFFFF"/> 그럼 이제 에딧클래스에다가 버튼이벤트 만들어봐 클래스에 view.onclicklisterner 구현
-
+            android:textColor="#FFFFFFFF"/>
 </LinearLayout>
