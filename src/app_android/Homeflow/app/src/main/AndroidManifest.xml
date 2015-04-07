@@ -3,6 +3,7 @@
     package="kookmin.cs.flower.homeflow" >
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -18,6 +19,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name=".Service.SocketService">
+                 <intent-filter>
+                     <action android:name="kookmin.cs.flower.homeflow.Service.SocketService"/>
+                 </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

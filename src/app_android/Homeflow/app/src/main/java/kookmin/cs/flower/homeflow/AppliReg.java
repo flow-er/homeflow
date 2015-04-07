@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-import kookmin.cs.flower.homeflow.filestream.FileContent;
+import kookmin.cs.flower.homeflow.FileManagement.FileManager;
 
 /**
  * @author Jinsung Choi, bugslife102401@nate.com
@@ -36,7 +36,7 @@ public class AppliReg extends Fragment implements View.OnClickListener {
 
     listView = (ListView) rootView.findViewById(R.id.appli_reg_list);
     ArrayAdapter adapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1,
-                                                    FileContent.getApplianceList());
+                                                    FileManager.getApplianceList());
     listView.setAdapter(adapter);
 
     return rootView;

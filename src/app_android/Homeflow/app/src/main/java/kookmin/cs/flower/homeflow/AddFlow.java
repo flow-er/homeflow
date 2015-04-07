@@ -13,6 +13,8 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import kookmin.cs.flower.homeflow.Management.WorkflowManager;
+
 /**
  * @author Jinsung Choi, bugslife102401@nate.com
  * @version 0.0.2
@@ -21,15 +23,23 @@ import java.util.ArrayList;
 public class AddFlow extends Fragment implements OnItemClickListener, View.OnClickListener {
 
   ListView listView;
-  ArrayList<String> list5 = new ArrayList<String>();
+  static ArrayList<String> list5 = new ArrayList<String>();
 
+  static int i = 0;
+
+  static {
+    list5.add("");
+  }
   // OnItemClickListener
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
+
+    if(getArguments() != null) {
+      list5.add(i++, getArguments().getString("result"));
+    }
     View rootView = inflater.inflate(R.layout.addflow, container, false);
 
-    list5.add("");
     listView = (ListView) rootView.findViewById(R.id.add_flow_list);
     ArrayAdapter adapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, list5);
     listView.setAdapter(adapter);
@@ -51,8 +61,13 @@ public class AddFlow extends Fragment implements OnItemClickListener, View.OnCli
   @Override
   public void onClick(View v) {
     if (v.getId() == R.id.add_flow_btn) {
+      list5.remove(list5.size()-1);
+      new WorkflowManager().addFlow(list5);
       FlowReg flowReg = new FlowReg();
       getFragmentManager().beginTransaction().replace(R.id.realtabcontent, flowReg).commit();
+      list5.clear();
+      list5.add("");
+      i = 0;
     }
   }
 }

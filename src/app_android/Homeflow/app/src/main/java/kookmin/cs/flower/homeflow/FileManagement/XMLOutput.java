@@ -3,7 +3,7 @@
  * @brief java package of HomeFlow app
  * @details XML 파일을 읽고 쓰는데 필요한 모듈
  */
-package kookmin.cs.flower.homeflow.filestream;
+package kookmin.cs.flower.homeflow.FileManagement;
 
 import android.util.Xml;
 
@@ -18,10 +18,11 @@ import kookmin.cs.flower.homeflow.data.Workflow;
 
 /**
  * @author Jongho Lim, sloth@kookmin.ac.kr
- * @author Jinsung choi, bugslife102401@nate.com
- * @version 0.0.1
+ * @version 0.0.2
  * @brief an class is write xml file
  * @details workflow class 나 Appliance 클래스와 저장할 경로를 받아서 xml 파일로 변환하여 저장하는 class 이다.
+ * @date 2015-04-07
+ *
  * @todo develop ...
  */
 public class XMLOutput {
@@ -43,19 +44,19 @@ public class XMLOutput {
 
       serializer.startTag("", "workflow");
 
-      serializer.startTag("", FileContent.FLOW_NAME);
+      serializer.startTag("", FileManager.FLOW_NAME);
       serializer.text(workflow.toString());
-      serializer.endTag("", FileContent.FLOW_NAME);
+      serializer.endTag("", FileManager.FLOW_NAME);
 
       for (int i = 0; i < workflow.getFlow().size(); i++) {
-        serializer.startTag("", FileContent.WORK);
-        serializer.startTag("", FileContent.NAME);
+        serializer.startTag("", FileManager.WORK);
+        serializer.startTag("", FileManager.NAME);
         serializer.text(workflow.getWorkName(i));
-        serializer.endTag("", FileContent.NAME);
-        serializer.startTag("", FileContent.ID);
+        serializer.endTag("", FileManager.NAME);
+        serializer.startTag("", FileManager.ID);
         serializer.text(String.valueOf(workflow.getWorkId(i)));
-        serializer.endTag("", FileContent.ID);
-        serializer.endTag("", FileContent.WORK);
+        serializer.endTag("", FileManager.ID);
+        serializer.endTag("", FileManager.WORK);
       }
 
       serializer.endTag("", "workflow");
@@ -80,19 +81,19 @@ public class XMLOutput {
 
       serializer.startTag("", "appliance");
 
-      serializer.startTag("", FileContent.APPLIANCE_NAME);
+      serializer.startTag("", FileManager.APPLIANCE_NAME);
       serializer.text(appliance.toString());
-      serializer.endTag("", FileContent.APPLIANCE_NAME);
+      serializer.endTag("", FileManager.APPLIANCE_NAME);
 
       for (int i = 0; i < appliance.getDevice().size(); i++) {
-        serializer.startTag("", FileContent.FUNCTION);
-        serializer.startTag("", FileContent.NAME);
+        serializer.startTag("", FileManager.FUNCTION);
+        serializer.startTag("", FileManager.NAME);
         serializer.text(appliance.getFuncName(i));
-        serializer.endTag("", FileContent.NAME);
-        serializer.startTag("", FileContent.ID);
+        serializer.endTag("", FileManager.NAME);
+        serializer.startTag("", FileManager.ID);
         serializer.text(String.valueOf(appliance.getFuncId(i)));
-        serializer.endTag("", FileContent.ID);
-        serializer.endTag("", FileContent.FUNCTION);
+        serializer.endTag("", FileManager.ID);
+        serializer.endTag("", FileManager.FUNCTION);
       }
 
       serializer.endTag("", "appliance");

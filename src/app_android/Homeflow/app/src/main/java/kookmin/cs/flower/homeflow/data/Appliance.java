@@ -9,10 +9,10 @@ import java.util.ArrayList;
 
 /**
  * @author Jongho Lim, sloth@kookmin.ac.kr
- * @author Jinsung choi, bugslife102401@nate.com
- * @version 0.0.3
+ * @version 0.0.4
  * @brief an Class is data of Device (appliance)
  * @details Device의 data를 가지고 있는 class이다. device의 이름과 기능들의 리스트를 담고 있다.
+ * @date 2015-04-07
  */
 public class Appliance {
 

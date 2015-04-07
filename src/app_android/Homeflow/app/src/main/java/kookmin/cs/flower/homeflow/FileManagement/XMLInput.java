@@ -3,7 +3,7 @@
  * @brief java package of HomeFlow app
  * @details XML 파일을 읽는데 필요한 모듈
  */
-package kookmin.cs.flower.homeflow.filestream;
+package kookmin.cs.flower.homeflow.FileManagement;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -17,11 +17,12 @@ import kookmin.cs.flower.homeflow.data.Workflow;
 
 /**
  * @author Jongho Lim, sloth@kookmin.ac.kr
- * @author Jinsung choi, bugslife102401@nate.com
- * @version 0.0.1
+ * @version 0.0.2
  * @brief an class read XML file and parsing it
  * @details XML 파일을 읽어서 필요한 부분을 파싱하는 클래스이다. Workflow xml 파일을 파싱하는 함수와 Appliance xml 파일을 파싱하는 함수가
  * 오버로딩 되어있다.
+ * @date 2015-04-07
+ *
  * @todo develop ...
  */
 public class XMLInput {
@@ -68,13 +69,13 @@ public class XMLInput {
 
           // 태그의 끝
           case XmlPullParser.END_TAG:
-            if (tagName.equalsIgnoreCase("flowname")) {
+            if (tagName.equalsIgnoreCase(FileManager.FLOW_NAME)) {
               flow.setName(text);
-            } else if (tagName.equalsIgnoreCase("work")) {
+            } else if (tagName.equalsIgnoreCase(FileManager.WORK)) {
               flow.addWork(workName, workId);
-            } else if (tagName.equalsIgnoreCase("name")) {
+            } else if (tagName.equalsIgnoreCase(FileManager.NAME)) {
               workName = text;
-            } else if (tagName.equalsIgnoreCase("id")) {
+            } else if (tagName.equalsIgnoreCase(FileManager.ID)) {
               workId = Integer.parseInt(text);
             }
 
@@ -132,11 +133,11 @@ public class XMLInput {
           case XmlPullParser.END_TAG:
             if (tagName.equalsIgnoreCase("devicename")) {
               dev.setName(text);
-            } else if (tagName.equalsIgnoreCase("function")) {
+            } else if (tagName.equalsIgnoreCase(FileManager.FUNCTION)) {
               dev.addFunction(funcName, funcId);
-            } else if (tagName.equalsIgnoreCase("name")) {
+            } else if (tagName.equalsIgnoreCase(FileManager.NAME)) {
               funcName = text;
-            } else if (tagName.equalsIgnoreCase("id")) {
+            } else if (tagName.equalsIgnoreCase(FileManager.ID)) {
               funcId = Integer.parseInt(text);
             }
 

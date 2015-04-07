@@ -35,7 +35,8 @@
             android:layout_marginTop="30dp"
             android:layout_marginLeft="60dp"
             android:layout_marginRight="60dp"
-            android:background="#FF000000"/>
+            android:background="#FF000000"
+            android:textColor="#FFFFFFFF"/>
 
     <LinearLayout
             android:orientation="horizontal"

@@ -1,5 +1,6 @@
 package kookmin.cs.flower.homeflow;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,7 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-import kookmin.cs.flower.homeflow.filestream.FileContent;
+import kookmin.cs.flower.homeflow.FileManagement.FileManager;
+import kookmin.cs.flower.homeflow.Service.SocketService;
 
 /**
  * @author Jinsung Choi, bugslife102401@nate.com
@@ -35,7 +37,7 @@ public class FlowReg extends Fragment implements View.OnClickListener {
 
     listView = (ListView) rootView.findViewById(R.id.flow_reg_list);
     ArrayAdapter adapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1,
-                                                    FileContent.getFlowList());
+                                                    FileManager.getFlowList());
     listView.setAdapter(adapter);
 
     return rootView;
@@ -48,6 +50,7 @@ public class FlowReg extends Fragment implements View.OnClickListener {
         EditTab editTab = new EditTab();
         getFragmentManager().beginTransaction().replace(R.id.realtabcontent, editTab).commit();
         break;
+
       case R.id.flow_reg_add:
         AddFlow addFlow = new AddFlow();
         getFragmentManager().beginTransaction().replace(R.id.realtabcontent, addFlow).commit();

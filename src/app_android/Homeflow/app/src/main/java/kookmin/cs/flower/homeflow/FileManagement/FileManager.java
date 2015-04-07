@@ -1,4 +1,4 @@
-package kookmin.cs.flower.homeflow.filestream;
+package kookmin.cs.flower.homeflow.FileManagement;
 
 import android.os.Environment;
 import android.util.Log;
@@ -8,18 +8,17 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import kookmin.cs.flower.homeflow.data.Appliance;
+import kookmin.cs.flower.homeflow.data.FileContent;
 import kookmin.cs.flower.homeflow.data.Workflow;
 
-public class FileContent {
-
-  private static ArrayList<String> workflow = new ArrayList<String>();
-  private static ArrayList<String> appliance = new ArrayList<String>();
-  private static HashMap<String, Integer> applianceId = new HashMap<String, Integer>();
-  private static boolean existFlowDir;
-  private static boolean existApplianceDir;
+/**
+ * @author Jongho Lim, sloth@kookmin.ac.kr
+ * @version 0.0.2
+ * @date 2015-04-07
+ */
+public class FileManager {
 
   public final static String FLOW_NAME = "flowname";
   public final static String WORK = "work";
@@ -27,44 +26,33 @@ public class FileContent {
   public final static String FUNCTION = "function";
   public final static String NAME = "name";
   public final static String ID = "id";
+  private static int i = 0;
+
+  private static boolean existFlowDir = false;
+  private static boolean existApplianceDir = false;
+
+  private static FileContent fileContent = new FileContent();
+
+  public static ArrayList<String> getFlowList() {
+    return fileContent.getFlowList();
+  }
+  public static ArrayList<String> getApplianceList() { return fileContent.getApplianceList(); }
+
+  public void addWorkflow(ArrayList<String> flowList) {
+    fileContent.addFlow("flow" + i++);
+    XMLwrite(flowList);
+  }
+  public void addApplianceflow(Appliance appliance) { fileContent.addAppliance(appliance.toString()); }
 
   static {
-    applianceId.put("세탁기", 1);
-    applianceId.put("청소기", 2);
-    applianceId.put("침대전등", 3);
-    applianceId.put("컴퓨터", 4);
-    applianceId.put("현관 형광등", 5);
-    applianceId.put("공기청정기", 6);
-    applianceId.put("전자레인지", 7);
-    applianceId.put("토스터기", 8);
-    applianceId.put("보일러", 9);
-
-    existFlowDir = false;
-    existApplianceDir = false;
-
     updateFlow();
     updateAppliance();
   }
-
-  public static void addFlow(String name) {
-    workflow.add(name);
-  }
-
-  public static void addAppliance(String name) {
-    appliance.add(name);
-  }
-
-  public static ArrayList<String> getFlowList() {
-    return workflow;
-  }
-
-  public static ArrayList<String> getApplianceList() {
-    return appliance;
-  }
-
-  public static void updateFlow() {
-    if (workflow.size() > 0) {
-      workflow.clear();
+  public void updateFlowdata() { updateFlow(); }
+  public void updateAppliancedata() { updateAppliance(); }
+  private static void updateFlow() {
+    if (fileContent.getFlowList().size() > 0) {
+      fileContent.getFlowList().clear();
     }
 
     if (!existFlowDir) {
@@ -86,13 +74,13 @@ public class FileContent {
     Log.i("mytag", "flow list num : " + flowlist.length);
 
     for (int i = 0; i < flowlist.length; i++) {
-      workflow.add(flowlist[i].substring(0, flowlist[i].length() - 4));
+      fileContent.addFlow(flowlist[i].substring(0, flowlist[i].length() - 4));
     }
   }
 
-  public static void updateAppliance() {
-    if (appliance.size() > 0) {
-      appliance.clear();
+  private static void updateAppliance() {
+    if (fileContent.getApplianceList().size() > 0) {
+      fileContent.getApplianceList().clear();
     }
 
     if (!existApplianceDir) {
@@ -116,7 +104,7 @@ public class FileContent {
         Appliance app = new Appliance();
         FileInputStream is = new FileInputStream(file.getPath() + "/" + appliancelist[i]);
 
-        appliance.add(new XMLInput().parse(is, app).toString());
+        fileContent.addAppliance(new XMLInput().parse(is, app).toString());
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -149,13 +137,13 @@ public class FileContent {
     }
   }
 
-  public static void XMLwrite(ArrayList<String> flow) {
+  private void XMLwrite(ArrayList<String> flow) {
 
     Workflow workflow = new Workflow();
 
     for (int i = 0; i < flow.size(); i++) {
       String workname = flow.get(i).toString();
-      workflow.addWork(workname, applianceId.get(workname));
+      workflow.addWork(workname, fileContent.getApplianceId(workname));
     }
 
     File
@@ -177,4 +165,5 @@ public class FileContent {
       e.printStackTrace();
     }
   }
+
 }
