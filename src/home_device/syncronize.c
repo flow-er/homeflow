@@ -8,6 +8,7 @@
 #include <fcntl.h> 
 #include <sys/ipc.h>
 #include <sys/msg.h>
+#include <signal.h>
 #define MAXLINE 127 
 #define BUFSIZE 1024
 
@@ -20,19 +21,20 @@ int main(int argc, char *argv[])
 	} t_data;
 	int      msqid;
 	t_data   data;
+	int count=0;
 
 	fd_set readfds, temps;
 	int fd_max,fd;
 	struct timeval timeout;
-	char* flag;
+	int flag=0;
 
 	char flowpath[40]="./user/temp/flows/";
 	char applpath[40]="./user/temp/appliances/";
 	char path[60];
 
 	struct sockaddr_in serv_addr, clnt_addr; 
-	int serv_sock, clnt_sock,clnt_len, // 소켓번호 
-		addrlen = sizeof(clnt_addr), // 주소구조체 길이 
+	int serv_sock, clnt_sock,clnt_len, 
+		addrlen = sizeof(clnt_addr),  
 		nbyte, nbuf; 
 	char buf[MAXLINE+1]; 
 	char cli_ip[20]; 
@@ -44,19 +46,20 @@ int main(int argc, char *argv[])
 	
 	if ( -1 == ( msqid = msgget( (key_t)1234, IPC_CREAT | 0666)))
 	{
-		perror( "msgget() 실패");
-		exit( 1);
+		perror( "msgget() error");
+		exit(0);
 	}
 
 	while( 1 )
 	{
-		// Receive data whish data_type is 2 
+		// Receive data which data_type is 2 
 		if ( -1 == msgrcv( msqid, &data, sizeof( t_data) - sizeof( long), 2, 0))
 		{
-			perror( "msgrcv() 실패");
-			exit( 1);
+			perror( "msgrcv() error");
+			exit(0);
 		}
-		printf( "%d - %s\n", data.data_num, data.data_buff);
+		count++;
+		printf( "%d - %s\n", data.data_num, data.data_buff);//test
 	}
 	
 	///////////////////////////////////////////////////////////////////////
@@ -131,6 +134,7 @@ int main(int argc, char *argv[])
 				else 
 				{
 					bzero( filename, 20 ); 
+					bzero( path, 60 ); 
 					recv( clnt_sock, filename, sizeof(filename), 0 ); 
 					printf( "%s ", filename ); 
 
@@ -138,8 +142,21 @@ int main(int argc, char *argv[])
 					read( clnt_sock, &filesize, sizeof(filesize) ); 
 					printf( "%d \n", filesize ); 
 
-					strcat( filename, "_backup" ); 
-					fp = open( filename, O_WRONLY | O_CREAT | O_TRUNC); 
+					read( clnt_sock, &flag, sizeof(flag) ); 
+					printf( "%d \n", flag );
+
+					if(flag==0)
+					{
+						strcat(path,flowpath);
+						strcat(path,filename);
+					}
+					else
+					{
+						strcat(path,applpath);
+						strcat(path,filename);
+					}
+					
+					fp = open( path, O_WRONLY | O_CREAT | O_TRUNC); 
 
 					while( total != filesize ) 
 					{ 
@@ -163,16 +180,30 @@ int main(int argc, char *argv[])
 						close(fp); 
 						close(clnt_sock); 
 						printf("End connection : file descripter %d \n", fd);
+
+						//If connection is finished, send signal to refresh.c
+						if(kill(pid, SIGUSR1)==-1) // have to know pid
+						{
+							printf("Signal error()\n");
+							exit(0);
+						}
 					}
 					else
 					{
-						write(serv_sock,data.data_buff,strlen(data.data_buff)+1);
+						// Send the flow statue to android
+						while(count>0)
+						{
+							write(serv_sock,data.data_buff,strlen(data.data_buff)+1);
+						}
+						//initialize the message buffer
+						bzero( data.data_buff, BUFSIZE ); 
 					}	
 				} // end else
 			} // end if
 		} // end for			
 	} // end while
 
+	
 	close( serv_sock ); 
 	return 0; 
 } // end main
