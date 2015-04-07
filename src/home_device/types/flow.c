@@ -61,7 +61,8 @@ struct node *parseNode(xmlNode *elem) {
 void parseProperties(struct node *node, enum nType type, xmlNode *elem) {
 	const char *temp;
 
-	node->appid = node->command = node->value = NULL;
+	node->appid = node->command = 0;
+	node->value = NULL;
 	node->child = node->next = NULL;
 
 	switch (type) {
@@ -77,10 +78,10 @@ void parseProperties(struct node *node, enum nType type, xmlNode *elem) {
 		case T_ACTION:
 		case T_NOTIFY:
 			temp = (const char *) xmlGetProp(elem, (xmlChar *) "appid");
-			strcpy((node->appid = (char *) malloc(strlen(temp))), temp);
+			node->appid = atoi(temp);
 
 			temp = (const char *) xmlGetProp(elem, (xmlChar *) "command");
-			strcpy((node->command = (char *) malloc(strlen(temp))), temp);
+			node->command = atoi(temp);
 
 		default:
 			node->type = type;

@@ -30,8 +30,8 @@ extern const char *cTypeName[6];
 struct node {
 	enum nType type;
 
-	char *appid;
-	char *command;
+	int appid;
+	int command;
 
 	struct node *next;
 

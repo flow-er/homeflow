@@ -10,9 +10,6 @@ void run(struct flow *flow);
 
 void *input(void *arg);
 
-int flag = 1;
-int go = 0;
-
 int main(int argc, const char *argv[]) {
 	struct flow *flow;
 	char path[BUFSIZ];
@@ -25,7 +22,6 @@ int main(int argc, const char *argv[]) {
 	run(flow);
 
 	freeFlow(flow);
-	flag = 0;
 	return 0;
 }
 
@@ -44,14 +40,13 @@ void run(struct flow *flow) {
 void runNode(struct node *node) {
 	printNodeInfoForTest(node);
 
+	//send command to appliance via bluetooth. (except SYS_TIMER, SYS_COUNTER)
+	//receive command executed.
+	//temporary
 	printf("press any button to continue.\n");
 	getchar();
 
 	switch (node->type) {
-		case T_ACTION:
-			//get char ->bluetooth
-		case T_NOTIFY:
-			//bluetooth
 		case T_CONDITION:
 			//bluetooth
 			//goto child
@@ -61,10 +56,12 @@ void runNode(struct node *node) {
 			//goto child
 		case T_COWORK:
 			//goto child
-			;
+		default:
+			break;
 	}
 
-	//notify to user (msg queue)
+	//receive command done.
+	//notify to user via msg queue & synchronizer.
 
 	if (node->child) runNode(node->child);
 	if (node->next) runNode(node->next);
@@ -80,8 +77,8 @@ void printNodeInfoForTest(struct node *node) {
 
 		case T_ACTION:
 		case T_NOTIFY:
-			printf("id        : %s\n", node->appid);
-			printf("command   : %s\n", node->command);
+			printf("id        : %d\n", node->appid);
+			printf("command   : %d\n", node->command);
 
 		default:
 			printf("type      : %s\n", nTypeName[node->type]);
