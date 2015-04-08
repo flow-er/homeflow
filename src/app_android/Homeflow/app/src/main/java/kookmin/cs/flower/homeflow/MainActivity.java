@@ -7,12 +7,19 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 
 /**
+ * @brief class for showing activity_main.xml layout
+ * @details This class includes tabhost fragmenttabhost which contains three tabs.
  * @author Jinsung Choi, bugslife102401@nate.com
  * @version 0.0.2
  * @date 2015-04-08
  */
 public class MainActivity extends FragmentActivity implements TabHost.OnTabChangeListener {
 
+  /**
+   * @brief method for showing activity_main.xml layout
+   * @details This method concatenates three tabs to tabhost.
+   * @param savedInstanceState
+   */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -40,6 +47,13 @@ public class MainActivity extends FragmentActivity implements TabHost.OnTabChang
     tabHost.setOnTabChangedListener(this);
   }
 
+  /**
+   * @brief method for determining action of Tab1, Tab2, and Tab3
+   * @details If you select Tab1, hometab.xml layout will appear.
+   *            If you select Tab2, edittab.xml layout will appear.
+   *            If you select Tab3, dashtab.xml layout will appear.
+   * @param tabId
+   */
   @Override
   public void onTabChanged(String tabId) {
     switch(tabId) {

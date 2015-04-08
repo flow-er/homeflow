@@ -9,12 +9,25 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 /**
+ * @brief class for showing workentry.xml layout
+ * @details This class includes cond_btn button, appli_btn button, and work_entry_btn button.
+ *            If you click cond_btn, condselect.xml layout will appear
+ *            If you click appli_btn, appliselect.xml layout will appear
+ *            If you click work_entry_btn, addflow.xml layout will appear
  * @author Jinsung Choi, bugslife102401@nate.com
  * @version 0.0.2
  * @date 2015-04-06
  */
 public class WorkEntry extends Fragment implements View.OnClickListener {
 
+  /**
+   * @brief method for showing workentry.xml layout
+   * @details This method sets clicked-events on cond_btn, appli_btn, and work_entry_btn
+   * @param inflater
+   * @param container
+   * @param savedInstanceState
+   * @return rootView
+   */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
@@ -41,6 +54,13 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
     return rootView;
   }
 
+  /**
+   * @brief method for determining actions of cond_btn, appli_btn, and work_entry_btn
+   * @details If you click cond_btn, condselect.xml layout will appear.
+   *            If you click appli_btn, appliselect.xml layout will appear.
+   *            If you click work_entry_btn, addflow.xml layout will appear.
+   * @param v
+   */
   @Override
   public void onClick(View v) {
     switch (v.getId()) {

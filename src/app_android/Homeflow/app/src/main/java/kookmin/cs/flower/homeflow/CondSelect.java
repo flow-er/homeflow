@@ -12,6 +12,10 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 
 /**
+ * @brief class for showing condselect.xml layout
+ * @details This class includes cond_classify_spin spinner and cond_select_btn button
+ *            You can select condition category by clicking cond_classify_spin.
+ *            If you click cond_select_btn, timecond.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
  * @version 0.0.2
  * @date 2015-04-06
@@ -20,13 +24,21 @@ public class CondSelect extends Fragment implements View.OnClickListener {
 
   Spinner cond_classify_spin;
 
-  static ArrayList<String> list6 = new ArrayList<String>();
+  static ArrayList<String> condSelectList = new ArrayList<String>();
 
   static {
-    list6.add("시간");
-    list6.add("다른 조건");
+    condSelectList.add("시간");
+    condSelectList.add("다른 조건");
   }
 
+  /**
+   * @brief method for showing condselect.xml layout
+   * @details This method sets a clicked-event on cond_select_btn
+   * @param inflater
+   * @param container
+   * @param savedInstanceState
+   * @return rootView
+   */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
@@ -35,8 +47,8 @@ public class CondSelect extends Fragment implements View.OnClickListener {
 
     cond_classify_spin = (Spinner) rootView.findViewById(R.id.cond_classify_spin);
 
-    ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, list6);
-    cond_classify_spin.setAdapter(adapter1);
+    ArrayAdapter<String> condSelectAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, condSelectList);
+    cond_classify_spin.setAdapter(condSelectAdapter);
 
     //cond_classify_spin.setOnItemSelectedListener(this);
 
@@ -46,6 +58,11 @@ public class CondSelect extends Fragment implements View.OnClickListener {
     return rootView;
   }
 
+  /**
+   * @brief method for determining action of cond_select_btn
+   * @detail If you click cond_select_btn, timecond.xml layout will appear.
+   * @param v
+   */
   @Override
   public void onClick(View v) {
     if (v.getId() == R.id.cond_select_btn) {

@@ -1,6 +1,8 @@
 package kookmin.cs.flower.homeflow;
 
 /**
+ * @brief class for listview Customizing
+ * @details This class implies construction of each row in listview.
  * @author Jinsung Choi, bugslife102401@nate.com
  * @version 0.0.2
  * @date 2015-04-08

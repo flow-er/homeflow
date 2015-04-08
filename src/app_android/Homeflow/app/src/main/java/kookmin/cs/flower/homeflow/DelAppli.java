@@ -12,6 +12,9 @@ import android.widget.ListView;
 import kookmin.cs.flower.homeflow.FileManagement.FileManager;
 
 /**
+ * @brief class for showing delappli.xml layout
+ * @details This class includes del_appli_btn button and del_appli_list listview
+ *            If you click del_appli_btn, applireg.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
  * @version 0.0.2
  * @date 2015-04-06
@@ -20,6 +23,14 @@ public class DelAppli extends Fragment implements View.OnClickListener {
 
   ListView listView;
 
+  /**
+   * @brief method for showing delappli.xml layout
+   * @details This method sets a clicked-event on del_appli_btn and shows del_appli_list.
+   * @param inflater
+   * @param container
+   * @param savedInstanceState
+   * @return rootView
+   */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
@@ -31,13 +42,18 @@ public class DelAppli extends Fragment implements View.OnClickListener {
     del_appli_btn.setOnClickListener(this);
 
     listView = (ListView) rootView.findViewById(R.id.del_appli_list);
-    ArrayAdapter adapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1,
+    ArrayAdapter delAppliAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1,
                                                     FileManager.getApplianceList());
-    listView.setAdapter(adapter);
+    listView.setAdapter(delAppliAdapter);
 
     return rootView;
   }
 
+  /**
+   * @brief method for determining action of del_appli_btn
+   * @details If you click del_appli_btn, applireg.xml layout will appear.
+   * @param v
+   */
   @Override
   public void onClick(View v) {
     if (v.getId() == R.id.del_appli_btn) {
