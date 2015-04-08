@@ -3,12 +3,14 @@
 #include <unistd.h>
 
 #include "types/flow.h"
+#include "types/msg.h"
 
 void printNodeInfoForTest(struct node *node);
 void runNode(struct node *node);
 void run(struct flow *flow);
 
-void *input(void *arg);
+struct message msg;
+int id;
 
 int main(int argc, const char *argv[]) {
 	struct flow *flow;
@@ -16,6 +18,13 @@ int main(int argc, const char *argv[]) {
 
 	if (argc < 2) return 0;
 
+	if ((id = msgget(MKEY, 0)) < 0) {
+		printf("can't get message queue.\n");
+		return 0;
+	}
+	
+	msg.pid = getpid();
+	
 	sprintf(path, "./user/flows/%s.xml", argv[1]);
 
 	flow = parseFlow(path);
@@ -62,6 +71,8 @@ void runNode(struct node *node) {
 
 	//receive command done.
 	//notify to user via msg queue & synchronizer.
+	msg.state = FLOW_DONENODE;
+	int j = msgsnd(id, &msg, MSGSIZE, 0);
 
 	if (node->child) runNode(node->child);
 	if (node->next) runNode(node->next);

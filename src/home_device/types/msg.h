@@ -1,3 +1,5 @@
+#include <sys/msg.h>
+
 #define MKEY 1234L
 #define PERM 0666
 
