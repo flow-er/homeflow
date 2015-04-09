@@ -9,11 +9,13 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import kookmin.cs.flower.homeflow.FileManagement.FileManager;
+
 /**
- * @brief class for showing dashtab.xml layout
- * @details This class includes dash_tab_list listview
  * @author Jinsung Choi, bugslife102401@nate.com
  * @version 0.0.2
+ * @brief class for showing dashtab.xml layout
+ * @details This class includes dash_tab_list listview
  * @date 2015-04-08
  */
 public class DashTab extends Fragment {
@@ -23,10 +25,6 @@ public class DashTab extends Fragment {
   /**
    * @brief method for showing dashtab.xml layout
    * @details This method shows dash_tab_list. dash_tab_list is a customized listview.
-   * @param inflater
-   * @param container
-   * @param savedInstanceState
-   * @return
    */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,18 +32,17 @@ public class DashTab extends Fragment {
     // Inflate the layout for this fragment
     View rootView = inflater.inflate(R.layout.dashtab, container, false);
 
-    ArrayList<MyCustomDTO> dashTabList = new ArrayList<MyCustomDTO>();
-    dashTabList.add(new MyCustomDTO(R.drawable.clock, "flow", R.id.enable_btn, R.id.unfold_btn));
-    dashTabList.add(new MyCustomDTO(R.drawable.clock, "flow", R.id.enable_btn, R.id.unfold_btn));
-    dashTabList.add(new MyCustomDTO(R.drawable.clock, "flow", R.id.enable_btn, R.id.unfold_btn));
-    dashTabList.add(new MyCustomDTO(R.drawable.clock, "flow", R.id.enable_btn, R.id.unfold_btn));
-    dashTabList.add(new MyCustomDTO(R.drawable.clock, "flow", R.id.enable_btn, R.id.unfold_btn));
+    ArrayList<MyCustomDTO> list = new ArrayList<>();
 
-    listView = (ListView)rootView.findViewById(R.id.dash_tab_list);
-    MyCustomAdapter dashTabAdapter = new MyCustomAdapter(getActivity(), R.layout.dashlistrow, dashTabList);
+    for (int i = 0; i < FileManager.getFlowList().size(); i++) {
+      list.add(new MyCustomDTO(R.drawable.clock, FileManager.getFlowList().get(i).toString(),
+                               R.id.enable_btn, R.id.unfold_btn));
+    }
+    listView = (ListView) rootView.findViewById(R.id.dash_tab_list);
+    MyCustomAdapter adapter = new MyCustomAdapter(getActivity(), R.layout.dashlistrow, list);
 
-    listView.setAdapter(dashTabAdapter);
-
+    listView.setAdapter(adapter);
+    listView.setClickable(true);
 
     return rootView;
   }

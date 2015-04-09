@@ -7,13 +7,17 @@ import android.os.IBinder;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
-import java.util.logging.Handler;
+
+import kookmin.cs.flower.homeflow.FileManagement.FileManager;
 
 /**
  * @author Jongho Lim, sloth@kookmin.ac.kr
@@ -21,12 +25,17 @@ import java.util.logging.Handler;
  * @date 2015-04-07
  */
 public class SocketService extends Service {
+  public static final String READ_STATE = "read state";
+  public static final String STATE_NAME = "state name";
+  public static final String STATE_DATA = "state data";
+
+  private static String SERVER_IP = "203.246.112.77";
+  private static int SERVER_PORT = 19916;
 
   private Socket socket;
   private BufferedReader socket_in;
   private PrintWriter socket_out;
   private Boolean runService = true;
-  private Handler mhandler;
 
   public IBinder onBind(Intent intent) {
     return null;
@@ -38,53 +47,92 @@ public class SocketService extends Service {
   }
 
   @Override
-  public int onStartCommand(Intent intent, int flags, int startId) {
+  public int onStartCommand(final Intent intent, int flags, int startId) {
     Log.i("mytag", "chatting is running");
 
-    final Thread worker = new Thread() {
+    final Thread working = new Thread(){
+      @Override
       public void run() {
         try {
-          Log.i("mytag", "socket connet before");
-          socket = new Socket("52.68.82.234", 19918);
-          //socket = new Socket("211.212.133.221", 19917);
-          Log.i("mytag", "socket connet after " + socket);
-          socket_out = new PrintWriter(socket.getOutputStream(), true);
-          socket_in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-        try {
-          while (runService) {
-            String line = "";
+          InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
 
-            File
-                file =
-                new File(
-                    Environment.getExternalStorageDirectory().getPath() + "/HomeFlow/workflow");
+          Log.i("mytag", "Connecting : " + intent.getStringExtra("selectItem"));
+          socket = new Socket(serverAddr, SERVER_PORT);
+          Log.i("mytag", "Connecting : " + socket);
 
-            String[] filelist = file.list();
+          File file = null;
+          String fileName = "";
+          try {
+            for (int i = 0; i < FileManager.getFlowList().size(); i++) {
+              Log.i("mytag", FileManager.getFlowList().get(i).toString());
 
-            for (int i = 0; i < filelist.length; i++) {
-              BufferedReader
-                  buf =
-                  new BufferedReader(new FileReader(file.getPath() + "/" + filelist[i]));
-
-              line = "";
-              while ((line = buf.readLine()) != null) {
-                socket_out.write(line);
-                Log.i("mytag", "send : " + line);
+              if (intent.getStringExtra("selectItem") != null && intent.getStringExtra("selectItem")
+                  .equalsIgnoreCase(FileManager.getFlowList().get(i).toString())) {
+                file = new File(Environment.getExternalStorageDirectory().getPath() +
+                                "/HomeFlow/workflow/" + "flow" + FileManager.getFlowList().get(i)
+                    .getFlowId() + ".xml");
+                fileName = FileManager.getFlowList().get(i).getFlowId() + ".xml";
               }
-              socket_out.flush();
             }
 
-            this.sleep(5000);
+            Log.i("mytag", file.getPath());
+            BufferedReader bfr = new BufferedReader(new FileReader(file));
+            socket_out =
+                new PrintWriter(
+                    new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+
+            String line = "";
+            String head = fileName + " ";
+            String outFile = "";
+            while ((line = bfr.readLine()) != null) {
+              outFile += line;
+            }
+            int length = outFile.getBytes().length;
+            head += length + " " + outFile;
+            Log.i("mytag", head);
+
+            //socket_out.println(head);
+            socket_out.println(head);
+            Log.i("mytag", "msg send");
+
+            while (runService) {
+              try {
+                Log.i("mytag", "start read");
+                socket_in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                String msg = socket_in.readLine();
+
+                /*
+                String[] split = msg.split(" ");
+                Intent intent = new Intent(READ_STATE);
+                intent.putExtra(STATE_NAME, split[0]);
+                intent.putExtra(STATE_DATA, split[1]);
+
+                sendBroadcast(intent);
+                */
+
+                Log.i("mytag", "read line : " + msg);
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
+
+              try {
+                this.sleep(5000);
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+            }
+
+          } catch (IOException e) {
+            e.printStackTrace();
           }
-        } catch (Exception e) {
+        } catch (IOException e) {
           e.printStackTrace();
         }
       }
     };
-    worker.start();
+
+    working.start();
+
     return START_STICKY;
   }
 
@@ -100,7 +148,6 @@ public class SocketService extends Service {
         e.printStackTrace();
       }
     }
-
     runService = false;
   }
 }

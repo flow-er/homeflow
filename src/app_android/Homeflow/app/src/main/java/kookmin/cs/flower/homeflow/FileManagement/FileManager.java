@@ -1,7 +1,6 @@
 package kookmin.cs.flower.homeflow.FileManagement;
 
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,7 +14,7 @@ import kookmin.cs.flower.homeflow.data.Workflow;
 
 /**
  * @author Jongho Lim, sloth@kookmin.ac.kr
- * @version 0.0.2
+ * @version 0.0.2 ---
  * @date 2015-04-07
  */
 public class FileManager {
@@ -26,6 +25,14 @@ public class FileManager {
   public final static String FUNCTION = "function";
   public final static String NAME = "name";
   public final static String ID = "id";
+
+  public final static String FLOW = "flow";
+  public final static String TRIGGER = "trigger";
+  public final static String COWORK = "cowork";
+  public final static String LOOP = "loop";
+  public final static String CONDITION = "condition";
+  public final static String ACTION = "id";
+
   private static int i = 0;
 
   private static boolean existFlowDir = false;
@@ -33,23 +40,36 @@ public class FileManager {
 
   private static FileContent fileContent = new FileContent();
 
-  public static ArrayList<String> getFlowList() {
+  public static ArrayList<Workflow> getFlowList() {
     return fileContent.getFlowList();
   }
-  public static ArrayList<String> getApplianceList() { return fileContent.getApplianceList(); }
 
-  public void addWorkflow(ArrayList<String> flowList) {
-    fileContent.addFlow("flow" + i++);
-    XMLwrite(flowList);
+  public static ArrayList<Appliance> getApplianceList() {
+    return fileContent.getApplianceList();
   }
-  public void addApplianceflow(Appliance appliance) { fileContent.addAppliance(appliance.toString()); }
+
+  public void addWorkflow(String[] argu, ArrayList<Workflow.Work> flowList) {
+    XMLwrite(argu, flowList);
+    updateFlow();
+  }
+
+  public void addApplianceflow(Appliance appliance) {
+    fileContent.addAppliance(appliance);
+  }
 
   static {
     updateFlow();
     updateAppliance();
   }
-  public void updateFlowdata() { updateFlow(); }
-  public void updateAppliancedata() { updateAppliance(); }
+
+  public void updateFlowdata() {
+    updateFlow();
+  }
+
+  public void updateAppliancedata() {
+    updateAppliance();
+  }
+
   private static void updateFlow() {
     if (fileContent.getFlowList().size() > 0) {
       fileContent.getFlowList().clear();
@@ -58,7 +78,6 @@ public class FileManager {
     if (!existFlowDir) {
       mkFlowDir("workflow");
       existFlowDir = true;
-      Log.i("mytag", "mkdir");
     }
 
     File
@@ -66,15 +85,17 @@ public class FileManager {
         new File(Environment.getExternalStorageDirectory().getPath() + "/HomeFlow/workflow");
     String[] flowlist = file.list();
 
-    Log.i("mytag", file.getPath());
-
-    if(flowlist == null) {
+    if (flowlist == null) {
       return;
     }
-    Log.i("mytag", "flow list num : " + flowlist.length);
 
     for (int i = 0; i < flowlist.length; i++) {
-      fileContent.addFlow(flowlist[i].substring(0, flowlist[i].length() - 4));
+      try {
+        fileContent.addFlow(
+            new XMLInput().parse(new FileInputStream(file + "/" + flowlist[i]), new Workflow()));
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -93,18 +114,16 @@ public class FileManager {
         new File(Environment.getExternalStorageDirectory().getPath() + "/HomeFlow/appliance/");
     String[] appliancelist = file.list();
 
-    Log.i("mytag", file.getPath());
-    if(appliancelist == null) {
-      return ;
+    if (appliancelist == null) {
+      return;
     }
 
-    Log.i("mytag", "appliance list num : " + appliancelist.length);
     for (int i = 0; i < appliancelist.length; i++) {
       try {
         Appliance app = new Appliance();
         FileInputStream is = new FileInputStream(file.getPath() + "/" + appliancelist[i]);
 
-        fileContent.addAppliance(new XMLInput().parse(is, app).toString());
+        fileContent.addAppliance(new XMLInput().parse(is, app));
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -137,26 +156,32 @@ public class FileManager {
     }
   }
 
-  private void XMLwrite(ArrayList<String> flow) {
+  private String XMLwrite(String[] argu, ArrayList<Workflow.Work> flow) {
 
     Workflow workflow = new Workflow();
 
+    workflow.setName(argu[0]);
+    workflow.setDescription(argu[1]);
+    workflow.setIsAuto(argu[2]);
+
     for (int i = 0; i < flow.size(); i++) {
-      String workname = flow.get(i).toString();
-      workflow.addWork(workname, fileContent.getApplianceId(workname));
+      workflow.addWork(flow.get(i).getType(), flow.get(i).getId());
+      workflow.getWork(i)
+          .setArgu(flow.get(i).getCommand(), flow.get(i).getCond(), flow.get(i).getValue());
     }
 
     File
         file =
         new File(Environment.getExternalStorageDirectory().getPath() + "/HomeFlow/workflow/flow");
+
     int fileId = 1;
 
     while (new File(file.getPath() + fileId + ".xml").exists()) {
       fileId++;
     }
 
+    workflow.setFlowId(fileId);
     file = new File(file.getPath() + fileId + ".xml");
-    workflow.setName("flow" + fileId);
 
     try {
       FileOutputStream fos = new FileOutputStream(file);
@@ -164,6 +189,7 @@ public class FileManager {
     } catch (IOException e) {
       e.printStackTrace();
     }
-  }
+    return "flow" + fileId;
 
+  }
 }

@@ -17,12 +17,11 @@ import kookmin.cs.flower.homeflow.data.Workflow;
 
 /**
  * @author Jongho Lim, sloth@kookmin.ac.kr
- * @version 0.0.2
+ * @version 0.0.2 ---
  * @brief an class read XML file and parsing it
  * @details XML 파일을 읽어서 필요한 부분을 파싱하는 클래스이다. Workflow xml 파일을 파싱하는 함수와 Appliance xml 파일을 파싱하는 함수가
  * 오버로딩 되어있다.
  * @date 2015-04-07
- *
  * @todo develop ...
  */
 public class XMLInput {
@@ -48,38 +47,34 @@ public class XMLInput {
       parser.setInput(is, null);
 
       int eventType = parser.getEventType();
-      String workName = "defalt";
-      int workId = 0;
 
       while (eventType != XmlPullParser.END_DOCUMENT) {
         String tagName = parser.getName();
         switch (eventType) {
           // 태그의 시작
           case XmlPullParser.START_TAG:
-            if (tagName.equalsIgnoreCase("workflow")) {
+            if (tagName.equalsIgnoreCase(FileManager.FLOW)) {
               // create a new instance of employee
-              flow = new Workflow();
+              flow.setFlowId(Integer.parseInt(parser.getAttributeValue("", "id")));
+              flow.setName(parser.getAttributeValue("", "name"));
+              flow.setDescription(parser.getAttributeValue("", "description"));
+              flow.setIsAuto(parser.getAttributeValue("", "isAuto"));
+            } else if (tagName.equalsIgnoreCase(FileManager.TRIGGER)) {
+              flow.addWork("trigger", parser.getAttributeValue("", "appid"));
+              flow.getWork(flow.getFlow().size()).setArgu(parser.getAttributeValue("", "command"),
+                                                          parser.getAttributeValue("", "cond"),
+                                                          parser.getAttributeValue("", "value"));
+            } else if (tagName.equalsIgnoreCase(FileManager.CONDITION)) {
+              flow.addWork("condition", parser.getAttributeValue("", "appid"));
+              flow.getWork(flow.getFlow().size()).setArgu(parser.getAttributeValue("", "command"),
+                                                          parser.getAttributeValue("", "cond"),
+                                                          parser.getAttributeValue("", "value"));
+            } else if (tagName.equalsIgnoreCase(FileManager.LOOP)) {
+              flow.addWork("loop", parser.getAttributeValue("", "appid"));
+              flow.getWork(flow.getFlow().size()).setArgu(parser.getAttributeValue("", "command"),
+                                                          parser.getAttributeValue("", "cond"),
+                                                          parser.getAttributeValue("", "value"));
             }
-            break;
-
-          // 텍스트 일 때
-          case XmlPullParser.TEXT:
-            text = parser.getText();
-            break;
-
-          // 태그의 끝
-          case XmlPullParser.END_TAG:
-            if (tagName.equalsIgnoreCase(FileManager.FLOW_NAME)) {
-              flow.setName(text);
-            } else if (tagName.equalsIgnoreCase(FileManager.WORK)) {
-              flow.addWork(workName, workId);
-            } else if (tagName.equalsIgnoreCase(FileManager.NAME)) {
-              workName = text;
-            } else if (tagName.equalsIgnoreCase(FileManager.ID)) {
-              workId = Integer.parseInt(text);
-            }
-
-            break;
 
           default:
             break;

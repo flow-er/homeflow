@@ -2,16 +2,16 @@ package kookmin.cs.flower.homeflow.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 /**
  * @author Jongho Lim, sloth@kookmin.ac.kr
  * @version 0.0.2
  * @date 2015-04-07
-
  */
 public class FileContent {
 
-  private static ArrayList<String> workflow = new ArrayList<String>();
-  private static ArrayList<String> appliance = new ArrayList<String>();
+  private static ArrayList<Workflow> workflowList = new ArrayList<Workflow>();
+  private static ArrayList<Appliance> applianceList = new ArrayList<Appliance>();
   private static HashMap<String, Integer> applianceId = new HashMap<String, Integer>();
 
   static {
@@ -26,18 +26,23 @@ public class FileContent {
     applianceId.put("보일러", 9);
   }
 
-  public void addFlow(String name) {
-    workflow.add(name);
+  public void addFlow(Workflow workflow) {
+    workflowList.add(workflow);
   }
 
-  public void addAppliance(String name) {
-    appliance.add(name);
+  public void addAppliance(Appliance appliance) {
+    applianceList.add(appliance);
   }
 
-  public ArrayList<String> getFlowList() { return workflow; }
-  public ArrayList<String> getApplianceList() {
-    return appliance;
+  public ArrayList<Workflow> getFlowList() {
+    return workflowList;
   }
-  public int getApplianceId(String key) { return applianceId.get(key); }
 
+  public ArrayList<Appliance> getApplianceList() {
+    return applianceList;
+  }
+
+  public int getApplianceId(String key) {
+    return applianceId.get(key);
+  }
 }

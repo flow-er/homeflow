@@ -25,7 +25,6 @@ public class Appliance {
 
   public void addFunction(String funcName, int funcId) {
     listFunction.add(Function.newInstance(funcName, funcId));
-
   }
 
   public String toString() {

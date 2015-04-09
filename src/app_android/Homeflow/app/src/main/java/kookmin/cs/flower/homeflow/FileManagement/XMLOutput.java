@@ -22,11 +22,9 @@ import kookmin.cs.flower.homeflow.data.Workflow;
  * @brief an class is write xml file
  * @details workflow class 나 Appliance 클래스와 저장할 경로를 받아서 xml 파일로 변환하여 저장하는 class 이다.
  * @date 2015-04-07
- *
  * @todo develop ...
  */
 public class XMLOutput {
-
 
   private XmlSerializer serializer;
   private StringWriter writer;
@@ -42,24 +40,24 @@ public class XMLOutput {
       serializer.setOutput(writer);
       serializer.startDocument("UTF-8", true);
 
-      serializer.startTag("", "workflow");
-
-      serializer.startTag("", FileManager.FLOW_NAME);
-      serializer.text(workflow.toString());
-      serializer.endTag("", FileManager.FLOW_NAME);
+      // start flow tag
+      serializer.startTag("", FileManager.FLOW);
+      serializer.attribute("", "id", "" + workflow.getFlowId());
+      serializer.attribute("", "name", workflow.toString());
+      serializer.attribute("", "description", workflow.getDescription());
+      serializer.attribute("", "isAuto", workflow.getIsAuto());
 
       for (int i = 0; i < workflow.getFlow().size(); i++) {
-        serializer.startTag("", FileManager.WORK);
-        serializer.startTag("", FileManager.NAME);
-        serializer.text(workflow.getWorkName(i));
-        serializer.endTag("", FileManager.NAME);
-        serializer.startTag("", FileManager.ID);
-        serializer.text(String.valueOf(workflow.getWorkId(i)));
-        serializer.endTag("", FileManager.ID);
-        serializer.endTag("", FileManager.WORK);
+
+        serializer.startTag("", workflow.getWork(i).getType());
+        serializer.attribute("", "id", workflow.getWork(i).getId());
+        serializer.attribute("", "command", workflow.getWork(i).getCommand());
+        serializer.attribute("", "cond", workflow.getWork(i).getCond());
+        serializer.attribute("", "value", workflow.getWork(i).getValue());
+        serializer.endTag("", workflow.getWork(i).getType());
       }
 
-      serializer.endTag("", "workflow");
+      serializer.endTag("", FileManager.FLOW);
       serializer.endDocument();
       serializer.flush();
 

@@ -26,6 +26,12 @@
                  </intent-filter>
         </service>
 
+        <receiver android:name=".Service.ReadstateReceiver">
+            <intent-filter>
+                <action android:name = "kookmin.cs.flower.homeflow.Service.SocketService.READ_STATE"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

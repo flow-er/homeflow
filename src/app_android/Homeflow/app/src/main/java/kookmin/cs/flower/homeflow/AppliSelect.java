@@ -14,25 +14,25 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 
 import kookmin.cs.flower.homeflow.FileManagement.FileManager;
+import kookmin.cs.flower.homeflow.data.Appliance;
 
 /**
- * @brief class for showing appliselect.xml layout
- * @details This class includes sel_appli_name_spin spinner, set_appli_func_spin spinner, alarm_config_spin spinner,
- *            alarm_time_spin spinner, and appli_select_btn button.
- *            You can select appliance by clicking sel_appli_name_spin.
- *            You can select appliance function by clicking sel_appli_func_spin.
- *            You can determine alarm configuration by clicking alarm_config_spin.
- *            You can determine alarm time by clicking alarm_time_spin.
- *            If you click appli_select_btn, workentry.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
  * @version 0.0.2
+ * @brief class for showing appliselect.xml layout
+ * @details This class includes sel_appli_name_spin spinner, set_appli_func_spin spinner,
+ * alarm_config_spin spinner, alarm_time_spin spinner, and appli_select_btn button. You can select
+ * appliance by clicking sel_appli_name_spin. You can select appliance function by clicking
+ * sel_appli_func_spin. You can determine alarm configuration by clicking alarm_config_spin. You can
+ * determine alarm time by clicking alarm_time_spin. If you click appli_select_btn, workentry.xml
+ * layout will appear.
  * @date 2015-04-06
  */
 public class AppliSelect extends Fragment implements View.OnClickListener,
                                                      AdapterView.OnItemSelectedListener {
 
   Spinner sel_appli_name_spin, sel_appli_func_spin, alarm_config_spin, alarm_time_spin;
-  String argu="";
+  String argu = "";
   static ArrayList<String> selAppliFuncList = new ArrayList<String>();
   static ArrayList<String> alarmConfigList = new ArrayList<String>();
   static ArrayList<String> alarmTimeList = new ArrayList<String>();
@@ -48,12 +48,10 @@ public class AppliSelect extends Fragment implements View.OnClickListener,
   }
 
   /**
-   * @brief method for showing appliselect.xml layout
-   * @details This method sets a selected-event on sel_appli_name_spin, and a clicked_event on appli_select_btn.
-   * @param inflater
-   * @param container
-   * @param savedInstanceState
    * @return rootView
+   * @brief method for showing appliselect.xml layout
+   * @details This method sets a selected-event on sel_appli_name_spin, and a clicked_event on
+   * appli_select_btn.
    */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,14 +64,25 @@ public class AppliSelect extends Fragment implements View.OnClickListener,
     alarm_config_spin = (Spinner) rootView.findViewById(R.id.alarm_config_spin);
     alarm_time_spin = (Spinner) rootView.findViewById(R.id.alarm_time_spin);
 
-    ArrayAdapter<String> selAppliNameAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1,
-                                                             FileManager.getApplianceList());
+    ArrayAdapter<Appliance>
+        selAppliNameAdapter =
+        new ArrayAdapter<>(rootView.getContext(), android.R.layout.simple_list_item_1,
+                           FileManager.getApplianceList());
     sel_appli_name_spin.setAdapter(selAppliNameAdapter);
-    ArrayAdapter<String> selAppliFuncAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, selAppliFuncList);
+    ArrayAdapter<String>
+        selAppliFuncAdapter =
+        new ArrayAdapter<>(rootView.getContext(), android.R.layout.simple_list_item_1,
+                           selAppliFuncList);
     sel_appli_func_spin.setAdapter(selAppliFuncAdapter);
-    ArrayAdapter<String> alarmConfigAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, alarmConfigList);
+    ArrayAdapter<String>
+        alarmConfigAdapter =
+        new ArrayAdapter<>(rootView.getContext(), android.R.layout.simple_list_item_1,
+                           alarmConfigList);
     alarm_config_spin.setAdapter(alarmConfigAdapter);
-    ArrayAdapter<String> alarmTimeAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, alarmTimeList);
+    ArrayAdapter<String>
+        alarmTimeAdapter =
+        new ArrayAdapter<>(rootView.getContext(), android.R.layout.simple_list_item_1,
+                           alarmTimeList);
     alarm_time_spin.setAdapter(alarmTimeAdapter);
 
     sel_appli_name_spin.setOnItemSelectedListener(this);
@@ -87,7 +96,6 @@ public class AppliSelect extends Fragment implements View.OnClickListener,
   /**
    * @brief method for determining action of appli_select_btn
    * @details If you click appli_select_btn, workentry.xml layout will appear.
-   * @param v
    */
   @Override
   public void onClick(View v) {
@@ -97,6 +105,7 @@ public class AppliSelect extends Fragment implements View.OnClickListener,
       Log.i("mytag", argu);
 
       bundle.putString("result", argu);
+      bundle.putString("type", "action");
       workEntry.setArguments(bundle);
 
       getFragmentManager().beginTransaction().replace(R.id.realtabcontent, workEntry).commit();
@@ -105,8 +114,8 @@ public class AppliSelect extends Fragment implements View.OnClickListener,
 
   @Override
   public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-    argu = FileManager.getApplianceList().get(adapterView.getSelectedItemPosition());
-    Log.i("mytag", "position : " + adapterView.getSelectedItemPosition() + " " +argu);
+    argu = FileManager.getApplianceList().get(adapterView.getSelectedItemPosition()).toString();
+    Log.i("mytag", "position : " + adapterView.getSelectedItemPosition() + " " + argu);
 
   }
 

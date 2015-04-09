@@ -3,6 +3,7 @@ package kookmin.cs.flower.homeflow.Management;
 import java.util.ArrayList;
 
 import kookmin.cs.flower.homeflow.FileManagement.FileManager;
+import kookmin.cs.flower.homeflow.data.Workflow;
 
 /**
  * @author Jongho Lim, sloth@kookmin.ac.kr
@@ -13,8 +14,11 @@ public class WorkflowManager {
 
   private FileManager fileManager = new FileManager();
 
-  public ArrayList<String> getList() { return fileManager.getFlowList(); }
-  public void addFlow(ArrayList<String> flowList) {
-    fileManager.addWorkflow(flowList);
+  public ArrayList<Workflow> getList() {
+    return fileManager.getFlowList();
+  }
+
+  public void addFlow(String[] argu, ArrayList<Workflow.Work> flowList) {
+    fileManager.addWorkflow(argu, flowList);
   }
 }

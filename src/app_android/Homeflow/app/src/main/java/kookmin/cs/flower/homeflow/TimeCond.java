@@ -8,21 +8,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 /**
- * @brief class for showing timecond
- * @details This class includes time_cond_btn. If you click time_cond_btn, workentry.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
  * @version 0.0.2
+ * @brief class for showing timecond
+ * @details This class includes time_cond_btn. If you click time_cond_btn, workentry.xml layout will
+ * appear.
  * @date 2015-04-06
  */
 public class TimeCond extends Fragment implements View.OnClickListener {
 
   /**
+   * @return rootView
    * @brief method for showing timecond.xml layout
    * @details This method sets a clicked-event on time_cond_btn
-   * @param inflater
-   * @param container
-   * @param savedInstanceState
-   * @return rootView
    */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,7 +37,6 @@ public class TimeCond extends Fragment implements View.OnClickListener {
   /**
    * @brief method for determining action of time_cond_btn
    * @details If you click time_cond_btn, workentry.xml layout will appear.
-   * @param v
    */
   @Override
   public void onClick(View v) {

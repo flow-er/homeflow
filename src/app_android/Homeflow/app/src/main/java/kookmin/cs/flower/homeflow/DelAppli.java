@@ -10,13 +10,14 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import kookmin.cs.flower.homeflow.FileManagement.FileManager;
+import kookmin.cs.flower.homeflow.data.Appliance;
 
 /**
- * @brief class for showing delappli.xml layout
- * @details This class includes del_appli_btn button and del_appli_list listview
- *            If you click del_appli_btn, applireg.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
  * @version 0.0.2
+ * @brief class for showing delappli.xml layout
+ * @details This class includes del_appli_btn button and del_appli_list listview If you click
+ * del_appli_btn, applireg.xml layout will appear.
  * @date 2015-04-06
  */
 public class DelAppli extends Fragment implements View.OnClickListener {
@@ -24,12 +25,9 @@ public class DelAppli extends Fragment implements View.OnClickListener {
   ListView listView;
 
   /**
+   * @return rootView
    * @brief method for showing delappli.xml layout
    * @details This method sets a clicked-event on del_appli_btn and shows del_appli_list.
-   * @param inflater
-   * @param container
-   * @param savedInstanceState
-   * @return rootView
    */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,8 +40,10 @@ public class DelAppli extends Fragment implements View.OnClickListener {
     del_appli_btn.setOnClickListener(this);
 
     listView = (ListView) rootView.findViewById(R.id.del_appli_list);
-    ArrayAdapter delAppliAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1,
-                                                    FileManager.getApplianceList());
+    ArrayAdapter<Appliance>
+        delAppliAdapter =
+        new ArrayAdapter<>(rootView.getContext(), android.R.layout.simple_list_item_1,
+                           FileManager.getApplianceList());
     listView.setAdapter(delAppliAdapter);
 
     return rootView;
@@ -52,7 +52,6 @@ public class DelAppli extends Fragment implements View.OnClickListener {
   /**
    * @brief method for determining action of del_appli_btn
    * @details If you click del_appli_btn, applireg.xml layout will appear.
-   * @param v
    */
   @Override
   public void onClick(View v) {

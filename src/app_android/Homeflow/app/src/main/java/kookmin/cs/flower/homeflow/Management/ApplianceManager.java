@@ -14,6 +14,11 @@ public class ApplianceManager {
 
   private FileManager fileManager = new FileManager();
 
-  public ArrayList<String> getList() { return fileManager.getApplianceList(); }
-  public void addAppliance(Appliance appliance) { fileManager.addApplianceflow(appliance); }
+  public ArrayList<Appliance> getList() {
+    return fileManager.getApplianceList();
+  }
+
+  public void addAppliance(Appliance appliance) {
+    fileManager.addApplianceflow(appliance);
+  }
 }
