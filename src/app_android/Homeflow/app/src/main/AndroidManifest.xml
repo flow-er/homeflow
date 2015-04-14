@@ -20,6 +20,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+                android:name=".Tabs"
+                android:label="HomeFlow"/>
+
         <service android:name=".Service.SocketService">
                  <intent-filter>
                      <action android:name="kookmin.cs.flower.homeflow.Service.SocketService"/>
