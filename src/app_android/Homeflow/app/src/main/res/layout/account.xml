@@ -1,0 +1,141 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:text="    Home Flow                         "
+                    android:textStyle="bold"
+                    android:textColor="#FF2C486D"
+                    android:background="#FFCA93E8"/>
+
+            <Button
+                    android:id="@+id/sign_up_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:gravity="right|center_vertical"
+                    android:text="계정 만들기"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#FFFFFFFF"
+                    android:background="#FFCA93E8"/>
+
+            <TextView
+                    android:id="@+id/account_bar_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="     |     "
+                    android:textColor="#FFFFFFFF"
+                    android:background="#FFCA93E8"/>
+
+            <Button
+                    android:id="@+id/log_in_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:gravity="left|center_vertical"
+                    android:text="로그인"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#FFFFFFFF"
+                    android:background="#FFCA93E8"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FF2A3F13">
+
+            <TextView
+                    android:id="@+id/make_acc_txt"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:gravity="center"
+                    android:text="계정 만들기"
+                    android:textColor="#FFCA93E8"
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+            <EditText
+                    android:id="@+id/login_id_edit"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:hint="ID를 입력하세요"
+                    android:textColor="#FFFFFFFF"
+                    android:textColorHint="#FFFFFFFF"
+                    android:background="@null"
+                    android:textCursorDrawable="@null"
+                    android:inputType="text"/>
+
+            <ImageView
+                    android:id="@+id/login_id_edit_uline"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/login_id_edit"
+                    android:background="@drawable/edit_underline"/>
+
+            <EditText
+                    android:id="@+id/login_pw_edit"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/login_id_edit"
+                    android:layout_marginTop="10dp"
+                    android:hint="PW를 입력하세요"
+                    android:textColor="#FFFFFFFF"
+                    android:textColorHint="#FFFFFFFF"
+                    android:background="@null"
+                    android:textCursorDrawable="@null"
+                    android:inputType="textPassword"/>
+
+            <ImageView
+                    android:id="@+id/login_pw_edit_uline"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/login_pw_edit"
+                    android:background="@drawable/edit_underline"/>
+
+            <EditText
+                    android:id="@+id/login_pw_check_edit"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/login_pw_edit_uline"
+                    android:layout_marginTop="10dp"
+                    android:hint="PW를 확인하세요"
+                    android:textColor="#FFFFFFFF"
+                    android:textColorHint="#FFFFFFFF"
+                    android:background="@null"
+                    android:textCursorDrawable="@null"
+                    android:inputType="textPassword"/>
+
+            <ImageView
+                    android:id="@+id/login_pw_check_edit_uline"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/login_pw_check_edit"
+                    android:background="@drawable/edit_underline"/>
+
+            <Button
+                    android:id="@+id/signup_signup_btn"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/login_pw_edit_uline"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="등록"
+                    android:textColor="#FFFFFFFF"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:background="#FFCA93E8"/>
+
+        </LinearLayout>
+</LinearLayout>

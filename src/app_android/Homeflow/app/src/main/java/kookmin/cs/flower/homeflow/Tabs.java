@@ -1,19 +1,23 @@
 package kookmin.cs.flower.homeflow;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 
 /**
  * @brief class for showing tabs.xml layout
  * @details This class includes tabhost fragmenttabhost which contains three tabs.
+ * It also includes login_btn button. If you click login_btn, Login.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
- * @version 0.0.4
- * @date 2015-04-14
+ * @version 0.0.6
+ * @date 2015-04-19
  */
-public class Tabs extends FragmentActivity implements TabHost.OnTabChangeListener {
+public class Tabs extends FragmentActivity implements TabHost.OnTabChangeListener, View.OnClickListener {
 
   /**
    * @brief method for showing tabs.xml layout
@@ -45,6 +49,22 @@ public class Tabs extends FragmentActivity implements TabHost.OnTabChangeListene
     // show First Tab Content
     tabHost.setCurrentTab(0);
     tabHost.setOnTabChangedListener(this);
+
+    Button login_btn = (Button)findViewById(R.id.login_btn);
+    login_btn.setOnClickListener(this);
+  }
+
+  /**
+   * @brief method for determining action of login_btn
+   * @details If you click login_btn, login.xml layout will appear.
+   * @param v
+   */
+  @Override
+  public void onClick(View v) {
+    if (v.getId() == R.id.login_btn) {
+      Intent intent = new Intent(this, Login.class);
+      startActivity(intent);
+    }
   }
 
   /**
