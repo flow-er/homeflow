@@ -1,9 +1,10 @@
 package kookmin.cs.flower.homeflow;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 /**
@@ -14,20 +15,17 @@ import android.widget.Button;
  * @version 0.0.0
  * @date 2015-04-19
  */
-public class SignUpSucc extends FragmentActivity implements View.OnClickListener {
-
-  /**
-   * @brief method for showing signupsucc.xml layout
-   * @details This method sets a clicked_event on log_in_btn.
-   * @param savedInstanceState
-   */
+public class SignUpSucc extends Fragment implements View.OnClickListener {
   @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.signupsucc);
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
 
-    Button log_in_btn = (Button)findViewById(R.id.log_in_btn);
+    View rootView = inflater.inflate(R.layout.signupsucc, container, false);
+
+    Button log_in_btn = (Button)rootView.findViewById(R.id.log_in_btn);
     log_in_btn.setOnClickListener(this);
+
+    return rootView;
   }
 
   /**
@@ -35,11 +33,12 @@ public class SignUpSucc extends FragmentActivity implements View.OnClickListener
    * @details If you click log_in_btn, login.xml layout will appear.
    * @param v
    */
+
   @Override
   public void onClick(View v) {
-    if(v.getId() == R.id.log_in_btn) {
+    if(v.getId() == R.id.log_in_btn) {/**
       Intent intent = intent = new Intent(this, Login.class);
-      startActivity(intent);
+      startActivity(intent);**/
     }
   }
 }

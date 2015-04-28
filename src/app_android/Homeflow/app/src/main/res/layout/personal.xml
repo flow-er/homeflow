@@ -1,0 +1,57 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:text="    Home Flow                         "
+                android:textStyle="bold"
+                android:textColor="#FF2C486D"
+                android:background="#FFCA93E8"/>
+
+        <Button
+                android:id="@+id/sign_up_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="right|center_vertical"
+                android:text="계정 만들기"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#FFFFFFFF"
+                android:background="#FFCA93E8"/>
+
+        <TextView
+                android:id="@+id/account_bar_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text="     |     "
+                android:textColor="#FFFFFFFF"
+                android:background="#FFCA93E8"/>
+
+        <Button
+                android:id="@+id/log_in_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="left|center_vertical"
+                android:text="로그인"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#FFFFFFFF"
+                android:background="#FFCA93E8"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+            android:id="@+id/personal_frag"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+</LinearLayout>

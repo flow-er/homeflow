@@ -36,6 +36,10 @@
                 android:name=".SignUpSucc"
                 android:label="HomeFlow"/>
 
+        <activity
+                android:name=".Personal"
+                android:label="HomeFlow"/>
+
         <service android:name=".Service.SocketService">
                  <intent-filter>
                      <action android:name="kookmin.cs.flower.homeflow.Service.SocketService"/>

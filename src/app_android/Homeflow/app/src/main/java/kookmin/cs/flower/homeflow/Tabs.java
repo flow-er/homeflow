@@ -62,7 +62,7 @@ public class Tabs extends FragmentActivity implements TabHost.OnTabChangeListene
   @Override
   public void onClick(View v) {
     if (v.getId() == R.id.login_btn) {
-      Intent intent = new Intent(this, Login.class);
+      Intent intent = new Intent(this, Personal.class);
       startActivity(intent);
     }
   }

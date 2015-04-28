@@ -1,9 +1,10 @@
 package kookmin.cs.flower.homeflow;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 /**
@@ -15,23 +16,17 @@ import android.widget.Button;
  * @version 0.0.0
  * @date 2015-04-19
  */
-public class Account extends FragmentActivity implements View.OnClickListener {
-
-  /**
-   * @brief method for showing account.xml layout
-   * @details This method sets clicked_events on log_in_btn and signup_signup_btn.
-   * @param savedInstanceState
-   */
+public class Account extends Fragment implements View.OnClickListener {
   @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.account);
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
 
-    Button log_in_btn = (Button)findViewById(R.id.log_in_btn);
-    log_in_btn.setOnClickListener(this);
+    View rootView = inflater.inflate(R.layout.account, container, false);
 
-    Button signup_signup_btn = (Button)findViewById(R.id.signup_signup_btn);
-    signup_signup_btn.setOnClickListener(this);
+    Button signup_btn = (Button)rootView.findViewById(R.id.signup_btn);
+    signup_btn.setOnClickListener(this);
+
+    return rootView;
   }
 
   /**
@@ -42,16 +37,8 @@ public class Account extends FragmentActivity implements View.OnClickListener {
    */
   @Override
   public void onClick(View v) {
-    Intent intent;
-    switch(v.getId()) {
-      case R.id.log_in_btn:
-        intent = new Intent(this, Login.class);
-        startActivity(intent);
-        break;
-      case R.id.signup_signup_btn:
-        intent = new Intent(this, SignUpSucc.class);
-        startActivity(intent);
-        break;
+    if(v.getId() == R.id.signup_btn) {
+
     }
   }
 }
