@@ -1,7 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/hometabscroll"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+            android:id="@+id/hometabscroll"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
 
+    <LinearLayout
+            android:id="@+id/hometablinear"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+        <ImageView
+                android:id="@+id/hometabimage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/hometabimg"/>
+        <LinearLayout
+                android:id="@+id/LinearLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+            <TabHost
+                    android:id="@+id/tabhost"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <TabWidget
+                        android:id="@android:id/tabs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                <FrameLayout
+                        android:id="@android:id/tabcontent"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@android:id/tabs"
+                        android:paddingTop="50dp">
+                    <ImageView
+                            android:id="@+id/tab1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/clock"/>
+                    <TextView
+                            android:id="@+id/tab2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="dd\ndd\ndd\n"/>
+                </FrameLayout>
+            </TabHost>
+        </LinearLayout>
+
+    </LinearLayout>
 </ScrollView>

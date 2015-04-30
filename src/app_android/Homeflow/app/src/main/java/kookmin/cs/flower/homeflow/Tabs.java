@@ -1,6 +1,7 @@
 package kookmin.cs.flower.homeflow;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
@@ -8,16 +9,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
 
 /**
  * @brief class for showing tabs.xml layout
  * @details This class includes tabhost fragmenttabhost which contains three tabs.
  * It also includes login_btn button. If you click login_btn, Login.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
- * @version 0.0.6
- * @date 2015-04-19
+ * @version 0.0.8
+ * @date 2015-05-01
  */
 public class Tabs extends FragmentActivity implements TabHost.OnTabChangeListener, View.OnClickListener {
+
+  FragmentTabHost tabHost;
 
   /**
    * @brief method for showing tabs.xml layout
@@ -29,7 +33,7 @@ public class Tabs extends FragmentActivity implements TabHost.OnTabChangeListene
     super.onCreate(savedInstanceState);
     setContentView(R.layout.tabs);
 
-    FragmentTabHost tabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
+    tabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
     tabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 
     TabSpec tabSpec1 = tabHost.newTabSpec("Tab1");
@@ -49,6 +53,17 @@ public class Tabs extends FragmentActivity implements TabHost.OnTabChangeListene
     // show First Tab Content
     tabHost.setCurrentTab(0);
     tabHost.setOnTabChangedListener(this);
+
+    for(int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
+      tabHost.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#FFFFFFFF"));
+      TextView tv = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+      tv.setTextColor(Color.parseColor("#FF2A3F13"));
+    }
+
+    tabHost.getTabWidget().setCurrentTab(0);
+    tabHost.getTabWidget().getChildAt(0).setBackgroundColor(Color.parseColor("#FF2A3F13"));
+    TextView tv = (TextView) tabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title);
+    tv.setTextColor(Color.parseColor("#FFFFFFFF"));
 
     Button login_btn = (Button)findViewById(R.id.login_btn);
     login_btn.setOnClickListener(this);
@@ -90,5 +105,15 @@ public class Tabs extends FragmentActivity implements TabHost.OnTabChangeListene
         getSupportFragmentManager().beginTransaction().replace(R.id.realtabcontent, dashTab).commit();
         break;
     }
+
+    for(int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
+      tabHost.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#FFFFFFFF"));
+      TextView tv = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+      tv.setTextColor(Color.parseColor("#FF2A3F13"));
+    }
+
+    tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundColor(Color.parseColor("#FF2A3F13"));
+    TextView tv = (TextView) tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).findViewById(android.R.id.title);
+    tv.setTextColor(Color.parseColor("#FFFFFFFF"));
   }
 }

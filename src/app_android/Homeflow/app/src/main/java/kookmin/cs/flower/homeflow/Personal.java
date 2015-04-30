@@ -7,20 +7,20 @@ import android.widget.Button;
 
 /**
  * @brief class for showing login.xml layout
- * @details This class includes sign_up_btn and login_login_btn buttons.
+ * @details This class includes sign_up_btn and log_in_btn buttons.
  * If you click sign_up_btn, account.xml layout will appear.
- * If you click login_login_btn, tabs.xml layout will appear.
+ * If you click log_in_btn, login.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
- * @version 0.0.0
- * @date 2015-04-19
+ * @version 0.0.2
+ * @date 2015-05-01
  */
 public class Personal extends FragmentActivity implements View.OnClickListener {
 
   /**
-   * @brief method for showing login.xml layout
-   * @details This method sets clicked_events on sign_up_btn and login_login_btn.
+   * @brief method for showing personal.xml layout
+   * @details This method sets clicked-events on sign_up_btn and log_in_btn.
+   * @param savedInstanceState
    */
-
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -36,6 +36,12 @@ public class Personal extends FragmentActivity implements View.OnClickListener {
     log_in_btn.setOnClickListener(this);
   }
 
+  /**
+   * @brief method for determining actions of sign_up_btn and log_in_btn
+   * @details If you click sign_up_btn, account.xml layout will appear.
+   * If you click log_in_btn, login.xml layout will appear.
+   * @param v
+   */
   @Override
   public void onClick(View v) {
     switch(v.getId()) {

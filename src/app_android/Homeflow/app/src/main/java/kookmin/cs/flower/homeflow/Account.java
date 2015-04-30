@@ -9,14 +9,21 @@ import android.widget.Button;
 
 /**
  * @brief class for showing account.xml layout
- * @details This class includes log_in_btn and signup_signup_btn buttons.
- * If you click log_in_btn, login.xml layout will appear.
- * If you click signup_signup_btn, signupsucc.xml layout will appear.
+ * @details This class includes signup_btn.
  * @author Jinsung Choi, bugslife102401@nate.com
- * @version 0.0.0
- * @date 2015-04-19
+ * @version 0.0.2
+ * @date 2015-05-01
  */
 public class Account extends Fragment implements View.OnClickListener {
+
+  /**
+   * @brief method for showing account.xml layout
+   * @details This method sets clicked-events on signup_btn.
+   * @param inflater
+   * @param container
+   * @param savedInstanceState
+   * @return rootView
+   */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
@@ -30,9 +37,8 @@ public class Account extends Fragment implements View.OnClickListener {
   }
 
   /**
-   * @brief method for determining actions of log_in_btn and signup_signup_btn
-   * @details If you click log_in_btn, login.xml layout will appear.
-   * If you click signup_signup_btn, signupsucc.xml layout will appear.
+   * @brief method for determining action of signup_btn
+   * @details
    * @param v
    */
   @Override
