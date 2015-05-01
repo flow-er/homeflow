@@ -32,17 +32,21 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_below="@android:id/tabs"
-                        android:paddingTop="50dp">
-                    <ImageView
+                        android:paddingTop="70dp">
+                    <TextView
                             android:id="@+id/tab1"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/clock"/>
+                            android:gravity="center"
+                            android:background="#FFFFFFFF"
+                            android:text="\n\n어플의\n\n소개가\n\n들어가는\n\n부분입니다.\n\n\n"/>
                     <TextView
                             android:id="@+id/tab2"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="dd\ndd\ndd\n"/>
+                            android:gravity="center"
+                            android:background="#FFFFFFFF"
+                            android:text="\n\n어플의\n\n사용법이\n\n들어가는\n\n부분입니다.\n\n\n"/>
                 </FrameLayout>
             </TabHost>
         </LinearLayout>

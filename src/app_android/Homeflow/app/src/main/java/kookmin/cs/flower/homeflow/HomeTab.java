@@ -1,5 +1,6 @@
 package kookmin.cs.flower.homeflow;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TabHost;
-import android.widget.TextView;
 
 /**
  * @brief class for showing hometab.xml layout
@@ -37,26 +37,27 @@ public class HomeTab extends Fragment implements TabHost.OnTabChangeListener {
     tabHost = (TabHost)V.findViewById(R.id.tabhost);
     tabHost.setup();
 
+    tabHost.getTabWidget().setDividerDrawable(null);
+
+    Context context01 = V.getContext();
+    ImageView tabwidget01 = new ImageView(context01);
+    tabwidget01.setImageResource(R.drawable.intro_tab);
+
+    Context context02 = V.getContext();
+    ImageView tabwidget02 = new ImageView(context02);
+    tabwidget02.setImageResource(R.drawable.man_tab);
+
     TabHost.TabSpec tabSpec1 = tabHost.newTabSpec("tab1");
     tabSpec1.setContent(R.id.tab1);
-    tabSpec1.setIndicator("Introduction");
+    tabSpec1.setIndicator(tabwidget01);
     tabHost.addTab(tabSpec1);
 
     TabHost.TabSpec tabSpec2 = tabHost.newTabSpec("tab2");
     tabSpec2.setContent(R.id.tab2);
-    tabSpec2.setIndicator("Manual");
+    tabSpec2.setIndicator(tabwidget02);
     tabHost.addTab(tabSpec2);
 
     tabHost.setCurrentTab(0);
-
-    for(int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
-      tabHost.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#FF808ED2"));
-      TextView tv = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-      tv.setTextColor(Color.parseColor("#FFFFFFFF"));
-    }
-
-    tabHost.getTabWidget().setCurrentTab(0);
-    tabHost.getTabWidget().getChildAt(0).setBackgroundColor(Color.parseColor("#FFCA93E8"));
 
     ScrollView mainScrollView = (ScrollView)V.findViewById(R.id.hometabscroll);
 
@@ -74,8 +75,8 @@ public class HomeTab extends Fragment implements TabHost.OnTabChangeListener {
   @Override
   public void onTabChanged(String tabId) {
     for(int i = 0; i < tabHost.getTabWidget().getChildCount(); i++)
-      tabHost.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#FF2A3F13"));
+      tabHost.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#FF808ED2"));
 
-    tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundColor(Color.parseColor("#FF2A3F13"));
+    tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundColor(Color.parseColor("#FFCA93E8"));
   }
 }
