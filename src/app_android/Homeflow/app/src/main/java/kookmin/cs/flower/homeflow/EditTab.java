@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 /**
  * @brief class for showing edittab.xml layout
@@ -13,8 +14,8 @@ import android.widget.Button;
  *          If you click appli_reg_btn, applireg.xml layout will appear.
  *          If you click flow_reg_btn, flowreg.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
- * @version 0.0.2
- * @date 2015-04-06
+ * @version 0.0.4
+ * @date 2015-05-03
  */
 public class EditTab extends Fragment implements View.OnClickListener {
 
@@ -31,6 +32,16 @@ public class EditTab extends Fragment implements View.OnClickListener {
                            Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View rootView = inflater.inflate(R.layout.edittab, container, false);
+
+    ImageView imageView = (ImageView)rootView.findViewById(R.id.edittabimg);
+    imageView.setAdjustViewBounds(true);
+
+    imageView = (ImageView)rootView.findViewById(R.id.edittab_appimg);
+    imageView.setAdjustViewBounds(true);
+
+    imageView = (ImageView)rootView.findViewById(R.id.edittab_flowimg);
+    imageView.setAdjustViewBounds(true);
+
 
     Button appli_reg_btn = (Button) rootView.findViewById(R.id.appli_reg_btn);
     Button flow_reg_btn = (Button) rootView.findViewById(R.id.flow_reg_btn);

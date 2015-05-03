@@ -4,23 +4,55 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:gravity="center">
+    <ImageView
+            android:id="@+id/edittabimg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:src="@drawable/editor_first"/>
 
-    <Button
-            android:id="@+id/appli_reg_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="가전 기기 등록/편집"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:background="#FF000000"
-            android:textColor="#FFFFFFFF"/>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:orientation="horizontal"
+            android:background="#FFFFFFFF">
 
-    <Button
-            android:id="@+id/flow_reg_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:text="작업 흐름 등록/편집"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:background="#FF000000"
-            android:textColor="#FFFFFFFF"/>
+        <ImageView
+                android:id="@+id/edittab_appimg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:src="@drawable/editor_app_img"/>
+
+        <Button
+                android:id="@+id/appli_reg_btn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/editor_app_btn"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:orientation="horizontal"
+            android:background="#FFFFFFFF">
+
+        <ImageView
+                android:id="@+id/edittab_flowimg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:src="@drawable/editor_flow_img"/>
+
+        <Button
+                android:id="@+id/flow_reg_btn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/editor_flow_btn"/>
+    </LinearLayout>
+
 </LinearLayout>
