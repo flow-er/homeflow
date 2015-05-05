@@ -5,11 +5,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-import kookmin.cs.flower.homeflow.FileManagement.FileManager;
+import java.util.ArrayList;
 
 /**
  * @brief class for showing applireg.xml layout
@@ -47,9 +46,24 @@ public class AppliReg extends Fragment implements View.OnClickListener {
     appli_reg_add.setOnClickListener(this);
     appli_reg_del.setOnClickListener(this);
 
-    listView = (ListView) rootView.findViewById(R.id.appli_reg_list);
+    ArrayList<MyCustomDTO2> appliRegList = new ArrayList<MyCustomDTO2>();
+    appliRegList.add(new MyCustomDTO2("appliance"));
+    appliRegList.add(new MyCustomDTO2("appliance"));
+    appliRegList.add(new MyCustomDTO2("appliance"));
+    appliRegList.add(new MyCustomDTO2("appliance"));
+    appliRegList.add(new MyCustomDTO2("appliance"));
+    appliRegList.add(new MyCustomDTO2("appliance"));
+    appliRegList.add(new MyCustomDTO2("appliance"));
+    appliRegList.add(new MyCustomDTO2("appliance"));
+    appliRegList.add(new MyCustomDTO2("appliance"));
+    appliRegList.add(new MyCustomDTO2("appliance"));
+
+    listView = (ListView) rootView.findViewById(R.id.appli_reg_list);/*
     ArrayAdapter appliRegAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1,
                                                     FileManager.getApplianceList());
+                                                    */
+
+    MyCustomAdapter2 appliRegAdapter = new MyCustomAdapter2(getActivity(), R.layout.appliregrow, appliRegList);
     listView.setAdapter(appliRegAdapter);
 
     return rootView;

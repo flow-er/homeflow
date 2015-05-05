@@ -46,7 +46,6 @@ public class DashTab extends Fragment {
 
     listView.setAdapter(dashTabAdapter);
 
-
     return rootView;
   }
 }

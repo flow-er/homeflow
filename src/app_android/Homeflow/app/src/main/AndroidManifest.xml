@@ -25,18 +25,6 @@
                 android:label="HomeFlow"/>
 
         <activity
-                android:name=".Account"
-                android:label="HomeFlow"/>
-
-        <activity
-                android:name=".Login"
-                android:label="HomeFlow"/>
-
-        <activity
-                android:name=".SignUpSucc"
-                android:label="HomeFlow"/>
-
-        <activity
                 android:name=".Personal"
                 android:label="HomeFlow"/>
 
