@@ -13,8 +13,8 @@ import java.util.ArrayList;
  * @brief class overriding BaseAdapter
  * @details This class needs for listview customizing.
  * @author Jinsung Choi, bugslife102401@nate.com
- * @version 0.0.2
- * @date 2015-04-08
+ * @version 0.0.0
+ * @date 2015-05-06
  */
 public class MyCustomAdapter2 extends BaseAdapter {
   Context ctx;

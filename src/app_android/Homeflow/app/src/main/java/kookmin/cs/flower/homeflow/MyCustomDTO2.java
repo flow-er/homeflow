@@ -4,8 +4,8 @@ package kookmin.cs.flower.homeflow;
  * @brief class for listview Customizing
  * @details This class implies construction of each row in listview.
  * @author Jinsung Choi, bugslife102401@nate.com
- * @version 0.0.2
- * @date 2015-04-08
+ * @version 0.0.0
+ * @date 2015-05-06
  */
 public class MyCustomDTO2 {
   String text;

@@ -17,8 +17,8 @@ import java.util.ArrayList;
  *            If you click appli_reg_add, addappli.xml layout will appear.
  *            If you click appli_reg_del, delappli.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
- * @version 0.0.2
- * @date 2015-04-06
+ * @version 0.0.4
+ * @date 2015-05-06
  */
 public class AppliReg extends Fragment implements View.OnClickListener {
 
@@ -60,8 +60,8 @@ public class AppliReg extends Fragment implements View.OnClickListener {
 
     listView = (ListView) rootView.findViewById(R.id.appli_reg_list);/*
     ArrayAdapter appliRegAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1,
-                                                    FileManager.getApplianceList());
-                                                    */
+                                                    FileManager.getApplianceList());*/
+
 
     MyCustomAdapter2 appliRegAdapter = new MyCustomAdapter2(getActivity(), R.layout.appliregrow, appliRegList);
     listView.setAdapter(appliRegAdapter);
