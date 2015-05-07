@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -12,13 +13,15 @@ import java.util.ArrayList;
 
 /**
  * @brief class for showing applireg.xml layout
- * @details This class includes appli_reg_to_edit button, appli_reg_add button, and appli_reg_del button.
+ * @details This class includes appli_reg_to_edit button, appli_reg_add button,
+ *            appli_reg_del button and appliRegAdapter.
  *            If you click appli_reg_to_edit, edittab.xml layout will appear.
  *            If you click appli_reg_add, addappli.xml layout will appear.
  *            If you click appli_reg_del, delappli.xml layout will appear.
+ *            If you click appliRegAdapter, editappli.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
- * @version 0.0.4
- * @date 2015-05-06
+ * @version 0.0.6
+ * @date 2015-05-07
  */
 public class AppliReg extends Fragment implements View.OnClickListener {
 
@@ -26,7 +29,8 @@ public class AppliReg extends Fragment implements View.OnClickListener {
 
   /**
    * @brief method for showing applireg.xml layout
-   * @details This method sets clicked-events on appli_reg_to_edit, appli_reg_add, and appli_reg_del
+   * @details This method sets clicked-events on appli_reg_to_edit, appli_reg_add,
+   *            appli_reg_del and appliRegAdapter.
    * @param inflater
    * @param container
    * @param savedInstanceState
@@ -65,6 +69,14 @@ public class AppliReg extends Fragment implements View.OnClickListener {
 
     MyCustomAdapter2 appliRegAdapter = new MyCustomAdapter2(getActivity(), R.layout.appliregrow, appliRegList);
     listView.setAdapter(appliRegAdapter);
+
+    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        EditAppli editAppli = new EditAppli();
+        getFragmentManager().beginTransaction().replace(R.id.realtabcontent, editAppli).commit();
+      }
+    });
 
     return rootView;
   }

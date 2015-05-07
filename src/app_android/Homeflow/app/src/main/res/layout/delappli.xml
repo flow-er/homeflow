@@ -2,26 +2,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="fill_parent"
-              android:layout_height="fill_parent">
+              android:layout_height="fill_parent"
+              android:background="@drawable/applireg_back">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="10"/>
+
     <ListView
             android:id="@+id/del_appli_list"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="10">
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:layout_gravity="center_horizontal"
+            android:dividerHeight="70px"
+            android:divider="#00000000">
     </ListView>
 
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_weight="9"
             android:gravity="center">
+
         <Button
                 android:id="@+id/del_appli_btn"
-                android:layout_width="wrap_content"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:text="삭제 완료"
-                android:background="#FF000000"
-                android:textColor="#FFFFFFFF"/>
+                android:textColor="#FFFFFFFF"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:background="#FF2C486D"/>
     </LinearLayout>
+
 </LinearLayout>
