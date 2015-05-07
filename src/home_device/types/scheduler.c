@@ -65,6 +65,7 @@ void scheduleEvents(struct scheduler *scheduler, int mode) {
 					if(old->prev) old->prev->next = old->next;
 					if(old->next) old->next->prev = old->prev;
 
+					freeFlow(old->flow);
 					free(old);
 
 					remove(origin);
