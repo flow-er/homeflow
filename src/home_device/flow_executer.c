@@ -9,6 +9,8 @@ void printNodeInfoForTest(struct node *node);
 void runNode(struct node *node);
 void run(struct flow *flow);
 
+const char *procname = "flow_executer";
+
 struct message msg;
 int id;
 
@@ -19,12 +21,12 @@ int main(int argc, const char *argv[]) {
 	if (argc < 2) return 0;
 
 	if ((id = msgget(MKEY, 0)) < 0) {
-		printf("can't get message queue.\n");
+		printf("%s : can't get message queue.\n", procname);
 		return 0;
 	}
-	
+
 	msg.pid = getpid();
-	
+
 	sprintf(path, "./user/flows/%s.xml", argv[1]);
 
 	flow = parseFlow(path);
