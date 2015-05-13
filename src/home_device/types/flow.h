@@ -4,20 +4,20 @@
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 
-#define TRUE 1
-#define FALSE 0
+#define NODE_TN 5
+#define COND_TN 5
 
-enum nType {
+enum node_t {
 	T_ACTION = 0,
-	T_NOTIFY,
 	T_CONDITION,
 	T_LOOP,
 	T_COWORK,
 	T_TRIGGER
 };
-extern const char *nTypeName[6];
 
-enum cType {
+extern const char *nodeTypes[NODE_TN];
+
+enum cond_t {
 	EQUAL = 0,
 	LESS,
 	LESS_OR_EQUAL,
@@ -25,17 +25,18 @@ enum cType {
 	MORE_OR_EQUAL
 };
 
-extern const char *cTypeName[6];
+extern const char *condTypes[COND_TN];
 
 struct node {
-	enum nType type;
+	enum node_t type;
 
 	int appid;
 	int command;
+	int notify;
 
 	struct node *next;
 
-	enum cType cond;
+	enum cond_t cond;
 	char *value;
 
 	struct node *child;
@@ -52,4 +53,3 @@ struct flow {
 
 struct flow *parseFlow(const char *path);
 void freeFlow(struct flow *flow);
-void printFlow(struct flow *flow);

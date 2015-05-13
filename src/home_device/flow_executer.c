@@ -39,7 +39,7 @@ int main(int argc, const char *argv[]) {
 void run(struct flow *flow) {
 	struct node *curr = flow->head;
 
-	if (flow->isAuto == TRUE) {
+	if (flow->isAuto) {
 		//trigger
 
 		curr = curr->next;

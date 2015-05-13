@@ -62,8 +62,8 @@ void scheduleEvents(struct scheduler *scheduler, int mode) {
 
 			for (old = scheduler->head; old != NULL; old = old->next) {
 				if (old->flow->id == id) {
-					if(old->prev) old->prev->next = old->next;
-					if(old->next) old->next->prev = old->prev;
+					if (old->prev) old->prev->next = old->next;
+					if (old->next) old->next->prev = old->prev;
 
 					freeFlow(old->flow);
 					free(old);

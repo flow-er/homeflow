@@ -3,12 +3,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-const char *nTypeName[6] = { "action", "notification", "condition", "loop",
-		"cowork", "trigger" };
-const char *cTypeName[6] = { "==", "<", "<=", ">", ">=" };
+const char *nodeTypes[NODE_TN] = { "action", "condition", "loop", "cowork",
+		"trigger" };
+const char *condTypes[COND_TN] = { "==", "<", "<=", ">", ">=" };
 
-void parseProperties(struct node *node, enum nType type, xmlNode *elem);
 struct node *parseNode(xmlNode *elem);
+void parseProperties(struct node *node, enum node_t type, xmlNode *elem);
+void freeNode(struct node *node);
 
 struct flow *parseFlow(const char *path) {
 	struct flow *flow = (struct flow *) malloc(sizeof(struct flow));
@@ -40,10 +41,10 @@ struct flow *parseFlow(const char *path) {
 
 struct node *parseNode(xmlNode *elem) {
 	struct node *node = NULL;
-	enum nType i;
+	int i;
 
-	for (i = T_ACTION; i <= T_TRIGGER; i++) {
-		if (!strcmp((const char *) elem->name, nTypeName[i])) {
+	for (i = 0; i < NODE_TN; i++) {
+		if (!strcmp((const char *) elem->name, nodeTypes[i])) {
 			node = (struct node *) malloc(sizeof(struct node));
 			node->child = node->next = NULL;
 
@@ -58,7 +59,7 @@ struct node *parseNode(xmlNode *elem) {
 	return node;
 }
 
-void parseProperties(struct node *node, enum nType type, xmlNode *elem) {
+void parseProperties(struct node *node, enum node_t type, xmlNode *elem) {
 	const char *temp;
 
 	node->appid = node->command = 0;
@@ -76,7 +77,6 @@ void parseProperties(struct node *node, enum nType type, xmlNode *elem) {
 			strcpy((node->value = (char *) malloc(strlen(temp))), temp);
 
 		case T_ACTION:
-		case T_NOTIFY:
 			temp = (const char *) xmlGetProp(elem, (xmlChar *) "appid");
 			node->appid = atoi(temp);
 
@@ -89,31 +89,14 @@ void parseProperties(struct node *node, enum nType type, xmlNode *elem) {
 	}
 }
 
-void freeNode(struct node *node) {
-	if (node->child) freeNode(node->child);
-	if (node->next) freeNode(node->next);
-
-	free(node);
-}
-
 void freeFlow(struct flow *flow) {
 	freeNode(flow->head);
 	free(flow);
 }
 
-void printNode(struct node *node, int level) {
-	int i;
+void freeNode(struct node *node) {
+	if (node->child) freeNode(node->child);
+	if (node->next) freeNode(node->next);
 
-	for (i = 0; i < level; i++)
-		printf("   ");
-	printf("|%c %s\n", (node->next ? '-' : '_'), nTypeName[node->type]);
-
-	if (node->child) printNode(node->child, level + 1);
-	if (node->next) printNode(node->next, level);
-}
-
-void printFlow(struct flow *flow) {
-	printf("flow\n");
-	printNode(flow->head, 0);
-	printf("\n");
+	free(node);
 }
