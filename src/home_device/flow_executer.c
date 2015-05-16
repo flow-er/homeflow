@@ -5,6 +5,9 @@
 #include "types/flow.h"
 #include "types/msg.h"
 
+#include "va/counter.h"
+#include "va/timer.h"
+
 void printNodeInfoForTest(struct node *node);
 void runNode(struct node *node);
 void run(struct flow *flow);
@@ -20,6 +23,7 @@ int main(int argc, const char *argv[]) {
 
 	if (argc < 2) return 0;
 
+	// BUG : Clearly have no effects at all.
 	if ((id = msgget(MKEY, 0)) < 0) {
 		printf("%s : can't get message queue.\n", procname);
 		return 0;
@@ -83,18 +87,5 @@ void runNode(struct node *node) {
 void printNodeInfoForTest(struct node *node) {
 	printf("NODE INFO\n");
 
-	switch (node->type) {
-		case T_CONDITION:
-		case T_LOOP:
-			printf("condition : %s %s\n", cTypeName[node->cond], node->value);
-
-		case T_ACTION:
-		case T_NOTIFY:
-			printf("id        : %d\n", node->appid);
-			printf("command   : %d\n", node->command);
-
-		default:
-			printf("type      : %s\n", nTypeName[node->type]);
-			break;
-	}
+	// TODO : Write code.
 }

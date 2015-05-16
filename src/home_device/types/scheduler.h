@@ -1,9 +1,6 @@
 #include <sys/types.h>
-#include "flow.h"
 
-#define PATH_CD		"./"
-#define PATH_USER	"user/"
-#define PATH_FLOW	"flows/"
+#include "flow.h"
 
 #define INIT 0
 #define REDO 1

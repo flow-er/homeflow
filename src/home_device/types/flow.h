@@ -1,10 +1,8 @@
-#include <stdio.h>
-#include <time.h>
-
-#include <libxml/xmlmemory.h>
-#include <libxml/parser.h>
+#include <sys/types.h>
 
 #define NT 5
+
+extern const char *types[NT];
 
 enum node_t {
 	T_ACTION = 0,

@@ -1,7 +1,8 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <dirent.h>
 #include <errno.h>
-#include <string.h>
 
 #include "scheduler.h"
 
@@ -13,7 +14,7 @@ void scheduleEvents(struct scheduler *scheduler, int mode) {
 	struct event *curr = NULL;
 
 	if (mode == REDO) {
-		path = "./user/temp/flows/";
+		path = "./user/temp/";
 
 		if (scheduler->head)
 			curr = scheduler->tail;
@@ -21,10 +22,7 @@ void scheduleEvents(struct scheduler *scheduler, int mode) {
 			mode = INIT;
 	}
 
-	if (!(dir = opendir(path))) {
-		printf("flow manager : failed to open \'flows directory\'\n");
-		return;
-	}
+	if (!(dir = opendir(path))) return;
 
 	while ((eBuf = readdir(dir))) {
 		char full[BUFSIZ];
@@ -60,7 +58,7 @@ void scheduleEvents(struct scheduler *scheduler, int mode) {
 			id = atoi(eBuf->d_name);
 			*ptr = '.';
 
-			for (old = scheduler->head; old != NULL; old = old->next) {
+			for (old = scheduler->head; old->next != NULL; old = old->next) {
 				if (old->flow->id == id) {
 					if (old->prev) old->prev->next = old->next;
 					if (old->next) old->next->prev = old->prev;

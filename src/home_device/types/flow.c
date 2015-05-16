@@ -1,7 +1,11 @@
 #include "flow.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include <libxml/xmlmemory.h>
+#include <libxml/parser.h>
 
 #define GETPROP(x, y) ((const char *) xmlGetProp(x, (xmlChar *) y))
 

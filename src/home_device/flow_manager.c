@@ -27,7 +27,7 @@ typedef int fd;
 
 void executeMsgManager(int *fd);
 void initServerSocket(int *fd);
-void executeFlow();
+void executeFlows();
 void signalHandler(int);
 
 const char *procname = "flow_manager";
@@ -59,7 +59,7 @@ int main(int argc, const char *argv[]) {
 		fd_set temp = fds;
 		int i;
 
-		executeFlow();
+		executeFlows();
 
 		if (select(fd_max + 1, &temp, 0, 0, 0) < 0) {
 			printf("%s : Failed to select.\n", procname);
@@ -83,88 +83,10 @@ int main(int argc, const char *argv[]) {
 			}
 			
 			write(server[WR], &msg, sizeof(struct message));
-		} else if (FD_ISSET(server[RD], &temp)) { //HAVE TO REWRITE ALL
-			struct sockaddr_in addr;
-			socklen_t addrlen = sizeof(addr);
-			
-			char cli_ip[20];
-			
-			server[WR] = accept(server[RD], (struct sockaddr *) &addr, &addrlen);
-			
-			if (server[WR] < 0) {
-				printf("%s : Failed to accept client.", procname);
-				exit(1);
-			}
-			
-			FD_SET(server[WR], &fds);
-			if (fd_max < server[WR]) fd_max = server[WR];
-			
-			printf("Connection : file descripter %d \n", server[WR]);
-			inet_ntop(AF_INET, &addr.sin_addr.s_addr, cli_ip,
-					  sizeof(cli_ip));
-			printf("IP : %s ", cli_ip);
-			printf("Port : %x \n", ntohs(addr.sin_port));
-		} else if (FD_ISSET(server[WR], &temp)) { //HAVE TO REWRITE ALL
-			int filesize = 0;
-			int fp;
-			int total = 0, sread = 0;
-			
-			char buf[MAXLINE + 1];
-			
-			char temp3[4];
-			char filename[6], path[60];
-			
-//			int flag = 0;
-			char flowpath[40] = "./user/temp/flows/";
-//			char applpath[40] = "./user/temp/appliances/";
-			
-			memset(filename, 0, 6);
-			memset(path, 0, 60);
-			
-			recv(server[WR], filename, sizeof(filename), 0);
-			filename[5] = '\0';
-			printf("%s", filename);
-			
-			read(server[WR], &temp3, sizeof(temp3));
-			temp3[3] = '\0';
-			filesize = atoi(temp3);
-			printf("%d\n", filesize);
-//
-//			read(socket[WR], &flag, sizeof(flag));
-//			printf("%d \n", flag);
-			
-//			if (flag == 0) {
-			strcat(path, flowpath);
-			strcat(path, filename);
-//			} else {
-//				strcat(path, applpath);
-//				strcat(path, filename);
-//			}
-			
-//			fp = open(filename, O_WRONLY | O_CREAT | O_TRUNC);
-			fp = open(path, O_WRONLY | O_CREAT | O_TRUNC);
-			
-			while (total < filesize) {
-				sread = (int) recv(server[WR], buf, 100, 0);
-				printf("file is receiving now.. ");
-				total += sread;
-				buf[sread] = 0;
-				write(fp, buf, sread);
-				bzero(buf, sizeof(buf));
-				printf("processing : %4.2f%% ",
-					   total * 100 / (float) filesize);
-				usleep(1000);
-			}
-			printf("file traslating is completed ");
-			printf("filesize : %d, received : %d ", filesize, total);
-			
-			if (sread == 0) {  //if end of connection
-				FD_CLR(i, &fds);
-				close(fp);
-				close(server[WR]);
-				printf("End connection : file descripter %d \n", i);
-			}
-			
+		} else if (FD_ISSET(server[RD], &temp)) {
+			// TODO : Write code.
+		} else if (FD_ISSET(server[WR], &temp)) {
+			// TODO : Write code.
 			scheduleEvents(&scheduler, REDO);
 		}
 	}
@@ -219,7 +141,7 @@ void initServerSocket(int *fd) {
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = inet_addr(SERVER_ADDR);
 	addr.sin_port = htons(SERVER_PORT);
-	
+
 	if (connect(fd[WR], (struct sockaddr *) &addr, sizeof(addr)) == -1) {
 		printf("%s : Failed to connect with server.\n", procname);
 		exit(1);
@@ -246,7 +168,7 @@ void initServerSocket(int *fd) {
 	//listen(fd[RD], 5);
 }
 
-void executeFlow() {
+void executeFlows() {
 	struct event *event = NULL;
 
 	for (event = scheduler.head; event != NULL; event = event->next) {
