@@ -84,13 +84,34 @@ int sendCommandToBLuetoohDevice(long addr, cmdset set, int *ret) {
 }
 
 int sendCommandToVirtualDevice(long addr, cmdset set, int *ret) {
+	enum cond_t cond;
+	int value;
+
+	// Parse command option.
+	cond = set.option >> 24;
+	value = (set.option << 8) >> 8;
+
 	switch (addr) {
 		case V_COUNTER:
+			if (set.command == 1) {
+				static int count = -1;
+				int result = 0;
 
+				++count;
+
+				if (count == value) result += (1<<0);
+				if (count < value)  result += (1<<1);
+				if (count > value)  result += (1<<2);
+
+				*ret = (result & cond);
+			}
 			break;
 
 		case V_TIMER:
-
+			if (set.command == 1) {
+//				struct tm time;
+//				mktime(&time);
+			}
 			break;
 	}
 

@@ -19,6 +19,14 @@ enum opt_t {
 	O_WAIT
 };
 
+enum cond_t {
+	EQUAL = 0,
+	LESS,
+	LESS_OR_EQUAL,
+	MORE,
+	MORE_OR_EQUAL
+};
+
 typedef struct cmdSet {
 	enum opt_t type;
 	

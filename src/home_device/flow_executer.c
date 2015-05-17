@@ -8,9 +8,6 @@
 #include "types/appliance.h"
 #include "types/msg.h"
 
-#include "va/counter.h"
-#include "va/timer.h"
-
 void runNode(struct node *node);
 void run(struct flow *flow);
 

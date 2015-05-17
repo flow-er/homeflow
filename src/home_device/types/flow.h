@@ -15,14 +15,6 @@ enum node_t {
 	N_TRIGGER
 };
 
-enum cond_t {
-	EQUAL = 0,
-	LESS,
-	LESS_OR_EQUAL,
-	MORE,
-	MORE_OR_EQUAL
-};
-
 struct node {
 	enum node_t type;
 
