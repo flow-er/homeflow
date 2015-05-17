@@ -104,8 +104,7 @@ public class Account extends Fragment implements View.OnClickListener,
    * @return
    */
   @Override
-  public void onItemSelected(AdapterView<?> parent,
-                             View v, int position, long id) {
+  public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
     ((TextView)parent.getChildAt(0)).setTextColor(Color.WHITE);
   }
 
