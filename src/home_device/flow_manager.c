@@ -54,7 +54,7 @@ int main(int argc, const char *argv[]) {
 	FD_SET(server[RD], &fds);
 
 	fd_max = pipe[WR];
-	
+
 	while (1) {
 		fd_set temp = fds;
 		int i;
@@ -69,19 +69,19 @@ int main(int argc, const char *argv[]) {
 		if (FD_ISSET(pipe[RD], &temp)) {
 			struct event *event;
 			const int ok = 1;
-			
+
 			read(pipe[RD], &msg, sizeof(struct message));
 			write(pipe[WR], &ok, sizeof(int));
-			
+
 			for (event = scheduler.head; event != NULL; event = event->next) {
 				if (msg.pid == event->pid) {
 					event->pid = 0;
 					msg.pid = event->flow->id;
-					
+
 					break;
 				}
 			}
-			
+
 			write(server[WR], &msg, sizeof(struct message));
 		} else if (FD_ISSET(server[RD], &temp)) {
 			// TODO : Write code.
@@ -131,12 +131,12 @@ void executeMsgManager(int *fd) {
 
 void initServerSocket(int *fd) {
 	struct sockaddr_in addr;
-	
+
 	if ((fd[WR] = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
 		printf("%s : Failed to create socket.\n", procname);
 		exit(1);
 	}
-	
+
 	memset(&addr, 0, sizeof(struct sockaddr_in));
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = inet_addr(SERVER_ADDR);
@@ -195,12 +195,6 @@ void executeFlows() {
 }
 
 void signalHandler(int signal) {
-	struct event *event = NULL;
-
-	for (event = scheduler.tail; event != NULL; event = event->prev) {
-		freeFlow(event->flow);
-		free(event);
-	}
-
+	freeScheduler(scheduler);
 	exit(0);
 }

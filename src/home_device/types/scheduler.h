@@ -19,3 +19,4 @@ struct scheduler {
 };
 
 void scheduleEvents(struct scheduler *scheduler, int mode);
+void freeScheduler(struct scheduler *scheduler);

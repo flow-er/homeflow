@@ -1,15 +1,18 @@
 #include <sys/types.h>
 
+#define FLOW_DIR "./user/flows/"
+#define TEMP_DIR "./user/temp/"
+
 #define NT 5
 
 extern const char *types[NT];
 
 enum node_t {
-	T_ACTION = 0,
-	T_CONDITION,
-	T_LOOP,
-	T_COWORK,
-	T_TRIGGER
+	N_ACTION = 0,
+	N_CONDITION,
+	N_LOOP,
+	N_COWORK,
+	N_TRIGGER
 };
 
 enum cond_t {

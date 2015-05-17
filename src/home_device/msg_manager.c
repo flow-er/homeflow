@@ -23,7 +23,7 @@ int main(int argc, const char *argv[]) {
 	fd[1] = atoi(argv[1]);
 	fd[0] = atoi(argv[2]);
 
-	if ((id = msgget(MKEY, PERM | IPC_CREAT)) < 0) {
+	if ((id = msgget(MSG_KEY, MSG_PERM | IPC_CREAT)) < 0) {
 		printf("%s : can't get message queue.\n", procname);
 		return 0;
 	}

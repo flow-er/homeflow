@@ -1,7 +1,7 @@
 #include <sys/msg.h>
 
-#define MKEY 1234L
-#define PERM 0666
+#define MSG_KEY  1234L
+#define MSG_PERM 0666
 
 #define MSGSIZE (sizeof(struct message) - sizeof(long))
 #define MESGHDRSIZE (sizeof(struct mesg) - MAXMESGDATA)
@@ -14,6 +14,7 @@ enum state {
 };
 
 struct message {
-	long pid;
+	long type;
+	pid_t pid;
 	enum state state;
 };

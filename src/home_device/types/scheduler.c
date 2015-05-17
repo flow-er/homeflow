@@ -7,14 +7,14 @@
 #include "scheduler.h"
 
 void scheduleEvents(struct scheduler *scheduler, int mode) {
-	const char *path = "./user/flows/";
+	const char *path = FLOW_DIR;
 	DIR *dir;
 	struct dirent *eBuf;
 
 	struct event *curr = NULL;
 
 	if (mode == REDO) {
-		path = "./user/temp/";
+		path = TEMP_DIR;
 
 		if (scheduler->head)
 			curr = scheduler->tail;
@@ -50,7 +50,7 @@ void scheduleEvents(struct scheduler *scheduler, int mode) {
 			char *ptr = strpbrk(eBuf->d_name, ".");
 			int id;
 
-			sprintf(origin, "./user/flows/%s", eBuf->d_name);
+			sprintf(origin, "%s%s", FLOW_DIR, eBuf->d_name);
 
 			struct event *old;
 
@@ -76,4 +76,15 @@ void scheduleEvents(struct scheduler *scheduler, int mode) {
 	}
 
 	scheduler->tail = curr;
+}
+
+void freeScheduler(struct scheduler *scheduler) {
+	struct event *event = NULL;
+
+	for (event = scheduler->tail; event != NULL; event = event->prev) {
+		freeFlow(event->flow);
+		free(event);
+	}
+
+	free(scheduler);
 }
