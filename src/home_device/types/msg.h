@@ -9,6 +9,7 @@
 enum state {
 	FLOW_RUNNING = 0,
 	FLOW_DONENODE,
+	FLOW_SKIPCHILD,
 	FLOW_COMPLETED,
 	FLOW_FAILED,
 };
@@ -16,5 +17,7 @@ enum state {
 struct message {
 	long type;
 	pid_t pid;
+	
+	int node;
 	enum state state;
 };

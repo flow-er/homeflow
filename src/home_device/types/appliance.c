@@ -10,8 +10,8 @@
 
 struct appliance *parseApp(xmlNode *elem);
 
-int sendCommandToBLuetoohDevice(long addr, int cmd, int *ret);
-int sendCommandToVirtualDevice(long addr, int cmd, int *ret);
+int sendCommandToBLuetoohDevice(long addr, cmdset set, int *ret);
+int sendCommandToVirtualDevice(long addr, cmdset set, int *ret);
 
 struct appl_list *parseApplList(const char *path) {
 	struct appl_list *apps;
@@ -76,14 +76,14 @@ void freeApplList(struct appl_list *apps) {
 	free (scheduler);
 }
 
-int sendCommandToBLuetoohDevice(long addr, int cmd, int *ret) {
+int sendCommandToBLuetoohDevice(long addr, cmdset set, int *ret) {
 	printf("test : press any button to continue.\n");
 	getchar();
 
 	return 0;
 }
 
-int sendCommandToVirtualDevice(long addr, int cmd, int *ret) {
+int sendCommandToVirtualDevice(long addr, cmdset set, int *ret) {
 	switch (addr) {
 		case V_COUNTER:
 

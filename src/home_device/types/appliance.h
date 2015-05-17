@@ -13,13 +13,26 @@ enum conn_t {
 	C_BLUE
 };
 
+enum opt_t {
+	O_NOTIFY = 0,
+	O_NOWAIT,
+	O_WAIT
+};
+
+typedef struct cmdSet {
+	enum opt_t type;
+	
+	int command;
+	int option;
+} cmdset;
+
 struct appliance {
 	int id;
 
 	enum conn_t ctype;
 	long addr;
 
-	int (*runCommand)(long, int, int *);
+	int (*runCommand)(long, cmdset, int *);
 
 	struct appliance *prev;
 	struct appliance *next;
