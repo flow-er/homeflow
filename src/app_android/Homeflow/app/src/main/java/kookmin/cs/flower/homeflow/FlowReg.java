@@ -5,11 +5,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 
-import kookmin.cs.flower.homeflow.FileManagement.FileManager;
+import java.util.ArrayList;
 
 /**
  * @brief class for showing flowreg.xml layout
@@ -24,7 +23,8 @@ import kookmin.cs.flower.homeflow.FileManagement.FileManager;
  */
 public class FlowReg extends Fragment implements View.OnClickListener {
 
-  ListView listView;
+  ExpandableListView listView;
+  private ArrayList<String> mChildList = null;
 
   /**
    * @brief method for showing flowreg.xml layout
@@ -39,6 +39,11 @@ public class FlowReg extends Fragment implements View.OnClickListener {
                            Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.flowreg, container, false);
 
+    mChildList = new ArrayList<String>();
+    mChildList.add("           CONTENTS");
+    mChildList.add("           CONTENTS");
+    mChildList.add("           CONTENTS");
+
     Button flow_reg_to_edit = (Button) rootView.findViewById(R.id.flow_reg_to_edit);
     Button flow_reg_add = (Button) rootView.findViewById(R.id.flow_reg_add);
     Button flow_reg_del = (Button) rootView.findViewById(R.id.flow_reg_del);
@@ -47,9 +52,23 @@ public class FlowReg extends Fragment implements View.OnClickListener {
     flow_reg_add.setOnClickListener(this);
     flow_reg_del.setOnClickListener(this);
 
-    listView = (ListView) rootView.findViewById(R.id.flow_reg_list);
+    ArrayList<MyCustomDTO3> flowRegList = new ArrayList<MyCustomDTO3>();
+    flowRegList.add(new MyCustomDTO3("      2015/05/18 12:00", mChildList));
+    flowRegList.add(new MyCustomDTO3("      2015/05/18 12:10", mChildList));
+    flowRegList.add(new MyCustomDTO3("      2015/05/18 12:20", mChildList));
+    flowRegList.add(new MyCustomDTO3("      2015/05/18 12:30", mChildList));
+    flowRegList.add(new MyCustomDTO3("      2015/05/18 12:40", mChildList));
+    flowRegList.add(new MyCustomDTO3("      2015/05/18 12:50", mChildList));
+    flowRegList.add(new MyCustomDTO3("      2015/05/18 13:00", mChildList));
+    flowRegList.add(new MyCustomDTO3("      2015/05/18 13:10", mChildList));
+    flowRegList.add(new MyCustomDTO3("      2015/05/18 13:20", mChildList));
+    flowRegList.add(new MyCustomDTO3("      2015/05/18 13:30", mChildList));
+
+    listView = (ExpandableListView) rootView.findViewById(R.id.flow_reg_list);/*
     ArrayAdapter flowRegAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1,
-                                                    FileManager.getFlowList());
+                                                    FileManager.getFlowList());*/
+    MyCustomAdapter3 flowRegAdapter = new MyCustomAdapter3(getActivity(), R.layout.flowregrow, flowRegList);
+
     listView.setAdapter(flowRegAdapter);
 
     return rootView;

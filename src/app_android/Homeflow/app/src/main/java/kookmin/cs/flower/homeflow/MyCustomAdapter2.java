@@ -51,11 +51,11 @@ public class MyCustomAdapter2 extends BaseAdapter {
       convertView = inf.inflate(layout, null);
     }
 
-    TextView appli_reg_txt = (TextView)convertView.findViewById(R.id.appli_reg_txt);
+    TextView reg_txt = (TextView)convertView.findViewById(R.id.reg_txt);
 
     MyCustomDTO2 dto = list.get(position);
 
-    appli_reg_txt.setText(dto.getFlowText());
+    reg_txt.setText(dto.getFlowText());
 
     return convertView;
   }

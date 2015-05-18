@@ -36,7 +36,6 @@ public class DashTab extends Fragment {
     View rootView = inflater.inflate(R.layout.dashtab, container, false);
 
     mChildList = new ArrayList<String>();
-
     mChildList.add("   전등");
     mChildList.add("   커피포트");
     mChildList.add("   블라인드");
