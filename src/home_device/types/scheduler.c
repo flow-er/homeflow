@@ -60,6 +60,8 @@ void scheduleEvents(struct scheduler *scheduler, int mode) {
 
 			for (old = scheduler->head; old->next != NULL; old = old->next) {
 				if (old->flow->id == id) {
+					curr->pid = old->pid;
+
 					if (old->prev) old->prev->next = old->next;
 					if (old->next) old->next->prev = old->prev;
 

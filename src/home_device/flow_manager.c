@@ -65,7 +65,6 @@ int main(int argc, const char *argv[]) {
 
 	while (1) {
 		fd_set temp = fds;
-		int i;
 
 		executeFlows();
 
@@ -75,12 +74,13 @@ int main(int argc, const char *argv[]) {
 		}
 
 		if (FD_ISSET(pipe[RD], &temp)) {
+			const int ok = 1;
+
 			read(pipe[RD], &msg, sizeof(struct message));
 			write(pipe[WR], &ok, sizeof(int));
 
 			if (msg.type == FROM_FLOW_EXECUTER) {
 				struct event *event = scheduler.head;
-				const int ok = 1;
 
 				while (event && msg.pid == event->pid)
 					event = event->next;
@@ -97,10 +97,27 @@ int main(int argc, const char *argv[]) {
 			write(server[WR], &msg, sizeof(struct message));
 		}
 		if (FD_ISSET(server[RD], &temp)) {
-			// TODO : Write code.
-		}
-		if (FD_ISSET(server[WR], &temp)) {
-			// TODO : Write code.
+			char buf[BUFSIZ];
+			long len;
+
+			char path[BUFSIZ] = "";
+			int file = -1;
+			int isFirst = 1;
+
+			while((len = read(server[RD], buf, BUFSIZ - 1)) != 0) {
+				// TODO : Write code for the case of flow execution command.
+				if(isFirst) {
+					strcat(path, TEMP_DIR);
+					//concat file name;
+
+					file = open(path, O_WRONLY | O_CREAT | O_TRUNC);
+					isFirst = 0;
+				}
+
+				write(file, buf, len);
+			}
+
+			close(file);
 			scheduleEvents(&scheduler, REDO);
 		}
 	}
@@ -168,10 +185,8 @@ pid_t executeAppManager() {
 void initServerSocket(int *fd) {
 	struct sockaddr_in addr;
 
-	if ((fd[WR] = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
-		printf("%s : Failed to create socket.\n", procname);
-		exit(1);
-	}
+	// Set 'server[WR]'.
+	fd[WR] = socket(PF_INET, SOCK_STREAM, 0);
 
 	memset(&addr, 0, sizeof(struct sockaddr_in));
 	addr.sin_family = AF_INET;
@@ -183,10 +198,8 @@ void initServerSocket(int *fd) {
 		exit(1);
 	}
 
-	if ((fd[RD] = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
-		printf("%s : Failed to create socket.\n", procname);
-		exit(1);
-	}
+	// Set 'server[RD]'.
+	fd[RD] = socket(PF_INET, SOCK_STREAM, 0);
 
 	memset(&addr, 0, sizeof(struct sockaddr_in));
 	addr.sin_family = AF_INET;
