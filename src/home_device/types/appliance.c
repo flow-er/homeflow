@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
 
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
@@ -92,6 +94,7 @@ int sendCommandToVirtualDevice(long addr, cmdset set, int *ret) {
 	value = (set.option << 8) >> 8;
 
 	switch (addr) {
+		// Available only for 'O_NOWAIT'.
 		case V_COUNTER:
 			if (set.command == 1) {
 				static int count = -1;
@@ -99,18 +102,56 @@ int sendCommandToVirtualDevice(long addr, cmdset set, int *ret) {
 
 				++count;
 
-				if (count == value) result += (1<<0);
-				if (count < value)  result += (1<<1);
-				if (count > value)  result += (1<<2);
+				if (count == value) result += (1 << 0);
+				if (count < value) result += (1 << 1);
+				if (count > value) result += (1 << 2);
 
 				*ret = (result & cond);
+
+				if (*ret == 0) count = -1;
 			}
 			break;
 
+			// Available only for 'O_NOWAIT' and 'O_WAIT'.
 		case V_TIMER:
 			if (set.command == 1) {
-//				struct tm time;
-//				mktime(&time);
+				struct tm *temp = localtime(&time(NULL));
+				int wday_mask = value >> 17;
+
+				long goal = 0, curr = 0;
+
+				int result = 0;
+
+				if (!(wday_mask & (1 << curr.tm_wday))) {
+					*ret = 0;
+					return 0;
+				}
+
+				goal += ((value << 7) >> 19) * 3600;
+				goal += ((value << 12) >> 18) * 60;
+				goal += ((value << 18) >> 18);
+
+				curr += temp->tm_hour * 3600;
+				curr += temp->tm_min * 3600;
+				curr += temp->tm_sec;
+
+				if (set.type == O_NOWAIT) {
+					if (curr == goal) result += (1 << 0);
+					if (curr < goal) result += (1 << 1);
+					if (curr > goal) result += (1 << 2);
+
+					*ret = (result & cond);
+				} else if (set.type == O_WAIT) {
+					// Available only for '=='.
+
+					if (curr > goal) {
+						*ret = 0;
+						return 0;
+					}
+
+					sleep((goal - curr) * 1000);
+					*ret = 1;
+				}
 			}
 			break;
 	}

@@ -17,7 +17,7 @@ enum state {
 struct message {
 	long type;
 	pid_t pid;
-	
+
 	int node;
 	enum state state;
 };

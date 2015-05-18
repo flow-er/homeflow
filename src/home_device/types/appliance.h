@@ -29,7 +29,7 @@ enum cond_t {
 
 typedef struct cmdSet {
 	enum opt_t type;
-	
+
 	int command;
 	int option;
 } cmdset;

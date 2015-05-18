@@ -60,7 +60,7 @@ void run(struct flow *flow) {
 void runNode(struct node *node) {
 	struct appliance *app = apps->head;
 	int ret = -1;
-	
+
 	cmdset set;
 
 	// Find the appliance to send command.
@@ -71,44 +71,44 @@ void runNode(struct node *node) {
 
 	set.command = node->command;
 	set.option = node->option;
-	
+
 	switch (node->type) {
 		case N_ACTION:
 			set.type = O_NOTIFY;
-			
-			if (app->runCommand(app->addr, set, NULL) == -1) {
-				msg.state = FLOW_FAILED;
-				msgsnd(msg_id, &msg, MSGSIZE, 0);
-				
-				exit(0);
-			}
-			break;
-			
-		case N_TRIGGER:
-			set.type = O_WAIT;
-			
-			if (app->runCommand(app->addr, set, NULL) == -1) {
-				msg.state = FLOW_FAILED;
-				msgsnd(msg_id, &msg, MSGSIZE, 0);
-				
-				exit(0);
-			}
-			break;
-			
-		case N_CONDITION:
-			set.type = O_NOWAIT;
-			
+
 			if (app->runCommand(app->addr, set, &ret) == -1) {
 				msg.state = FLOW_FAILED;
 				msgsnd(msg_id, &msg, MSGSIZE, 0);
-				
+
 				exit(0);
 			}
-			
+			break;
+
+		case N_TRIGGER:
+			set.type = O_WAIT;
+
+			if (app->runCommand(app->addr, set, &ret) == -1) {
+				msg.state = FLOW_FAILED;
+				msgsnd(msg_id, &msg, MSGSIZE, 0);
+
+				exit(0);
+			}
+			break;
+
+		case N_CONDITION:
+			set.type = O_NOWAIT;
+
+			if (app->runCommand(app->addr, set, &ret) == -1) {
+				msg.state = FLOW_FAILED;
+				msgsnd(msg_id, &msg, MSGSIZE, 0);
+
+				exit(0);
+			}
+
 			if (ret) {
 				msg.state = FLOW_DONENODE;
 				msgsnd(msg_id, &msg, MSGSIZE, 0);
-				
+
 				if (node->child) runNode(node->child);
 			} else {
 				msg.state = FLOW_SKIPCHILD;
@@ -118,29 +118,28 @@ void runNode(struct node *node) {
 
 		case N_LOOP:
 			set.type = O_NOWAIT;
-			
+
 			while (ret != 0) {
 				if (app->runCommand(app->addr, set, &ret) == -1) {
 					msg.state = FLOW_FAILED;
 					msgsnd(msg_id, &msg, MSGSIZE, 0);
-				
+
 					exit(0);
 				}
-				
+
 				if (ret && node->child) runNode(node->child);
 			}
-			
+
 			msg.state = FLOW_DONENODE;
 			msgsnd(msg_id, &msg, MSGSIZE, 0);
-			
-			break;
 
+			break;
 
 		case N_COWORK:
 			runNodesAtOnce(node->child);
 			break;
 	}
-	
+
 	if (node->next) runNode(node->next);
 }
 
@@ -148,19 +147,20 @@ void runNodesAtOnce(struct node *head) {
 	struct node *temp;
 	int num = 0;
 	int i;
-	
+
 	pthread_t *thread;
-	
-	for (temp = head; temp != NULL; temp = temp->next) ++num;
+
+	for (temp = head; temp != NULL; temp = temp->next)
+		++num;
 	temp = head;
-	
+
 	thread = (pthread_t *) malloc(sizeof(pthread_t) * num);
-	
+
 	for (i = 0; i < num; i++) {
 		pthread_create(&thread[i], NULL, runNodeByThread, temp);
 		temp = temp->next;
 	}
-	
+
 	for (i = 0; i < num; i++) {
 		pthread_join(thread[i], NULL);
 	}
