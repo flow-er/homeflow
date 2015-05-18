@@ -54,8 +54,13 @@ struct node *parseNode(xmlNode *elem) {
 			node->appid = node->command = node->option = 0;
 			node->child = node->next = NULL;
 
+			node->num = -1;
+
 			// Parse properties of the node. (except cowork node)
 			if (node->type == N_COWORK) break;
+			if (node->type == N_ACTION) {
+				node->num = atoi(GETPROP(elem, "num"));
+			}
 
 			node->appid = atoi(GETPROP(elem, "appid"));
 			node->command = (uint) atoi(GETPROP(elem, "command"));

@@ -40,7 +40,7 @@ struct appliance {
 	enum conn_t ctype;
 	long addr;
 
-	int (*runCommand)(long, cmdset, int *);
+	int (*runCommand)(long, cmdset);
 
 	struct appliance *prev;
 	struct appliance *next;
@@ -53,5 +53,3 @@ struct appl_list {
 
 struct appl_list *parseApplList(const char *path);
 void freeApplList(struct appl_list *apps);
-
-int runCommand()

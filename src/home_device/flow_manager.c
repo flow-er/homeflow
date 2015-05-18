@@ -18,16 +18,20 @@
 #define MAXLINE 127
 
 #define SERVER_ADDR "52.68.106.249"
-#define SERVER_PORT 80
+#define SERVER_PORT 52222
+#define HOMDEV_PORT 50000
 
 #define RD 0
 #define WR 1
 
 typedef int fd;
 
-void executeMsgManager(int *fd);
+pid_t executeMsgManager(int *fd);
+pid_t executeAppManager();
+
 void initServerSocket(int *fd);
 void executeFlows();
+
 void signalHandler(int);
 
 const char *procname = "flow_manager";
@@ -35,17 +39,21 @@ const char *procname = "flow_manager";
 struct scheduler scheduler;
 struct message msg;
 
+pid_t pid_msgman, pid_appman;
+
 int main(int argc, const char *argv[]) {
 	fd server[2], pipe[2];
 	fd_set fds;
 
 	int fd_max;
 
-	signal(SIGINT, signalHandler);
+	signal(SIGUSR1, signalHandler);
 
 	scheduleEvents(&scheduler, INIT);
-	executeMsgManager(pipe);
 	initServerSocket(server);
+
+	pid_msgman = executeMsgManager(pipe);
+	pid_appman = executeAppManager();
 
 	FD_ZERO(&fds);
 
@@ -67,25 +75,31 @@ int main(int argc, const char *argv[]) {
 		}
 
 		if (FD_ISSET(pipe[RD], &temp)) {
-			struct event *event;
-			const int ok = 1;
-
 			read(pipe[RD], &msg, sizeof(struct message));
 			write(pipe[WR], &ok, sizeof(int));
 
-			for (event = scheduler.head; event != NULL; event = event->next) {
-				if (msg.pid == event->pid) {
-					event->pid = 0;
-					msg.pid = event->flow->id;
+			if (msg.type == FROM_FLOW_EXECUTER) {
+				struct event *event = scheduler.head;
+				const int ok = 1;
 
-					break;
+				while (event && msg.pid == event->pid)
+					event = event->next;
+
+				if (msg.state == FLOW_COMPLETED || msg.state == FLOW_FAILED) {
+					event->pid = 0;
 				}
+
+				msg.pid = event->flow->id;
+			} else if (msg.type == FROM_APP_MANAGER) {
+				// TODO : Write code.
 			}
 
 			write(server[WR], &msg, sizeof(struct message));
-		} else if (FD_ISSET(server[RD], &temp)) {
+		}
+		if (FD_ISSET(server[RD], &temp)) {
 			// TODO : Write code.
-		} else if (FD_ISSET(server[WR], &temp)) {
+		}
+		if (FD_ISSET(server[WR], &temp)) {
 			// TODO : Write code.
 			scheduleEvents(&scheduler, REDO);
 		}
@@ -94,9 +108,10 @@ int main(int argc, const char *argv[]) {
 	return 0;
 }
 
-void executeMsgManager(int *fd) {
+pid_t executeMsgManager(int *fd) {
+	pid_t pid;
+
 	int fd1[2], fd2[2];
-	int pid;
 	char *argv[4];
 
 	pipe(fd1);
@@ -127,6 +142,27 @@ void executeMsgManager(int *fd) {
 	fd[WR] = fd2[1];
 
 	free(argv[1]);
+
+	return pid;
+}
+
+pid_t executeAppManager() {
+	pid_t pid;
+
+	char *argv[1];
+
+	argv[0] = "app_manager";
+
+	if ((pid = fork())) {
+
+	} else {
+		if (execv("./app_manager", argv) == -1) {
+			printf("%s : Failed to execute msg_manager", procname);
+			exit(1);
+		}
+	}
+
+	return pid;
 }
 
 void initServerSocket(int *fd) {
@@ -147,25 +183,25 @@ void initServerSocket(int *fd) {
 		exit(1);
 	}
 
-	//send to alert connection success with some kind of id
-	//do something for fd[RD] (in fact, server[RD]) or do else.
-	//
-	//if ((fd[RD] = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
-	//	printf("%s : Failed to create socket.\n", procname);
-	//	exit(1);
-	//}
-	//
-	//memset(&addr, 0, sizeof(struct sockaddr_in));
-	//addr.sin_family = AF_INET;
-	//addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	//addr.sin_port = htons(19916);
-	//
-	//if (bind(fd[RD], (const struct sockaddr *) &addr, sizeof(addr)) < 0) {
-	//	printf("%s : Failed to bind socket.\n", procname);
-	//	exit(1);
-	//}
-	//
-	//listen(fd[RD], 5);
+	if ((fd[RD] = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
+		printf("%s : Failed to create socket.\n", procname);
+		exit(1);
+	}
+
+	memset(&addr, 0, sizeof(struct sockaddr_in));
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	addr.sin_port = htons(HOMDEV_PORT);
+
+	if (bind(fd[RD], (const struct sockaddr *) &addr, sizeof(addr)) < 0) {
+		printf("%s : Failed to bind socket.\n", procname);
+		exit(1);
+	}
+
+	if (listen(fd[RD], 5) < 0) {
+		printf("%s : Failed to listen socket.\n", procname);
+		exit(1);
+	}
 }
 
 void executeFlows() {
@@ -195,6 +231,13 @@ void executeFlows() {
 }
 
 void signalHandler(int signal) {
-	freeScheduler(scheduler);
+	struct event *event = NULL;
+
+	for (event = scheduler.head; event != NULL; event = event->next) {
+		if (!event->pid) continue;
+		kill(event->pid, SIGUSR1);
+	}
+
+	freeScheduler(&scheduler);
 	exit(0);
 }

@@ -18,7 +18,7 @@ int main(int argc, const char *argv[]) {
 
 	if (argc < 3) return 0;
 
-	signal(SIGINT, signalHandler);
+	signal(SIGUSR1, signalHandler);
 
 	fd[1] = atoi(argv[1]);
 	fd[0] = atoi(argv[2]);

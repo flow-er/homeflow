@@ -14,6 +14,9 @@ void run(struct flow *flow);
 void runNodesAtOnce(struct node *head);
 void *runNodeByThread(void *temp);
 
+inline void sendMessage(int node, enum state state);
+void signalHandler(int signal);
+
 struct cmdOption {
 	enum cond_t cond;
 	int val;
@@ -30,6 +33,8 @@ int main(int argc, const char *argv[]) {
 	char path[BUFSIZ];
 
 	if (argc < 2) return 0;
+
+	signal(SIGUSR1, signalHandler);
 
 	// BUG : Clearly have no effects at all.
 	if ((msg_id = msgget(MSG_KEY, 0)) < 0) {
@@ -51,14 +56,21 @@ int main(int argc, const char *argv[]) {
 }
 
 void run(struct flow *flow) {
+	if (!flow->isAuto) sendMessage(0, FLOW_RUNNING);
+
 	runNode(flow->head);
 
-	msg.state = FLOW_COMPLETED;
-	msgsnd(msg_id, &msg, MSGSIZE, 0);
+	sendMessage(0, FLOW_COMPLETED);
 }
 
 void runNode(struct node *node) {
 	struct appliance *app = apps->head;
+
+	// int ret : Get return value for command.
+	//
+	//           value -1 : Failed to connect.
+	//                  0 : Comparison expression is wrong.
+	//                  1 : Comparison expression is right.
 	int ret = -1;
 
 	cmdset set;
@@ -76,63 +88,42 @@ void runNode(struct node *node) {
 		case N_ACTION:
 			set.type = O_NOTIFY;
 
-			if (app->runCommand(app->addr, set, &ret) == -1) {
-				msg.state = FLOW_FAILED;
-				msgsnd(msg_id, &msg, MSGSIZE, 0);
+			sendMessage(node->num, NODE_RUNNING);
+			ret = app->runCommand(app->addr, set);
 
-				exit(0);
-			}
+			if (ret == -1) sendMessage(0, FLOW_FAILED);
+			sendMessage(node->num, NODE_COMPLETED);
 			break;
 
 		case N_TRIGGER:
 			set.type = O_WAIT;
 
-			if (app->runCommand(app->addr, set, &ret) == -1) {
-				msg.state = FLOW_FAILED;
-				msgsnd(msg_id, &msg, MSGSIZE, 0);
+			while (ret == 0) {
+				ret = app->runCommand(app->addr, set);
 
-				exit(0);
+				if (ret == -1) sendMessage(0, FLOW_FAILED);
+				if (ret) sendMessage(0, FLOW_RUNNING);
 			}
 			break;
 
 		case N_CONDITION:
 			set.type = O_NOWAIT;
 
-			if (app->runCommand(app->addr, set, &ret) == -1) {
-				msg.state = FLOW_FAILED;
-				msgsnd(msg_id, &msg, MSGSIZE, 0);
+			ret = app->runCommand(app->addr, set);
 
-				exit(0);
-			}
-
-			if (ret) {
-				msg.state = FLOW_DONENODE;
-				msgsnd(msg_id, &msg, MSGSIZE, 0);
-
-				if (node->child) runNode(node->child);
-			} else {
-				msg.state = FLOW_SKIPCHILD;
-				msgsnd(msg_id, &msg, MSGSIZE, 0);
-			}
+			if (ret == -1) sendMessage(0, FLOW_FAILED);
+			if (ret && node->child) runNode(node->child);
 			break;
 
 		case N_LOOP:
 			set.type = O_NOWAIT;
 
 			while (ret != 0) {
-				if (app->runCommand(app->addr, set, &ret) == -1) {
-					msg.state = FLOW_FAILED;
-					msgsnd(msg_id, &msg, MSGSIZE, 0);
+				ret = app->runCommand(app->addr, set);
 
-					exit(0);
-				}
-
+				if (ret == -1) sendMessage(0, FLOW_FAILED);
 				if (ret && node->child) runNode(node->child);
 			}
-
-			msg.state = FLOW_DONENODE;
-			msgsnd(msg_id, &msg, MSGSIZE, 0);
-
 			break;
 
 		case N_COWORK:
@@ -169,4 +160,17 @@ void runNodesAtOnce(struct node *head) {
 void *runNodeByThread(void *node) {
 	runNode((struct node *) node);
 	return NULL;
+}
+
+inline void sendMessage(int node, enum state state) {
+	msg.state = state;
+	msg.node = node;
+	msgsnd(msg_id, &msg, MSGSIZE, 0);
+
+	if (state == FLOW_FAILED) exit(0);
+}
+
+void signalHandler(int signal) {
+	freeApplList(apps);
+	exit(0);
 }

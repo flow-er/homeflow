@@ -12,8 +12,8 @@
 
 struct appliance *parseApp(xmlNode *elem);
 
-int sendCommandToBLuetoohDevice(long addr, cmdset set, int *ret);
-int sendCommandToVirtualDevice(long addr, cmdset set, int *ret);
+int sendCommandToBLuetoohDevice(long addr, cmdset set);
+int sendCommandToVirtualDevice(long addr, cmdset set);
 
 struct appl_list *parseApplList(const char *path) {
 	struct appl_list *apps;
@@ -62,7 +62,7 @@ struct appliance *parseApp(xmlNode *elem) {
 			break;
 	}
 
-	if (elem->next) app->next = parseNode(elem->next);
+	if (elem->next) app->next = parseApp(elem->next);
 	app->next->prev = app;
 
 	return app;
@@ -75,17 +75,17 @@ void freeApplList(struct appl_list *apps) {
 		free(app);
 	}
 
-	free (scheduler);
+	free(apps);
 }
 
-int sendCommandToBLuetoohDevice(long addr, cmdset set, int *ret) {
+int sendCommandToBLuetoohDevice(long addr, cmdset set) {
 	printf("test : press any button to continue.\n");
 	getchar();
 
-	return 0;
+	return 1;
 }
 
-int sendCommandToVirtualDevice(long addr, cmdset set, int *ret) {
+int sendCommandToVirtualDevice(long addr, cmdset set) {
 	enum cond_t cond;
 	int value;
 
@@ -94,8 +94,7 @@ int sendCommandToVirtualDevice(long addr, cmdset set, int *ret) {
 	value = (set.option << 8) >> 8;
 
 	switch (addr) {
-		// Available only for 'O_NOWAIT'.
-		case V_COUNTER:
+		case V_COUNTER:  // Available only for 'O_NOWAIT'.
 			if (set.command == 1) {
 				static int count = -1;
 				int result = 0;
@@ -106,26 +105,20 @@ int sendCommandToVirtualDevice(long addr, cmdset set, int *ret) {
 				if (count < value) result += (1 << 1);
 				if (count > value) result += (1 << 2);
 
-				*ret = (result & cond);
-
-				if (*ret == 0) count = -1;
+				if (!(result & cond)) count = -1;
+				return (result & cond);
 			}
 			break;
 
-			// Available only for 'O_NOWAIT' and 'O_WAIT'.
-		case V_TIMER:
+		case V_TIMER:  // Available only for 'O_NOWAIT' and 'O_WAIT'.
 			if (set.command == 1) {
-				struct tm *temp = localtime(&time(NULL));
+				time_t t = time(NULL);
+				struct tm *temp = localtime(&t);
 				int wday_mask = value >> 17;
 
-				long goal = 0, curr = 0;
+				uint goal = 0, curr = 0;
 
-				int result = 0;
-
-				if (!(wday_mask & (1 << curr.tm_wday))) {
-					*ret = 0;
-					return 0;
-				}
+				if (!(wday_mask & (1 << temp->tm_wday))) return 0;
 
 				goal += ((value << 7) >> 19) * 3600;
 				goal += ((value << 12) >> 18) * 60;
@@ -136,21 +129,20 @@ int sendCommandToVirtualDevice(long addr, cmdset set, int *ret) {
 				curr += temp->tm_sec;
 
 				if (set.type == O_NOWAIT) {
+					int result = 0;
+
 					if (curr == goal) result += (1 << 0);
 					if (curr < goal) result += (1 << 1);
 					if (curr > goal) result += (1 << 2);
 
-					*ret = (result & cond);
+					return (result & cond);
 				} else if (set.type == O_WAIT) {
 					// Available only for '=='.
 
-					if (curr > goal) {
-						*ret = 0;
-						return 0;
-					}
+					if (curr > goal) return 0;
 
 					sleep((goal - curr) * 1000);
-					*ret = 1;
+					return 1;
 				}
 			}
 			break;

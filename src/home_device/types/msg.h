@@ -6,12 +6,17 @@
 #define MSGSIZE (sizeof(struct message) - sizeof(long))
 #define MESGHDRSIZE (sizeof(struct mesg) - MAXMESGDATA)
 
+enum msgtype {
+	FROM_FLOW_EXECUTER = 0,
+	FROM_APP_MANAGER
+};
+
 enum state {
 	FLOW_RUNNING = 0,
-	FLOW_DONENODE,
-	FLOW_SKIPCHILD,
 	FLOW_COMPLETED,
 	FLOW_FAILED,
+	NODE_RUNNING,
+	NODE_COMPLETED
 };
 
 struct message {

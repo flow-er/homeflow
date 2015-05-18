@@ -21,6 +21,8 @@ struct node {
 	int appid;
 	uint command, option;
 
+	int num;
+
 	struct node *next;
 	struct node *child;
 };
