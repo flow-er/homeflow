@@ -18,11 +18,12 @@
 #define MAXLINE 127
 
 #define SERVER_ADDR "52.68.106.249"
-#define SERVER_PORT 52222
+#define SERVER_PORT 52223
 #define HOMDEV_PORT 50000
 
-#define RD 0
-#define WR 1
+#define RD 0 // Read from ...
+#define WR 1 // Write to ...
+#define CN 2 // Open connection for ...
 
 typedef int fd;
 
@@ -42,10 +43,12 @@ struct message msg;
 pid_t pid_msgman, pid_appman;
 
 int main(int argc, const char *argv[]) {
-	fd server[2], pipe[2];
+	fd server[3], pipe[2];
 	fd_set fds;
 
 	int fd_max;
+
+	int usr_exec = -1;
 
 	signal(SIGUSR1, signalHandler);
 
@@ -59,7 +62,7 @@ int main(int argc, const char *argv[]) {
 
 	FD_SET(pipe[RD], &fds);
 	FD_SET(pipe[WR], &fds);
-	FD_SET(server[RD], &fds);
+	FD_SET(server[CN], &fds);
 
 	fd_max = pipe[WR];
 
@@ -82,19 +85,31 @@ int main(int argc, const char *argv[]) {
 			if (msg.type == FROM_FLOW_EXECUTER) {
 				struct event *event = scheduler.head;
 
-				while (event && msg.pid == event->pid)
+				while (event && msg.id == event->pid) {
 					event = event->next;
+				}
 
 				if (msg.state == FLOW_COMPLETED || msg.state == FLOW_FAILED) {
 					event->pid = 0;
 				}
 
-				msg.pid = event->flow->id;
-			} else if (msg.type == FROM_APP_MANAGER) {
-				// TODO : Write code.
+				msg.id = event->flow->id;
 			}
 
 			write(server[WR], &msg, sizeof(struct message));
+		}
+		if (FD_ISSET(server[CN], &temp)) {
+			struct sockaddr_in addr;
+			socklen_t slen = sizeof(addr);
+
+			server[RD] = accept(server[CN], (struct sockaddr *) &addr, &slen);
+
+			if (server[RD] < 0) {
+				printf("%s : Failed to accept client.", procname);
+				exit(1);
+			}
+
+			FD_SET(server[RD], &fds);
 		}
 		if (FD_ISSET(server[RD], &temp)) {
 			char buf[BUFSIZ];
@@ -102,22 +117,32 @@ int main(int argc, const char *argv[]) {
 
 			char path[BUFSIZ] = "";
 			int file = -1;
-			int isFirst = 1;
 
-			while((len = read(server[RD], buf, BUFSIZ - 1)) != 0) {
-				// TODO : Write code for the case of flow execution command.
-				if(isFirst) {
-					strcat(path, TEMP_DIR);
-					//concat file name;
+			while ((len = read(server[RD], buf, BUFSIZ - 1)) != 0) {
+				char *data = strpbrk(buf, " ");
+
+				*data = '\0';
+				++data;
+
+				if (!strcmp(buf, "START")) {
+					usr_exec = atoi(data);
+				} else if (!strcmp(buf, "FLOW")) {
+					char *xml = strpbrk(data, " ");
+
+					*xml = '\0';
+					++xml;
+
+					sprintf(path, "%s%s", TEMP_DIR, buf);
 
 					file = open(path, O_WRONLY | O_CREAT | O_TRUNC);
-					isFirst = 0;
+					write(file, xml, len);
+				} else {
+					write(file, buf, len);
 				}
-
-				write(file, buf, len);
 			}
 
 			close(file);
+			FD_CLR(server[RD], &fds);
 			scheduleEvents(&scheduler, REDO);
 		}
 	}
@@ -185,6 +210,24 @@ pid_t executeAppManager() {
 void initServerSocket(int *fd) {
 	struct sockaddr_in addr;
 
+	// Set 'server[CN]'.
+	fd[CN] = socket(PF_INET, SOCK_STREAM, 0);
+
+	memset(&addr, 0, sizeof(struct sockaddr_in));
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	addr.sin_port = htons(HOMDEV_PORT);
+
+	if (bind(fd[CN], (const struct sockaddr *) &addr, sizeof(addr)) < 0) {
+		printf("%s : Failed to bind socket.\n", procname);
+		exit(1);
+	}
+
+	if (listen(fd[CN], 5) < 0) {
+		printf("%s : Failed to listen socket.\n", procname);
+		exit(1);
+	}
+
 	// Set 'server[WR]'.
 	fd[WR] = socket(PF_INET, SOCK_STREAM, 0);
 
@@ -197,34 +240,16 @@ void initServerSocket(int *fd) {
 		printf("%s : Failed to connect with server.\n", procname);
 		exit(1);
 	}
-
-	// Set 'server[RD]'.
-	fd[RD] = socket(PF_INET, SOCK_STREAM, 0);
-
-	memset(&addr, 0, sizeof(struct sockaddr_in));
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	addr.sin_port = htons(HOMDEV_PORT);
-
-	if (bind(fd[RD], (const struct sockaddr *) &addr, sizeof(addr)) < 0) {
-		printf("%s : Failed to bind socket.\n", procname);
-		exit(1);
-	}
-
-	if (listen(fd[RD], 5) < 0) {
-		printf("%s : Failed to listen socket.\n", procname);
-		exit(1);
-	}
 }
 
-void executeFlows() {
+void executeFlows(int id) {
 	struct event *event = NULL;
 
 	for (event = scheduler.head; event != NULL; event = event->next) {
 		char *argv[3];
 
 		if (event->pid != 0) continue;
-		if (!event->flow->isAuto) continue;
+		if ((event->flow->id != id) && (!event->flow->isAuto)) continue;
 
 		argv[0] = "flow_executer";
 		argv[1] = (char *) malloc(sizeof(char) * BUFSIZ);
@@ -245,6 +270,9 @@ void executeFlows() {
 
 void signalHandler(int signal) {
 	struct event *event = NULL;
+
+	kill(pid_msgman, SIGUSR1);
+	kill(pid_appman, SIGUSR1);
 
 	for (event = scheduler.head; event != NULL; event = event->next) {
 		if (!event->pid) continue;

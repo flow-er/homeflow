@@ -42,7 +42,7 @@ int main(int argc, const char *argv[]) {
 		return 0;
 	}
 
-	msg.pid = getpid();
+	msg.id = getpid();
 
 	sprintf(path, "./user/flows/%s.xml", argv[1]);
 
