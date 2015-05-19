@@ -5,11 +5,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 
-import kookmin.cs.flower.homeflow.FileManagement.FileManager;
+import java.util.ArrayList;
 
 /**
  * @brief class for showing delflow.xml layout
@@ -21,7 +20,8 @@ import kookmin.cs.flower.homeflow.FileManagement.FileManager;
  */
 public class DelFlow extends Fragment implements View.OnClickListener {
 
-  ListView listView;
+  ExpandableListView listView;
+  private ArrayList<String> mChildList = null;
 
   /**
    * @brief method for showing delflow.xml layout
@@ -37,13 +37,32 @@ public class DelFlow extends Fragment implements View.OnClickListener {
     // Inflate the layout for this fragment
     View rootView = inflater.inflate(R.layout.delflow, container, false);
 
+    mChildList = new ArrayList<String>();
+    mChildList.add("                         CONTENTS");
+    mChildList.add("                         CONTENTS");
+    mChildList.add("                         CONTENTS");
+
     Button del_flow_btn = (Button) rootView.findViewById(R.id.del_flow_btn);
 
     del_flow_btn.setOnClickListener(this);
 
-    listView = (ListView) rootView.findViewById(R.id.del_flow_list);
+    ArrayList<MyCustomDTO4> delFlowList = new ArrayList<MyCustomDTO4>();
+    delFlowList.add(new MyCustomDTO4(R.id.del_flow_row_btn, "      2015/05/18 12:00", mChildList));
+    delFlowList.add(new MyCustomDTO4(R.id.del_flow_row_btn, "      2015/05/18 12:00", mChildList));
+    delFlowList.add(new MyCustomDTO4(R.id.del_flow_row_btn, "      2015/05/18 12:00", mChildList));
+    delFlowList.add(new MyCustomDTO4(R.id.del_flow_row_btn, "      2015/05/18 12:00", mChildList));
+    delFlowList.add(new MyCustomDTO4(R.id.del_flow_row_btn, "      2015/05/18 12:00", mChildList));
+    delFlowList.add(new MyCustomDTO4(R.id.del_flow_row_btn, "      2015/05/18 12:00", mChildList));
+    delFlowList.add(new MyCustomDTO4(R.id.del_flow_row_btn, "      2015/05/18 12:00", mChildList));
+    delFlowList.add(new MyCustomDTO4(R.id.del_flow_row_btn, "      2015/05/18 12:00", mChildList));
+    delFlowList.add(new MyCustomDTO4(R.id.del_flow_row_btn, "      2015/05/18 12:00", mChildList));
+    delFlowList.add(new MyCustomDTO4(R.id.del_flow_row_btn, "      2015/05/18 12:00", mChildList));
+
+    listView = (ExpandableListView) rootView.findViewById(R.id.del_flow_list);/*
     ArrayAdapter delFlowAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1,
-                                                    FileManager.getFlowList());
+                                                    FileManager.getFlowList());*/
+    MyCustomAdapter4 delFlowAdapter = new MyCustomAdapter4(getActivity(), R.layout.delflowrow, delFlowList);
+
     listView.setAdapter(delFlowAdapter);
 
     return rootView;
