@@ -1,36 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
 #include <fcntl.h>
-#include <time.h>
 #include <signal.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 
 #include "types/scheduler.h"
 #include "types/msg.h"
 
-#define MAXLINE 127
+#define RD 0
+#define WR 1
 
 #define SERVER_ADDR "52.68.106.249"
 #define SERVER_PORT 52223
-#define HOMDEV_PORT 50000
-
-#define RD 0 // Read from ...
-#define WR 1 // Write to ...
-#define CN 2 // Open connection for ...
 
 typedef int fd;
 
 pid_t executeMsgManager(int *fd);
 pid_t executeAppManager();
-
-void initServerSocket(int *fd);
 void executeFlows();
 
 void signalHandler(int);
@@ -43,26 +31,37 @@ struct message msg;
 pid_t pid_msgman, pid_appman;
 
 int main(int argc, const char *argv[]) {
-	fd server[3], pipe[2];
+	fd server, pipe[2];
 	fd_set fds;
-
 	int fd_max;
+	struct sockaddr_in addr;
 
 	int usr_exec = -1;
 
 	signal(SIGUSR1, signalHandler);
 
 	scheduleEvents(&scheduler, INIT);
-	initServerSocket(server);
 
 	pid_msgman = executeMsgManager(pipe);
 	pid_appman = executeAppManager();
+
+	server = socket(PF_INET, SOCK_STREAM, 0);
+
+	memset(&addr, 0, sizeof(struct sockaddr_in));
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = inet_addr(SERVER_ADDR);
+	addr.sin_port = htons(SERVER_PORT);
+
+	if (connect(server, (struct sockaddr *) &addr, sizeof(addr)) == -1) {
+		printf("%s : Failed to connect with server.\n", procname);
+		exit(1);
+	}
 
 	FD_ZERO(&fds);
 
 	FD_SET(pipe[RD], &fds);
 	FD_SET(pipe[WR], &fds);
-	FD_SET(server[CN], &fds);
+	FD_SET(server, &fds);
 
 	fd_max = pipe[WR];
 
@@ -96,29 +95,16 @@ int main(int argc, const char *argv[]) {
 				msg.id = event->flow->id;
 			}
 
-			write(server[WR], &msg, sizeof(struct message));
+			write(server, &msg, sizeof(struct message));
 		}
-		if (FD_ISSET(server[CN], &temp)) {
-			struct sockaddr_in addr;
-			socklen_t slen = sizeof(addr);
-
-			server[RD] = accept(server[CN], (struct sockaddr *) &addr, &slen);
-
-			if (server[RD] < 0) {
-				printf("%s : Failed to accept client.", procname);
-				exit(1);
-			}
-
-			FD_SET(server[RD], &fds);
-		}
-		if (FD_ISSET(server[RD], &temp)) {
+		if (FD_ISSET(server, &temp)) {
 			char buf[BUFSIZ];
 			long len;
 
 			char path[BUFSIZ] = "";
 			int file = -1;
 
-			while ((len = read(server[RD], buf, BUFSIZ - 1)) != 0) {
+			while ((len = read(server, buf, BUFSIZ - 1)) != 0) {
 				char *data = strpbrk(buf, " ");
 
 				*data = '\0';
@@ -141,9 +127,8 @@ int main(int argc, const char *argv[]) {
 				}
 			}
 
-			close(file);
-			FD_CLR(server[RD], &fds);
 			scheduleEvents(&scheduler, REDO);
+			if (file != -1) close(file);
 		}
 	}
 
@@ -175,7 +160,7 @@ pid_t executeMsgManager(int *fd) {
 		close(fd2[1]);
 
 		if (execv("./msg_manager", argv) == -1) {
-			printf("%s : Failed to execute msg_manager", procname);
+			printf("%s : Failed to execute msg_manager\n", procname);
 			exit(1);
 		}
 	}
@@ -190,56 +175,21 @@ pid_t executeMsgManager(int *fd) {
 
 pid_t executeAppManager() {
 	pid_t pid;
-
-	char *argv[1];
+	char *argv[2];
 
 	argv[0] = "app_manager";
+	argv[1] = NULL;
 
-	if ((pid = fork())) {
+	pid = fork();
 
-	} else {
+	if (!pid) {
 		if (execv("./app_manager", argv) == -1) {
-			printf("%s : Failed to execute msg_manager", procname);
+			printf("%s : Failed to execute app_manager\n", procname);
 			exit(1);
 		}
 	}
 
 	return pid;
-}
-
-void initServerSocket(int *fd) {
-	struct sockaddr_in addr;
-
-	// Set 'server[CN]'.
-	fd[CN] = socket(PF_INET, SOCK_STREAM, 0);
-
-	memset(&addr, 0, sizeof(struct sockaddr_in));
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	addr.sin_port = htons(HOMDEV_PORT);
-
-	if (bind(fd[CN], (const struct sockaddr *) &addr, sizeof(addr)) < 0) {
-		printf("%s : Failed to bind socket.\n", procname);
-		exit(1);
-	}
-
-	if (listen(fd[CN], 5) < 0) {
-		printf("%s : Failed to listen socket.\n", procname);
-		exit(1);
-	}
-
-	// Set 'server[WR]'.
-	fd[WR] = socket(PF_INET, SOCK_STREAM, 0);
-
-	memset(&addr, 0, sizeof(struct sockaddr_in));
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = inet_addr(SERVER_ADDR);
-	addr.sin_port = htons(SERVER_PORT);
-
-	if (connect(fd[WR], (struct sockaddr *) &addr, sizeof(addr)) == -1) {
-		printf("%s : Failed to connect with server.\n", procname);
-		exit(1);
-	}
 }
 
 void executeFlows(int id) {
