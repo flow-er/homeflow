@@ -48,7 +48,7 @@ struct appliance *parseApp(xmlNode *elem) {
 	app->prev = app->next = NULL;
 
 	// Parse properties of the appliance.
-	app->id = atoi(GETPROP(elem, "appid"));
+	app->id = atoi(GETPROP(elem, "id"));
 	app->ctype = atoi(GETPROP(elem, "ctype"));
 	app->addr = atol(GETPROP(elem, "addr"));
 
@@ -62,8 +62,10 @@ struct appliance *parseApp(xmlNode *elem) {
 			break;
 	}
 
-	if (elem->next) app->next = parseApp(elem->next);
-	app->next->prev = app;
+	if (elem->next) {
+		app->next = parseApp(elem->next);
+		app->next->prev = app;
+	}
 
 	return app;
 }
@@ -87,29 +89,13 @@ int sendCommandToBLuetoohDevice(long addr, cmdset set) {
 
 int sendCommandToVirtualDevice(long addr, cmdset set) {
 	enum cond_t cond;
-	int value;
+	uint value;
 
 	// Parse command option.
 	cond = set.option >> 24;
 	value = (set.option << 8) >> 8;
 
 	switch (addr) {
-		case V_COUNTER:  // Available only for 'O_NOWAIT'.
-			if (set.command == 1) {
-				static int count = -1;
-				int result = 0;
-
-				++count;
-
-				if (count == value) result += (1 << 0);
-				if (count < value) result += (1 << 1);
-				if (count > value) result += (1 << 2);
-
-				if (!(result & cond)) count = -1;
-				return (result & cond);
-			}
-			break;
-
 		case V_TIMER:  // Available only for 'O_NOWAIT' and 'O_WAIT'.
 			if (set.command == 1) {
 				time_t t = time(NULL);
@@ -118,14 +104,14 @@ int sendCommandToVirtualDevice(long addr, cmdset set) {
 
 				uint goal = 0, curr = 0;
 
-				if (!(wday_mask & (1 << temp->tm_wday))) return 0;
+				if (!(wday_mask & (1 << (6 - temp->tm_wday)))) return 0;
 
-				goal += ((value << 7) >> 19) * 3600;
-				goal += ((value << 12) >> 18) * 60;
-				goal += ((value << 18) >> 18);
+				goal += ((value << 15) >> 27) * 3600;
+				goal += ((value << 20) >> 26) * 60;
+				goal += ((value << 26) >> 26);
 
 				curr += temp->tm_hour * 3600;
-				curr += temp->tm_min * 3600;
+				curr += temp->tm_min * 60;
 				curr += temp->tm_sec;
 
 				if (set.type == O_NOWAIT) {
@@ -144,6 +130,22 @@ int sendCommandToVirtualDevice(long addr, cmdset set) {
 					sleep((goal - curr) * 1000);
 					return 1;
 				}
+			}
+			break;
+
+		case V_COUNTER:  // Available only for 'O_NOWAIT'.
+			if (set.command == 1) {
+				static int count = 0;
+				int result = 0;
+
+				++count;
+
+				if (count == value) result += (1 << 0);
+				if (count < value) result += (1 << 1);
+				if (count > value) result += (1 << 2);
+
+				if (!(result & cond)) count = -1;
+				return (result & cond);
 			}
 			break;
 	}

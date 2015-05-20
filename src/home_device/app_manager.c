@@ -16,6 +16,6 @@ int main(int argc, const char *argv[]) {
 	return 0;
 }
 
-void signalHandler(int) {
+void signalHandler(int signal) {
 	exit(0);
 }

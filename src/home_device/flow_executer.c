@@ -14,7 +14,7 @@ void run(struct flow *flow);
 void runNodesAtOnce(struct node *head);
 void *runNodeByThread(void *temp);
 
-inline void sendMessage(int node, enum state state);
+void sendMessage(int node, enum state state);
 void signalHandler(int signal);
 
 struct cmdOption {
@@ -28,23 +28,26 @@ struct appl_list *apps;
 struct message msg;
 int msg_id;
 
+int usr_exec;
+
 int main(int argc, const char *argv[]) {
 	struct flow *flow;
 	char path[BUFSIZ];
 
-	if (argc < 2) return 0;
+	if (argc < 3) return 0;
+	usr_exec = atoi(argv[2]);
 
 	signal(SIGUSR1, signalHandler);
 
 	// BUG : Clearly have no effects at all.
-	if ((msg_id = msgget(MSG_KEY, 0)) < 0) {
-		printf("%s : can't get message queue.\n", procname);
-		return 0;
-	}
+//	if ((msg_id = msgget(MSG_KEY, 0)) < 0) {
+//		printf("%s : can't get message queue.\n", procname);
+//		return 0;
+//	}
 
 	msg.id = getpid();
 
-	sprintf(path, "./user/flows/%s.xml", argv[1]);
+	sprintf(path, "%s%s.xml", FLOW_DIR, argv[1]);
 
 	apps = parseApplList(APPL_PATH);
 
@@ -56,7 +59,7 @@ int main(int argc, const char *argv[]) {
 }
 
 void run(struct flow *flow) {
-	if (!flow->isAuto) sendMessage(0, FLOW_RUNNING);
+	if (!flow->isAuto || usr_exec) sendMessage(0, FLOW_RUNNING);
 
 	runNode(flow->head);
 
@@ -96,6 +99,8 @@ void runNode(struct node *node) {
 			break;
 
 		case N_TRIGGER:
+			if (usr_exec) break;
+
 			set.type = O_WAIT;
 
 			while (ret == 0) {
@@ -162,10 +167,10 @@ void *runNodeByThread(void *node) {
 	return NULL;
 }
 
-inline void sendMessage(int node, enum state state) {
+void sendMessage(int node, enum state state) {
 	msg.state = state;
 	msg.node = node;
-	msgsnd(msg_id, &msg, MSGSIZE, 0);
+	//msgsnd(msg_id, &msg, MSGSIZE, 0);
 
 	if (state == FLOW_FAILED) exit(0);
 }

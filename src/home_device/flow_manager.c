@@ -145,8 +145,8 @@ pid_t executeMsgManager(int *fd) {
 	pipe(fd2);
 
 	argv[0] = "msg_manager";
-	argv[1] = (char *) malloc(sizeof(char) * 5);
-	argv[2] = (char *) malloc(sizeof(char) * 5);
+	argv[1] = (char *) malloc(sizeof(char) * 3);
+	argv[2] = (char *) malloc(sizeof(char) * 3);
 	argv[3] = NULL;
 
 	sprintf(argv[1], "%d", fd1[1]);
@@ -196,16 +196,18 @@ void executeFlows(int id) {
 	struct event *event = NULL;
 
 	for (event = scheduler.head; event != NULL; event = event->next) {
-		char *argv[3];
+		char *argv[4];
 
 		if (event->pid != 0) continue;
 		if ((event->flow->id != id) && (!event->flow->isAuto)) continue;
 
 		argv[0] = "flow_executer";
 		argv[1] = (char *) malloc(sizeof(char) * BUFSIZ);
-		argv[2] = NULL;
+		argv[2] = (char *) malloc(sizeof(char) * 2);
+		argv[3] = NULL;
 
 		sprintf(argv[1], "%d", event->flow->id);
+		sprintf(argv[2], "%d", (event->flow->id == id ? 1 : 0));
 
 		if (!(event->pid = fork())) {
 			if (execv("./flow_executer", argv) == -1) {

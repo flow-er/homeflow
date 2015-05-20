@@ -4,8 +4,8 @@
 #define SYS_COUNTER 1
 
 enum virtual_devices {
-	V_COUNTER = 0,
-	V_TIMER
+	V_TIMER = 1,
+	V_COUNTER
 };
 
 enum conn_t {
@@ -20,7 +20,7 @@ enum opt_t {
 };
 
 enum cond_t {
-	EQUAL = 0,
+	EQUAL = 1,
 	LESS,
 	LESS_OR_EQUAL,
 	MORE,
