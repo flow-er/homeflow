@@ -39,14 +39,26 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:background="#FFFFFFFF"
-                            android:text="\n\n어플의\n\n소개가\n\n들어가는\n\n부분입니다.\n\n\n"/>
+                            android:textColor="#FF2C486D"
+                            android:text="\n\nHome Flow는 기존의 IoT 제품들을\n사용자가 원하는 하나의 흐름으로\n작성할 수 있게끔 해주는 시스템입니다.
+\n\n이미 사용중인 기술의 한계를 넘어\n사용자가 원하는 흐름이 있다면\n특정 규칙이나 모델에 얽매이지 않고\n높은 자유도 아래에서의 작성이 가능합니다.
+\n\n이러한 특징은 보다 폭넓은 사용자 맞춤형 서비스를\n제공할 수 있으며, 더 큰 시장 가치를\n가져올 것으로 기대됩니다.
+\n\n기존의 ‘홈 오토메이션 서비스'들이\np2p 방식을 채택하고 있는 반면 Home Flow는\nCentralized-control 방식으로 동작됩니다.
+\n\n추가적으로 사용자의 정보와 사용자가 작성한\n작업 흐름에 관한 데이터를 \nUser-based, Contents-based 등의\n방법으로 분석할 수 있어 효율적인 스마트 홈 구성이\n가능해질 것으로 기대됩니다.\n\n\n"/>
                     <TextView
                             android:id="@+id/tab2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:background="#FFFFFFFF"
-                            android:text="\n\n어플의\n\n사용법이\n\n들어가는\n\n부분입니다.\n\n\n"/>
+                            android:textColor="#FF2C486D"
+                            android:text="\n\n상단 타이틀 바의 우측 사람 모양 아이콘을 누르면\n계정을 새로 생성하고 로그인하는 화면이 보입니다.
+\n\nEditor 탭을 누르면 가전 기기와 작업 흐름을\n관리하는 부분이 보입니다.
+\n\n가전 기기를 등록/편집하는 부분에서는\n새로운 가전 기기의 이름과 시리얼 번호를\n등록할 수 있고, 편집 및 삭제가 가능합니다.
+\n\n작업 흐름을 등록/편집하는 부분에서는\n복잡한 작업 흐름을 등록할 수 있도록\n조건, 루프, 트리거, 병행 실행을\n다룰 수 있는 편집창이 뜹니다.
+\n\nDashboard 탭을 누르면 현재 사용자가\n보유하고 있는 작업 흐름을 볼 수 있고\n현재 진행 중인 작업 흐름은 흐름 칸의 왼쪽에 있는\n버튼의 깜빡임으로 표시됩니다.
+\n\n흐름 칸을 오른쪽으로 밀면\n활성화/비활성화 버튼과\n펼쳐보기/접기 버튼이 나옵니다.
+\n\n펼쳐보기 버튼을 누르면\n작업 흐름의 상세 내용을 볼 수 있으며\n현재 진행 중인 기기를 색깔 변화로 알 수 있습니다.\n\n\n"/>
                 </FrameLayout>
             </TabHost>
         </LinearLayout>
