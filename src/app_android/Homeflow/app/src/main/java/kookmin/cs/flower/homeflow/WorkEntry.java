@@ -52,6 +52,7 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
     pager.setAdapter(new CustomPagerAdapter(getActivity(), list, R.layout.pager));
 
     Button cond_btn = (Button) rootView.findViewById(R.id.cond_btn);
+    Button loop_btn = (Button) rootView.findViewById(R.id.loop_btn);
     Button appli_btn = (Button) rootView.findViewById(R.id.appli_btn);
     Button work_entry_btn = (Button) rootView.findViewById(R.id.work_entry_btn);
 
@@ -64,6 +65,7 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
     }
 
     cond_btn.setOnClickListener(this);
+    loop_btn.setOnClickListener(this);
     appli_btn.setOnClickListener(this);
     work_entry_btn.setOnClickListener(this);
 
@@ -125,6 +127,10 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
       case R.id.cond_btn:
         CondSelect condSelect = new CondSelect();
         getFragmentManager().beginTransaction().replace(R.id.realtabcontent, condSelect).commit();
+        break;
+      case R.id.loop_btn:
+        LoopSelect loopSelect = new LoopSelect();
+        getFragmentManager().beginTransaction().replace(R.id.realtabcontent, loopSelect).commit();
         break;
       case R.id.appli_btn:
         /*
