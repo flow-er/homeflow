@@ -40,10 +40,10 @@ int main(int argc, const char *argv[]) {
 	signal(SIGUSR1, signalHandler);
 
 	// BUG : Clearly have no effects at all.
-//	if ((msg_id = msgget(MSG_KEY, 0)) < 0) {
-//		printf("%s : can't get message queue.\n", procname);
-//		return 0;
-//	}
+	if ((msg_id = msgget(MSG_KEY, 0)) < 0) {
+		printf("%s : can't get message queue.\n", procname);
+		return 0;
+	}
 
 	msg.id = getpid();
 
@@ -170,7 +170,7 @@ void *runNodeByThread(void *node) {
 void sendMessage(int node, enum state state) {
 	msg.state = state;
 	msg.node = node;
-	//msgsnd(msg_id, &msg, MSGSIZE, 0);
+	msgsnd(msg_id, &msg, MSGSIZE, 0);
 
 	if (state == FLOW_FAILED) exit(0);
 }

@@ -38,13 +38,13 @@ int main(int argc, const char *argv[]) {
 
 	int usr_exec = -1;
 
+	int flag = 0;
+
 	signal(SIGUSR1, signalHandler);
 
 	scheduleEvents(&scheduler, INIT);
 
-	pid_msgman = executeMsgManager(pipe);
-	pid_appman = executeAppManager();
-
+	// Initialize server socket.
 	server = socket(PF_INET, SOCK_STREAM, 0);
 
 	memset(&addr, 0, sizeof(struct sockaddr_in));
@@ -57,11 +57,14 @@ int main(int argc, const char *argv[]) {
 		exit(1);
 	}
 
+	pid_msgman = executeMsgManager(pipe);
+	pid_appman = executeAppManager();
+
 	FD_ZERO(&fds);
 
+	FD_SET(server, &fds);
 	FD_SET(pipe[RD], &fds);
 	FD_SET(pipe[WR], &fds);
-	FD_SET(server, &fds);
 
 	fd_max = pipe[WR];
 
@@ -107,6 +110,11 @@ int main(int argc, const char *argv[]) {
 			while ((len = read(server, buf, BUFSIZ - 1)) != 0) {
 				char *data = strpbrk(buf, " ");
 
+				if(flag == 0) {
+					flag = 1;
+					break;
+				}
+
 				*data = '\0';
 				++data;
 
@@ -118,9 +126,9 @@ int main(int argc, const char *argv[]) {
 					*xml = '\0';
 					++xml;
 
-					sprintf(path, "%s%s", TEMP_DIR, buf);
+					sprintf(path, "%s%s", TEMP_DIR, data);
 
-					file = open(path, O_WRONLY | O_CREAT | O_TRUNC);
+					file = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 					write(file, xml, len);
 				} else {
 					write(file, buf, len);
