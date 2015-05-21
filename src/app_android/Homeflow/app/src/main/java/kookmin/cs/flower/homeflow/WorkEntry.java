@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -98,12 +97,20 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
     @Override
     public Object instantiateItem(View pager, int position) {
       View v = inf.inflate(layout, null);
-      TextView txtValue = (TextView)v.findViewById(R.id.txtValue);
-      txtValue.setText(list.get(position));
+      Button btnValue = (Button)v.findViewById(R.id.btnValue);
+      btnValue.setOnClickListener(mButtonClick);
+      btnValue.setText(list.get(position));
       ((ViewPager)pager).addView(v, 0);
       return v;
     }
   }
+
+  private View.OnClickListener mButtonClick = new View.OnClickListener() {
+    public void onClick(View v) {
+      AppliFunc appliFunc = new AppliFunc();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, appliFunc).commit();
+    }
+  };
 
   /**
    * @brief method for determining actions of cond_btn, appli_btn, and work_entry_btn
