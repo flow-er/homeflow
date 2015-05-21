@@ -2,18 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:background="@drawable/applireg_back">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:orientation="horizontal"
                   android:layout_width="match_parent"
                   android:layout_height="0dp"
-                  android:layout_weight="1"
+                  android:layout_weight="2"
                   android:gravity="center">
         <TextView
-                android:id="@+id/cond_classify_txt"
+                android:id="@+id/loop_classify_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="항목"
+                android:layout_gravity="bottom"
+                android:text="｜ 항목 ｜"
+                android:textColor="#FF404ED2"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
     </LinearLayout>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -23,22 +26,25 @@
                   android:layout_weight="1"
                   android:gravity="center">
         <Spinner
-                android:id="@+id/cond_classify_spin"
+                android:id="@+id/loop_classify_spin"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:drawSelectorOnTop="true"/>
     </LinearLayout>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:orientation="horizontal"
                   android:layout_width="match_parent"
                   android:layout_height="0dp"
-                  android:layout_weight="1"
+                  android:layout_weight="3"
                   android:gravity="center">
         <Button
-                android:id="@+id/cond_select_btn"
-                android:layout_width="wrap_content"
+                android:id="@+id/loop_select_btn"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:text="확인"
-                android:background="#FF000000"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:background="#FF2C486D"
                 android:textColor="#FFFFFFFF"/>
     </LinearLayout>
 </LinearLayout>

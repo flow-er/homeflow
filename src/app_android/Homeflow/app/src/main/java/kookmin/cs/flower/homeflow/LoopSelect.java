@@ -1,13 +1,16 @@
 package kookmin.cs.flower.homeflow;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -20,15 +23,17 @@ import java.util.ArrayList;
  * @version 0.0.2
  * @date 2015-04-06
  */
-public class LoopSelect extends Fragment implements View.OnClickListener {
+public class LoopSelect extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
-  Spinner cond_classify_spin;
+  Spinner loop_classify_spin;
 
-  static ArrayList<String> condSelectList = new ArrayList<String>();
+  static ArrayList<String> loopSelectList = new ArrayList<String>();
 
   static {
-    condSelectList.add("시간");
-    condSelectList.add("다른 조건");
+    loopSelectList.add("시간");
+    loopSelectList.add("온도");
+    loopSelectList.add("습도");
+    loopSelectList.add("기기 상태");
   }
 
   /**
@@ -45,17 +50,41 @@ public class LoopSelect extends Fragment implements View.OnClickListener {
     // Inflate the layout for this fragment
     View rootView = inflater.inflate(R.layout.loopselect, container, false);
 
-    cond_classify_spin = (Spinner) rootView.findViewById(R.id.cond_classify_spin);
+    loop_classify_spin = (Spinner) rootView.findViewById(R.id.loop_classify_spin);
 
-    ArrayAdapter<String> condSelectAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, condSelectList);
-    cond_classify_spin.setAdapter(condSelectAdapter);
+    ArrayAdapter<String> condSelectAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, loopSelectList);
+    loop_classify_spin.setAdapter(condSelectAdapter);
 
-    //cond_classify_spin.setOnItemSelectedListener(this);
+    loop_classify_spin.setOnItemSelectedListener(this);
 
-    Button cond_select_btn = (Button) rootView.findViewById(R.id.cond_select_btn);
-    cond_select_btn.setOnClickListener(this);
+    Button loop_select_btn = (Button) rootView.findViewById(R.id.loop_select_btn);
+    loop_select_btn.setOnClickListener(this);
 
     return rootView;
+  }
+
+  /**
+   * @brief method for showing action of spinners when selected
+   * @details This method sets selected-events on the spinners.
+   * @param parent
+   * @param v
+   * @param position
+   * @param id
+   * @return
+   */
+  @Override
+  public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+    ((TextView)parent.getChildAt(0)).setTextColor(Color.WHITE);
+  }
+
+  /**
+   * @brief method for showing action of spinners when they are not selected
+   * @details This method sets events if the spinners aren't selected.
+   * @param parent
+   * @return
+   */
+  @Override
+  public void onNothingSelected(AdapterView<?> parent) {
   }
 
   /**
@@ -65,7 +94,7 @@ public class LoopSelect extends Fragment implements View.OnClickListener {
    */
   @Override
   public void onClick(View v) {
-    if (v.getId() == R.id.cond_select_btn) {
+    if (v.getId() == R.id.loop_select_btn) {
       TimeCond timeCond = new TimeCond();
       getFragmentManager().beginTransaction().replace(R.id.realtabcontent, timeCond).commit();
     }
