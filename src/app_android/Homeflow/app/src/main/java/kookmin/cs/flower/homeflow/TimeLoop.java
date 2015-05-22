@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -22,20 +21,15 @@ import java.util.ArrayList;
  * @version 0.0.2
  * @date 2015-04-06
  */
-public class TimeCond extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class TimeLoop extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
-  ListView listView;
+  Spinner hour_spin, minute_spin, second_spin;
 
-  Spinner am_pm_spin, hour_spin, minute_spin, second_spin;
-
-  static ArrayList<String> amPmList = new ArrayList<String>();
   static ArrayList<String> hourList = new ArrayList<String>();
   static ArrayList<String> minuteList = new ArrayList<String>();
   static ArrayList<String> secondList = new ArrayList<String>();
 
   static {
-    amPmList.add("AM");amPmList.add("PM");
-
     hourList.add("1");hourList.add("2");hourList.add("3");hourList.add("4");
     hourList.add("5");hourList.add("6");hourList.add("7");hourList.add("8");
     hourList.add("9");hourList.add("10");hourList.add("11");hourList.add("12");
@@ -84,54 +78,23 @@ public class TimeCond extends Fragment implements View.OnClickListener, AdapterV
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     // Inflate the layout for this fragment
-    View rootView = inflater.inflate(R.layout.timecond, container, false);
+    View rootView = inflater.inflate(R.layout.timeloop, container, false);
 
-    Button time_cond_btn = (Button) rootView.findViewById(R.id.time_cond_btn);
-    time_cond_btn.setOnClickListener(this);
+    Button time_loop_btn = (Button) rootView.findViewById(R.id.time_loop_btn);
+    time_loop_btn.setOnClickListener(this);
 
-    ArrayList<String> dayList = new ArrayList<String>();
-    dayList.add("월");
-    dayList.add("화");
-    dayList.add("수");
-    dayList.add("목");
-    dayList.add("금");
-    dayList.add("토");
-    dayList.add("일");
-
-    listView = (ListView) rootView.findViewById(R.id.day_list);
-
-    final ArrayAdapter
-        dayAdapter = new ArrayAdapter<String>(rootView.getContext(), R.layout.applifuncrow, dayList);
-    listView.setAdapter(dayAdapter);
-
-    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        TextView tv = (TextView)view.findViewById(R.id.appli_func_txt);
-        int txtColor = tv.getCurrentTextColor();
-        if(txtColor == 0xFFFFFFFF)
-          tv.setTextColor(0xFFCA93E8);
-        else if(txtColor == 0xFFCA93E8)
-          tv.setTextColor(0xFFFFFFFF);
-      }
-    });
-
-    am_pm_spin = (Spinner) rootView.findViewById(R.id.am_pm_spin);
     hour_spin = (Spinner) rootView.findViewById(R.id.hour_spin);
     minute_spin = (Spinner) rootView.findViewById(R.id.minute_spin);
     second_spin = (Spinner) rootView.findViewById(R.id.second_spin);
 
-    ArrayAdapter<String> amPmAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, amPmList);
     ArrayAdapter<String> hourAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, hourList);
     ArrayAdapter<String> minuteAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, minuteList);
     ArrayAdapter<String> secondAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, secondList);
 
-    am_pm_spin.setAdapter(amPmAdapter);
     hour_spin.setAdapter(hourAdapter);
     minute_spin.setAdapter(minuteAdapter);
     second_spin.setAdapter(secondAdapter);
 
-    am_pm_spin.setOnItemSelectedListener(this);
     hour_spin.setOnItemSelectedListener(this);
     minute_spin.setOnItemSelectedListener(this);
     second_spin.setOnItemSelectedListener(this);
@@ -169,7 +132,7 @@ public class TimeCond extends Fragment implements View.OnClickListener, AdapterV
    */
   @Override
   public void onClick(View v) {
-    if (v.getId() == R.id.time_cond_btn) {
+    if (v.getId() == R.id.time_loop_btn) {
       WorkEntry workEntry = new WorkEntry();
       getFragmentManager().beginTransaction().replace(R.id.realtabcontent, workEntry).commit();
     }

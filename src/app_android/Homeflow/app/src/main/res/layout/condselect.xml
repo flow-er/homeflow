@@ -17,7 +17,7 @@
                 android:layout_gravity="bottom"
                 android:text="｜ 항목 ｜"
                 android:textColor="#FF404ED2"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
     </LinearLayout>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:orientation="horizontal"
@@ -38,13 +38,5 @@
                   android:layout_height="0dp"
                   android:layout_weight="3"
                   android:gravity="center">
-        <Button
-                android:id="@+id/cond_select_btn"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:text="확인"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:background="#FF2C486D"
-                android:textColor="#FFFFFFFF"/>
     </LinearLayout>
 </LinearLayout>

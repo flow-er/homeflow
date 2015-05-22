@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -23,13 +22,14 @@ import java.util.ArrayList;
  * @version 0.0.2
  * @date 2015-04-06
  */
-public class CondSelect extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class CondSelect extends Fragment implements AdapterView.OnItemSelectedListener {
 
   Spinner cond_classify_spin;
 
   static ArrayList<String> condSelectList = new ArrayList<String>();
 
   static {
+    condSelectList.add("선택하세요.");
     condSelectList.add("바로 실행");
     condSelectList.add("시간");
     condSelectList.add("온도");
@@ -58,9 +58,6 @@ public class CondSelect extends Fragment implements View.OnClickListener, Adapte
 
     cond_classify_spin.setOnItemSelectedListener(this);
 
-    Button cond_select_btn = (Button) rootView.findViewById(R.id.cond_select_btn);
-    cond_select_btn.setOnClickListener(this);
-
     return rootView;
   }
 
@@ -76,6 +73,27 @@ public class CondSelect extends Fragment implements View.OnClickListener, Adapte
   @Override
   public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
     ((TextView)parent.getChildAt(0)).setTextColor(Color.WHITE);
+
+    if(((TextView)parent.getChildAt(0)).getText().toString().equals("바로 실행")) {
+      WorkEntry workEntry = new WorkEntry();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, workEntry).commit();
+    }
+    else if(((TextView)parent.getChildAt(0)).getText().toString().equals("시간")) {
+      TimeCond timeCond = new TimeCond();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, timeCond).commit();
+    }
+    else if(((TextView)parent.getChildAt(0)).getText().toString().equals("온도")) {
+      Temperature temperature = new Temperature();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, temperature).commit();
+    }
+    else if(((TextView)parent.getChildAt(0)).getText().toString().equals("습도")) {
+      Humidity humidity = new Humidity();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, humidity).commit();
+    }
+    else if(((TextView)parent.getChildAt(0)).getText().toString().equals("기기 상태")) {
+      Appliance appliance = new Appliance();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, appliance).commit();
+    }
   }
 
   /**
@@ -86,18 +104,5 @@ public class CondSelect extends Fragment implements View.OnClickListener, Adapte
    */
   @Override
   public void onNothingSelected(AdapterView<?> parent) {
-  }
-
-  /**
-   * @brief method for determining action of cond_select_btn
-   * @detail If you click cond_select_btn, timecond.xml layout will appear.
-   * @param v
-   */
-  @Override
-  public void onClick(View v) {
-    if (v.getId() == R.id.cond_select_btn) {
-      TimeCond timeCond = new TimeCond();
-      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, timeCond).commit();
-    }
   }
 }

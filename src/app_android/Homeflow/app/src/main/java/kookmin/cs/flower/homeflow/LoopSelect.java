@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -23,13 +22,14 @@ import java.util.ArrayList;
  * @version 0.0.2
  * @date 2015-04-06
  */
-public class LoopSelect extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class LoopSelect extends Fragment implements AdapterView.OnItemSelectedListener {
 
   Spinner loop_classify_spin;
 
   static ArrayList<String> loopSelectList = new ArrayList<String>();
 
   static {
+    loopSelectList.add("선택하세요.");
     loopSelectList.add("시간");
     loopSelectList.add("온도");
     loopSelectList.add("습도");
@@ -57,9 +57,6 @@ public class LoopSelect extends Fragment implements View.OnClickListener, Adapte
 
     loop_classify_spin.setOnItemSelectedListener(this);
 
-    Button loop_select_btn = (Button) rootView.findViewById(R.id.loop_select_btn);
-    loop_select_btn.setOnClickListener(this);
-
     return rootView;
   }
 
@@ -75,6 +72,23 @@ public class LoopSelect extends Fragment implements View.OnClickListener, Adapte
   @Override
   public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
     ((TextView)parent.getChildAt(0)).setTextColor(Color.WHITE);
+
+    if(((TextView)parent.getChildAt(0)).getText().toString().equals("시간")) {
+      TimeLoop timeLoop = new TimeLoop();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, timeLoop).commit();
+    }
+    else if(((TextView)parent.getChildAt(0)).getText().toString().equals("온도")) {
+      Temperature temperature = new Temperature();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, temperature).commit();
+    }
+    else if(((TextView)parent.getChildAt(0)).getText().toString().equals("습도")) {
+      Humidity humidity = new Humidity();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, humidity).commit();
+    }
+    else if(((TextView)parent.getChildAt(0)).getText().toString().equals("기기 상태")) {
+      Appliance appliance = new Appliance();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, appliance).commit();
+    }
   }
 
   /**
@@ -85,18 +99,5 @@ public class LoopSelect extends Fragment implements View.OnClickListener, Adapte
    */
   @Override
   public void onNothingSelected(AdapterView<?> parent) {
-  }
-
-  /**
-   * @brief method for determining action of cond_select_btn
-   * @detail If you click cond_select_btn, timecond.xml layout will appear.
-   * @param v
-   */
-  @Override
-  public void onClick(View v) {
-    if (v.getId() == R.id.loop_select_btn) {
-      TimeCond timeCond = new TimeCond();
-      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, timeCond).commit();
-    }
   }
 }

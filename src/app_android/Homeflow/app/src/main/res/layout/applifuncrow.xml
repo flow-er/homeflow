@@ -8,5 +8,5 @@
           android:paddingTop="12dp"
           android:background="#00000000"
           android:textAppearance="?android:attr/textAppearanceLarge"
-          android:textColor="#FF2C486D">
+          android:textColor="#FFFFFFFF">
 </TextView>
