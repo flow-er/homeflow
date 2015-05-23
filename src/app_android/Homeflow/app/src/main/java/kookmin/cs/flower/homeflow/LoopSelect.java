@@ -74,8 +74,8 @@ public class LoopSelect extends Fragment implements AdapterView.OnItemSelectedLi
     ((TextView)parent.getChildAt(0)).setTextColor(Color.WHITE);
 
     if(((TextView)parent.getChildAt(0)).getText().toString().equals("시간")) {
-      TimeLoop timeLoop = new TimeLoop();
-      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, timeLoop).commit();
+      Time time= new Time();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, time).commit();
     }
     else if(((TextView)parent.getChildAt(0)).getText().toString().equals("온도")) {
       Temperature temperature = new Temperature();

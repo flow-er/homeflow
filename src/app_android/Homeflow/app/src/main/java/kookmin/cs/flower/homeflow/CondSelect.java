@@ -79,8 +79,8 @@ public class CondSelect extends Fragment implements AdapterView.OnItemSelectedLi
       getFragmentManager().beginTransaction().replace(R.id.realtabcontent, workEntry).commit();
     }
     else if(((TextView)parent.getChildAt(0)).getText().toString().equals("시간")) {
-      TimeCond timeCond = new TimeCond();
-      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, timeCond).commit();
+      Time time = new Time();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, time).commit();
     }
     else if(((TextView)parent.getChildAt(0)).getText().toString().equals("온도")) {
       Temperature temperature = new Temperature();

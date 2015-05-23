@@ -47,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:text="| 이상/이하 |"
+                    android:text="| 비교 |"
                     android:textColor="#FF404ED2"
                     android:textStyle="bold"
                     android:textAppearance="?android:attr/textAppearanceMedium"/>
@@ -58,6 +58,7 @@
                     android:layout_marginTop="20dp"
                     android:drawSelectorOnTop="true"/>
         </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout

@@ -41,7 +41,9 @@ public class Temperature extends Fragment implements View.OnClickListener, Adapt
     temperList.add("36℃");temperList.add("37℃");temperList.add("38℃");temperList.add("39℃");
     temperList.add("40℃");
 
-    compList.add("이상");compList.add("이하");
+    compList.add("<");compList.add("<=");
+    compList.add(">");compList.add(">=");
+    compList.add("==");
   }
   /**
    * @brief method for showing timecond.xml layout

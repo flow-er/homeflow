@@ -51,7 +51,9 @@ public class Humidity extends Fragment implements View.OnClickListener, AdapterV
     humidList.add("95%");humidList.add("96%");humidList.add("97%");humidList.add("98%");humidList.add("99%");
     humidList.add("99%");
 
-    compList.add("이상");compList.add("이하");
+    compList.add("<");compList.add("<=");
+    compList.add(">");compList.add(">=");
+    compList.add("==");
   }
 
   /**
