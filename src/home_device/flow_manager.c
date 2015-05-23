@@ -38,8 +38,6 @@ int main(int argc, const char *argv[]) {
 
 	int usr_exec = -1;
 
-	int flag = 0;
-
 	signal(SIGUSR1, signalHandler);
 
 	scheduleEvents(&scheduler, INIT);
@@ -107,13 +105,8 @@ int main(int argc, const char *argv[]) {
 			char path[BUFSIZ] = "";
 			int file = -1;
 
-			while ((len = read(server, buf, BUFSIZ - 1)) != 0) {
-				char *data = strpbrk(buf, " ");
-
-				if(flag == 0) {
-					flag = 1;
-					break;
-				}
+			while ((len = recv(server, buf, BUFSIZ - 1, MSG_DONTWAIT)) > -1) {
+				char *data = strpbrk(buf, "|");
 
 				*data = '\0';
 				++data;
@@ -121,7 +114,7 @@ int main(int argc, const char *argv[]) {
 				if (!strcmp(buf, "START")) {
 					usr_exec = atoi(data);
 				} else if (!strcmp(buf, "FLOW")) {
-					char *xml = strpbrk(data, " ");
+					char *xml = strpbrk(data, "|");
 
 					*xml = '\0';
 					++xml;
