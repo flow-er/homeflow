@@ -37,6 +37,9 @@ int main(int argc, const char *argv[]) {
 	if (argc < 3) return 0;
 	usr_exec = atoi(argv[2]);
 
+	printf("%s : flow %s is executed ", procname, argv[1]);
+	printf("by %s.\n", (usr_exec ? "user" : "scheduler"));
+
 	signal(SIGUSR1, signalHandler);
 
 	// BUG : Clearly have no effects at all.
@@ -63,6 +66,7 @@ void run(struct flow *flow) {
 
 	runNode(flow->head);
 
+	printf("%s : flow %d is successfully completed.\n", procname, flow->id);
 	sendMessage(0, FLOW_COMPLETED);
 }
 

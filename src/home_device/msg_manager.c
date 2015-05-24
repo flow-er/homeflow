@@ -28,6 +28,8 @@ int main(int argc, const char *argv[]) {
 		return 0;
 	}
 
+	printf("%s : Initialization completed.\n", procname);
+
 	while (1) {
 		long msglen;
 		int ret;

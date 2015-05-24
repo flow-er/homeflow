@@ -66,6 +66,8 @@ int main(int argc, const char *argv[]) {
 
 	fd_max = pipe[WR];
 
+	printf("%s : Initialization completed.\n", procname);
+
 	while (1) {
 		fd_set temp = fds;
 
@@ -103,7 +105,7 @@ int main(int argc, const char *argv[]) {
 			long len;
 
 			char path[BUFSIZ] = "";
-			int file = -1;
+			int file = 0;
 
 			while ((len = recv(server, buf, BUFSIZ - 1, MSG_DONTWAIT)) > -1) {
 				char *data = strpbrk(buf, "|");
@@ -113,6 +115,7 @@ int main(int argc, const char *argv[]) {
 
 				if (!strcmp(buf, "START")) {
 					usr_exec = atoi(data);
+					printf("%s : User executed flow %d.\n", procname, usr_exec);
 				} else if (!strcmp(buf, "FLOW")) {
 					char *xml = strpbrk(data, "|");
 
@@ -122,6 +125,7 @@ int main(int argc, const char *argv[]) {
 					sprintf(path, "%s%s", TEMP_DIR, data);
 
 					file = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+					printf("%s : New file \'%s\' received.\n", procname, data);
 					write(file, xml, len);
 				} else {
 					write(file, buf, len);
@@ -129,7 +133,7 @@ int main(int argc, const char *argv[]) {
 			}
 
 			scheduleEvents(&scheduler, REDO);
-			if (file != -1) close(file);
+			if (file) close(file);
 		}
 	}
 

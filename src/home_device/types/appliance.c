@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -50,7 +51,7 @@ struct appliance *parseApp(xmlNode *elem) {
 	// Parse properties of the appliance.
 	app->id = atoi(GETPROP(elem, "id"));
 	app->ctype = atoi(GETPROP(elem, "ctype"));
-	app->addr = atol(GETPROP(elem, "addr"));
+	strcpy(app->addr, GETPROP(elem, "addr"));
 
 	switch (app->ctype) {
 		case C_BLUE:

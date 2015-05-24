@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #define APPL_PATH "./user/appliances.xml"
 
 #define SYS_TIMER 0
@@ -38,7 +40,7 @@ struct appliance {
 	int id;
 
 	enum conn_t ctype;
-	long addr;
+	char addr[BUFSIZ];
 
 	int (*runCommand)(long, cmdset);
 
