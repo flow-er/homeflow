@@ -90,9 +90,9 @@ void freeApplList(struct appl_list *apps) {
 int sendCommandToBLuetoohDevice(char *addr, cmdset set) {
 	struct sockaddr_rc addr = { 0 };
 	fd blue;
-	
+
 	int curr;
-	
+
 	enum cond_t cond = set.option >> 24;
 	int value = (set.option << 8) >> 8;
 
@@ -106,23 +106,31 @@ int sendCommandToBLuetoohDevice(char *addr, cmdset set) {
 		return -1;
 	}
 
-	write(blue, &set.command, sizeof(int));
-	read(blue, &curr, sizeof(int));
-
 	if (set.type == O_NOWAIT) {
 		int result = 0;
-		
+
+		write(blue, &set.command, sizeof(int));
+		read(blue, &curr, sizeof(int));
+
 		if (curr == value) result += (1 << 0);
 		if (curr < value) result += (1 << 1);
 		if (curr > value) result += (1 << 2);
-		
+
 		return (result & cond);
 	} else if (set.type == O_WAIT) {
-		
-	}
+		int result = 0;
 
-//	printf("test : press any button to continue.\n");
-//	getchar();
+		do {
+			result = curr= 0;
+
+			write(blue, &set.command, sizeof(int));
+			read(blue, &curr, sizeof(int));
+
+			if (curr == value) result += (1 << 0);
+			if (curr < value) result += (1 << 1);
+			if (curr > value) result += (1 << 2);
+		} while (!(result & cond));
+	}
 
 	return 1;
 }
