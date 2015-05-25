@@ -5,16 +5,22 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <arpa/inet.h>
 
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 
+#include <bluetooth/bluetooth.h>
+#include <bluetooth/rfcomm.h>
+
 #define GETPROP(x, y) ((const char *) xmlGetProp(x, (xmlChar *) y))
+
+typedef int fd;
 
 struct appliance *parseApp(xmlNode *elem);
 
-int sendCommandToBLuetoohDevice(long addr, cmdset set);
-int sendCommandToVirtualDevice(long addr, cmdset set);
+int sendCommandToBLuetoohDevice(char *addr, cmdset set);
+int sendCommandToVirtualDevice(char *addr, cmdset set);
 
 struct appl_list *parseApplList(const char *path) {
 	struct appl_list *apps;
@@ -81,22 +87,51 @@ void freeApplList(struct appl_list *apps) {
 	free(apps);
 }
 
-int sendCommandToBLuetoohDevice(long addr, cmdset set) {
-	printf("test : press any button to continue.\n");
-	getchar();
+int sendCommandToBLuetoohDevice(char *addr, cmdset set) {
+	struct sockaddr_rc addr = { 0 };
+	fd blue;
+	
+	int curr;
+	
+	enum cond_t cond = set.option >> 24;
+	int value = (set.option << 8) >> 8;
+
+	blue = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
+
+	addr.rc_family = AF_BLUETOOTH;
+	addr.rc_channel = (uint8_t) 1;
+	str2ba(addr, &addr.rc_bdaddr);
+
+	if (connect(blue, (struct sockaddr *) &addr, sizeof(addr)) == -1) {
+		return -1;
+	}
+
+	write(blue, &set.command, sizeof(int));
+	read(blue, &curr, sizeof(int));
+
+	if (set.type == O_NOWAIT) {
+		int result = 0;
+		
+		if (curr == value) result += (1 << 0);
+		if (curr < value) result += (1 << 1);
+		if (curr > value) result += (1 << 2);
+		
+		return (result & cond);
+	} else if (set.type == O_WAIT) {
+		
+	}
+
+//	printf("test : press any button to continue.\n");
+//	getchar();
 
 	return 1;
 }
 
-int sendCommandToVirtualDevice(long addr, cmdset set) {
-	enum cond_t cond;
-	uint value;
+int sendCommandToVirtualDevice(char *addr, cmdset set) {
+	enum cond_t cond = set.option >> 24;
+	uint value = (set.option << 8) >> 8;
 
-	// Parse command option.
-	cond = set.option >> 24;
-	value = (set.option << 8) >> 8;
-
-	switch (addr) {
+	switch (atoi(addr)) {
 		case V_TIMER:  // Available only for 'O_NOWAIT' and 'O_WAIT'.
 			if (set.command == 1) {
 				time_t t = time(NULL);

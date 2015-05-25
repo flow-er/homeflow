@@ -42,7 +42,7 @@ struct appliance {
 	enum conn_t ctype;
 	char addr[BUFSIZ];
 
-	int (*runCommand)(long, cmdset);
+	int (*runCommand)(char *, cmdset);
 
 	struct appliance *prev;
 	struct appliance *next;
