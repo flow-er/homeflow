@@ -10,9 +10,6 @@
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 
-#include <bluetooth/bluetooth.h>
-#include <bluetooth/rfcomm.h>
-
 #define GETPROP(x, y) ((const char *) xmlGetProp(x, (xmlChar *) y))
 
 typedef int fd;
@@ -88,29 +85,41 @@ void freeApplList(struct appl_list *apps) {
 }
 
 int sendCommandToBLuetoohDevice(char *addr, cmdset set) {
-	struct sockaddr_rc addr = { 0 };
-	fd blue;
+	// NOTE : shell script has to be like ...
+	//        1. get parameters (addr, have return?)
+	//        2. if, have return : do char-read-hnd
+	//           if not : do not
+	//        3. have to return value and this process have to get it. (exit n)
+	//
+	// ABLE TO HAVE THIS PROBLEM!!!
+	// : connect can be failed if more than one processess try to connect with a
+	//   specific ble device.
 
-	int curr;
+	pid_t pid;
+
+	// TODO : Have to be changed.
+	char *argv[9] = { "gatttool", "-b", addr, "--char-write-req", "-a",
+			"0x0010" /*change it to non-static one*/, "-n",
+			"02" /*change it to non-static one*/, NULL };
 
 	enum cond_t cond = set.option >> 24;
-	int value = (set.option << 8) >> 8;
+	uint value = (set.option << 8) >> 8;
+	int curr = -1;
 
-	blue = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
-
-	addr.rc_family = AF_BLUETOOTH;
-	addr.rc_channel = (uint8_t) 1;
-	str2ba(addr, &addr.rc_bdaddr);
-
-	if (connect(blue, (struct sockaddr *) &addr, sizeof(addr)) == -1) {
-		return -1;
+	if ((pid = fork())) {
+		wait(&curr);
+	} else {
+		if (execv("/usr/bin/gatttool", argv) == -1) {
+			printf("test : Failed to execute gatttool\n");
+			exit(1);
+		}
 	}
 
+	// TODO : Consider about the codes below into the shell.
 	if (set.type == O_NOWAIT) {
 		int result = 0;
 
-		write(blue, &set.command, sizeof(int));
-		read(blue, &curr, sizeof(int));
+		// TODO : fork again.
 
 		if (curr == value) result += (1 << 0);
 		if (curr < value) result += (1 << 1);
@@ -122,9 +131,8 @@ int sendCommandToBLuetoohDevice(char *addr, cmdset set) {
 
 		do {
 			result = curr= 0;
-
-			write(blue, &set.command, sizeof(int));
-			read(blue, &curr, sizeof(int));
+			
+			// fork again.
 
 			if (curr == value) result += (1 << 0);
 			if (curr < value) result += (1 << 1);

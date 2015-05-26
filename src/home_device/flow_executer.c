@@ -48,13 +48,13 @@ int main(int argc, const char *argv[]) {
 		return 0;
 	}
 
-	msg.id = getpid();
-
 	sprintf(path, "%s%s.xml", FLOW_DIR, argv[1]);
 
 	apps = parseApplList(APPL_PATH);
 
 	flow = parseFlow(path);
+	msg.id = flow->id;
+
 	run(flow);
 
 	freeFlow(flow);

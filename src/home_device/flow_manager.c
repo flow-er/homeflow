@@ -26,7 +26,6 @@ void signalHandler(int);
 const char *procname = "flow_manager";
 
 struct scheduler scheduler;
-struct message msg;
 
 pid_t pid_msgman, pid_appman;
 
@@ -40,7 +39,7 @@ int main(int argc, const char *argv[]) {
 
 	signal(SIGUSR1, signalHandler);
 
-	scheduleEvents(&scheduler, INIT);
+//	scheduleEvents(&scheduler, INIT);
 
 	// Initialize server socket.
 	server = socket(PF_INET, SOCK_STREAM, 0);
@@ -56,7 +55,7 @@ int main(int argc, const char *argv[]) {
 	}
 
 	pid_msgman = executeMsgManager(pipe);
-	pid_appman = executeAppManager();
+//	pid_appman = executeAppManager();
 
 	FD_ZERO(&fds);
 
@@ -71,7 +70,7 @@ int main(int argc, const char *argv[]) {
 	while (1) {
 		fd_set temp = fds;
 
-		executeFlows();
+//		executeFlows();
 
 		if (select(fd_max + 1, &temp, 0, 0, 0) < 0) {
 			printf("%s : Failed to select.\n", procname);
@@ -79,6 +78,11 @@ int main(int argc, const char *argv[]) {
 		}
 
 		if (FD_ISSET(pipe[RD], &temp)) {
+			static const char *status[5] = { "FLOW_RUNNING", "FLOW_COMPLETED",
+					"FLOW_FAILED", "NODE_RUNNING", "NODE_COMPLETED" };
+
+			struct message msg;
+			char message[BUFSIZ];
 			const int ok = 1;
 
 			read(pipe[RD], &msg, sizeof(struct message));
@@ -87,7 +91,7 @@ int main(int argc, const char *argv[]) {
 			if (msg.type == FROM_FLOW_EXECUTER) {
 				struct event *event = scheduler.head;
 
-				while (event && msg.id == event->pid) {
+				while (event && msg.id == event->flow->id) {
 					event = event->next;
 				}
 
@@ -95,10 +99,12 @@ int main(int argc, const char *argv[]) {
 					event->pid = 0;
 				}
 
-				msg.id = event->flow->id;
+				sprintf(message, "FLOW_STATUS|%d|%d|%s", msg.id, msg.node, status[msg.state]);
+			} else {
+				sprintf(message, "NEW_DEVICE|%d", msg.id);
 			}
 
-			write(server, &msg, sizeof(struct message));
+			write(server, message, strlen(message)+1);
 		}
 		if (FD_ISSET(server, &temp)) {
 			char buf[BUFSIZ];
@@ -132,7 +138,7 @@ int main(int argc, const char *argv[]) {
 				}
 			}
 
-			scheduleEvents(&scheduler, REDO);
+//			scheduleEvents(&scheduler, REDO);
 			if (file) close(file);
 		}
 	}
