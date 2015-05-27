@@ -10,15 +10,16 @@ import android.widget.Button;
 /**
  * @brief class for showing editappli.xml layout
  * @details This class includes edit_appli_btn button.
+ *          If you click edit_appli_btn, applireg.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
- * @version 0.0.0
- * @date 2015-05-07
+ * @version 0.0.2
+ * @date 2015-05-27
  */
 public class EditAppli extends Fragment implements View.OnClickListener {
 
   /**
    * @brief method for showing editappli.xml layout
-   * @details
+   * @details This method sets a clicked-event on edit_appli_btn.
    * @param inflater
    * @param container
    * @param savedInstanceState

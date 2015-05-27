@@ -15,20 +15,21 @@ import java.util.ArrayList;
 
 /**
  * @brief class for showing workentry.xml layout
- * @details This class includes cond_btn button, appli_btn button, and work_entry_btn button.
+ * @details This class includes pager pagerview, cond_btn button, loop_btn, appli_btn button, and work_entry_btn button.
  *            If you click cond_btn, condselect.xml layout will appear
- *            If you click appli_btn, appliselect.xml layout will appear
+ *            If you click loop_btn, loopselect.xml layout will appear
+ *            If you click appli_btn, pager becomes visible.
  *            If you click work_entry_btn, addflow.xml layout will appear
  * @author Jinsung Choi, bugslife102401@nate.com
- * @version 0.0.2
- * @date 2015-04-06
+ * @version 0.0.4
+ * @date 2015-05-27
  */
 public class WorkEntry extends Fragment implements View.OnClickListener {
 
   ViewPager pager;
   /**
    * @brief method for showing workentry.xml layout
-   * @details This method sets clicked-events on cond_btn, appli_btn, and work_entry_btn
+   * @details This method sets clicked-events on cond_btn, loop_btn, appli_btn, and work_entry_btn
    * @param inflater
    * @param container
    * @param savedInstanceState
@@ -38,7 +39,6 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
 
-    // Inflate the layout for this fragment
     View rootView = inflater.inflate(R.layout.workentry, container, false);
 
     ArrayList<String> list = new ArrayList<String>();
@@ -85,17 +85,39 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
       inf = (LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    /**
+     * @brief method for getting size of listview
+     * @return
+     */
     @Override
     public int getCount() { return list.size(); }
 
+    /**
+     * @brief method for checking if pager and obj are equal
+     * @param pager
+     * @param obj
+     * @return
+     */
     @Override
     public boolean isViewFromObject(View pager, Object obj) { return pager == obj; }
 
+    /**
+     * @brief method for destroying item
+     * @param container
+     * @param position
+     * @param object
+     */
     @Override
     public void destroyItem(View container, int position, Object object) {
       ((ViewPager)pager).removeView((View)object);
     }
 
+    /**
+     * @brief method for instantiating item
+     * @param pager
+     * @param position
+     * @return
+     */
     @Override
     public Object instantiateItem(View pager, int position) {
       View v = inf.inflate(layout, null);
@@ -115,9 +137,10 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
   };
 
   /**
-   * @brief method for determining actions of cond_btn, appli_btn, and work_entry_btn
+   * @brief method for determining actions of cond_btn, loop_btn, appli_btn, and work_entry_btn
    * @details If you click cond_btn, condselect.xml layout will appear.
-   *            If you click appli_btn, appliselect.xml layout will appear.
+   *            If you click loop_btn, loopselect.xml layout will appear.
+   *            If you click appli_btn, pager becomes visible.
    *            If you click work_entry_btn, addflow.xml layout will appear.
    * @param v
    */

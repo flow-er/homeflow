@@ -29,7 +29,7 @@ public class HomeTab extends Fragment implements TabHost.OnTabChangeListener {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    // Inflate the layout for this fragment
+
     View V = inflater.inflate(R.layout.hometab, container, false);
     ImageView imageView = (ImageView)V.findViewById(R.id.hometabimage);
     imageView.setAdjustViewBounds(true);

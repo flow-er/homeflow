@@ -17,10 +17,9 @@ import java.util.ArrayList;
  * @brief class for showing condselect.xml layout
  * @details This class includes cond_classify_spin spinner and cond_select_btn button
  *            You can select condition category by clicking cond_classify_spin.
- *            If you click cond_select_btn, timecond.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
- * @version 0.0.2
- * @date 2015-04-06
+ * @version 0.0.4
+ * @date 2015-05-27
  */
 public class CondSelect extends Fragment implements AdapterView.OnItemSelectedListener {
 
@@ -39,7 +38,7 @@ public class CondSelect extends Fragment implements AdapterView.OnItemSelectedLi
 
   /**
    * @brief method for showing condselect.xml layout
-   * @details This method sets a clicked-event on cond_select_btn
+   * @details This method sets a selected-event on cond_classify_spin.
    * @param inflater
    * @param container
    * @param savedInstanceState
@@ -48,7 +47,7 @@ public class CondSelect extends Fragment implements AdapterView.OnItemSelectedLi
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    // Inflate the layout for this fragment
+
     View rootView = inflater.inflate(R.layout.condselect, container, false);
 
     cond_classify_spin = (Spinner) rootView.findViewById(R.id.cond_classify_spin);

@@ -15,11 +15,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * @brief class for showing timecond
- * @details This class includes time_cond_btn. If you click time_cond_btn, workentry.xml layout will appear.
+ * @brief class for showing temperature
+ * @details This class includes temper_spin, comp_spin and temperature_btn.
+ *            If you click temperature_btn, workentry.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
- * @version 0.0.2
- * @date 2015-04-06
+ * @version 0.0.4
+ * @date 2015-05-27
  */
 public class Temperature extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
@@ -46,8 +47,8 @@ public class Temperature extends Fragment implements View.OnClickListener, Adapt
     compList.add("==");
   }
   /**
-   * @brief method for showing timecond.xml layout
-   * @details This method sets a clicked-event on time_cond_btn
+   * @brief method for showing temperature.xml layout
+   * @details This method sets select-events on temper_spin and comp_spin, and clicked_events on temperature_btn.
    * @param inflater
    * @param container
    * @param savedInstanceState
@@ -101,8 +102,8 @@ public class Temperature extends Fragment implements View.OnClickListener, Adapt
   public void onNothingSelected(AdapterView<?> parent) {
   }
   /**
-   * @brief method for determining action of time_cond_btn
-   * @details If you click time_cond_btn, workentry.xml layout will appear.
+   * @brief method for determining action of temperature_btn
+   * @details If you click temperature_btn, workentry.xml layout will appear.
    * @param v
    */
   @Override

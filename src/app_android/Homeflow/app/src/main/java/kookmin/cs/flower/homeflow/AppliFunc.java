@@ -16,7 +16,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * Created by cjs on 2015-05-21.
+ * @brief class for showing applifunc.xml
+ * @details This class includes act_count_spin, appli_func_list and appli_func_btn.
+ * @author Jinsung Choi, bugslife102401@nate.com
+ * @version 0.0.2
+ * @date 2015-05-27
  */
 public class AppliFunc extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
@@ -36,8 +40,8 @@ public class AppliFunc extends Fragment implements View.OnClickListener, Adapter
 
   ListView listView;
   /**
-   * @brief method for showing login.xml layout
-   * @details This method sets clicked-events on login_btn.
+   * @brief method for showing applifunc.xml layout
+   * @details This method sets selected-events on act_count_spin and clicked-events on appli_func_btn..
    * @param inflater
    * @param container
    * @param savedInstanceState
@@ -116,6 +120,11 @@ public class AppliFunc extends Fragment implements View.OnClickListener, Adapter
   public void onNothingSelected(AdapterView<?> parent) {
   }
 
+  /**
+   * @brief method for determining action of appli_func_btn.
+   * @details If you click appli_func_btn, workentry.xml layout will appear.
+   * @param v
+   */
   @Override
   public void onClick(View v) {
     if(v.getId() == R.id.appli_func_btn) {

@@ -15,11 +15,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * @brief class for showing timecond
- * @details This class includes time_cond_btn. If you click time_cond_btn, workentry.xml layout will appear.
+ * @brief class for showing appliance.xml
+ * @details This class includes appli_spin, func_spin and appliance_btn.
  * @author Jinsung Choi, bugslife102401@nate.com
  * @version 0.0.2
- * @date 2015-04-06
+ * @date 2015-05-27
  */
 public class Appliance extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
@@ -39,8 +39,8 @@ public class Appliance extends Fragment implements View.OnClickListener, Adapter
     funcList.add("OFF");
   }
   /**
-   * @brief method for showing timecond.xml layout
-   * @details This method sets a clicked-event on time_cond_btn
+   * @brief method for showing appliance.xml layout
+   * @details This method sets selected-events on spinners and clicked-event on appliance_btn.
    * @param inflater
    * @param container
    * @param savedInstanceState
@@ -49,7 +49,6 @@ public class Appliance extends Fragment implements View.OnClickListener, Adapter
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    // Inflate the layout for this fragment
     View rootView = inflater.inflate(R.layout.appliance, container, false);
 
     Button appliance_btn = (Button) rootView.findViewById(R.id.appliance_btn);
@@ -95,8 +94,8 @@ public class Appliance extends Fragment implements View.OnClickListener, Adapter
   public void onNothingSelected(AdapterView<?> parent) {
   }
   /**
-   * @brief method for determining action of time_cond_btn
-   * @details If you click time_cond_btn, workentry.xml layout will appear.
+   * @brief method for determining action of appliance_btn
+   * @details If you click appliance_btn, workentry.xml layout will appear.
    * @param v
    */
   @Override

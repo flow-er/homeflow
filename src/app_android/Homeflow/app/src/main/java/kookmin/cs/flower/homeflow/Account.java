@@ -18,8 +18,8 @@ import java.util.ArrayList;
  * @brief class for showing account.xml layout
  * @details This class includes signup_btn.
  * @author Jinsung Choi, bugslife102401@nate.com
- * @version 0.0.4
- * @date 2015-05-016
+ * @version 0.0.6
+ * @date 2015-05-27
  */
 public class Account extends Fragment implements View.OnClickListener,
                                                  AdapterView.OnItemSelectedListener {
@@ -53,7 +53,7 @@ public class Account extends Fragment implements View.OnClickListener,
 
   /**
    * @brief method for showing account.xml layout
-   * @details This method sets clicked-events on signup_btn.
+   * @details This method sets clicked-event on signup_btn and selected-events on age_spin, sex_spin, job_spin and maintime_spin.
    * @param inflater
    * @param container
    * @param savedInstanceState

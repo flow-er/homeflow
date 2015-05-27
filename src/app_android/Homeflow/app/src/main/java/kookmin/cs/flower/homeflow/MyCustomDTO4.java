@@ -25,9 +25,17 @@ public class MyCustomDTO4 {
     this.childList = childList;
   }
 
+  /**
+   * @brief method for getting btn
+   * @return
+   */
   public int getBtn() { return btn; }
 
-  public void setBtn(int Btn) { this.btn = btn; }
+  /**
+   * @brief method for setting btn
+   * @param btn
+   */
+  public void setBtn(int btn) { this.btn = btn; }
 
   /**
    * @brief method for getting text

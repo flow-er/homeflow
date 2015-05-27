@@ -34,7 +34,7 @@ public class DelFlow extends Fragment implements View.OnClickListener {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    // Inflate the layout for this fragment
+
     View rootView = inflater.inflate(R.layout.delflow, container, false);
 
     mChildList = new ArrayList<String>();

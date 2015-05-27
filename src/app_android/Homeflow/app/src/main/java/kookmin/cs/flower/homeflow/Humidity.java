@@ -15,11 +15,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * @brief class for showing timecond
- * @details This class includes time_cond_btn. If you click time_cond_btn, workentry.xml layout will appear.
+ * @brief class for showing humidity.xml
+ * @details This class includes humid_spin, comp_spin and humidity_btn.
+ *            If you click humidity_btn, workentry.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
- * @version 0.0.2
- * @date 2015-04-06
+ * @version 0.0.4
+ * @date 2015-05-27
  */
 public class Humidity extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
@@ -57,8 +58,8 @@ public class Humidity extends Fragment implements View.OnClickListener, AdapterV
   }
 
   /**
-   * @brief method for showing timecond.xml layout
-   * @details This method sets a clicked-event on time_cond_btn
+   * @brief method for showing humidity.xml layout
+   * @details This method sets a clicked-event on humidity_btn
    * @param inflater
    * @param container
    * @param savedInstanceState
@@ -67,7 +68,7 @@ public class Humidity extends Fragment implements View.OnClickListener, AdapterV
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    // Inflate the layout for this fragment
+
     View rootView = inflater.inflate(R.layout.humidity, container, false);
 
     Button humidity_btn = (Button) rootView.findViewById(R.id.humidity_btn);
@@ -113,8 +114,8 @@ public class Humidity extends Fragment implements View.OnClickListener, AdapterV
   public void onNothingSelected(AdapterView<?> parent) {
   }
   /**
-   * @brief method for determining action of time_cond_btn
-   * @details If you click time_cond_btn, workentry.xml layout will appear.
+   * @brief method for determining action of humidity_btn
+   * @details If you click humidity_btn, workentry.xml layout will appear.
    * @param v
    */
   @Override

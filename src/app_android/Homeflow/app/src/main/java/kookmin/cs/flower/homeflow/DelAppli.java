@@ -34,7 +34,7 @@ public class DelAppli extends Fragment implements View.OnClickListener {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    // Inflate the layout for this fragment
+
     View rootView = inflater.inflate(R.layout.delappli, container, false);
 
     Button del_appli_btn = (Button) rootView.findViewById(R.id.del_appli_btn);

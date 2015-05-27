@@ -16,11 +16,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * @brief class for showing timecond
- * @details This class includes time_cond_btn. If you click time_cond_btn, workentry.xml layout will appear.
+ * @brief class for showing time.xml
+ * @details This class includes time_btn. If you click time_btn, workentry.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
- * @version 0.0.2
- * @date 2015-04-06
+ * @version 0.0.4
+ * @date 2015-05-27
  */
 public class Time extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
@@ -78,8 +78,8 @@ public class Time extends Fragment implements View.OnClickListener, AdapterView.
     compList.add("==");
   }
   /**
-   * @brief method for showing timecond.xml layout
-   * @details This method sets a clicked-event on time_cond_btn
+   * @brief method for showing time.xml layout
+   * @details This method sets selected-events on spinners and a clicked-event on time_btn.
    * @param inflater
    * @param container
    * @param savedInstanceState
@@ -88,7 +88,7 @@ public class Time extends Fragment implements View.OnClickListener, AdapterView.
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    // Inflate the layout for this fragment
+
     View rootView = inflater.inflate(R.layout.time, container, false);
 
     Button time_btn = (Button) rootView.findViewById(R.id.time_btn);
@@ -172,7 +172,7 @@ public class Time extends Fragment implements View.OnClickListener, AdapterView.
   public void onNothingSelected(AdapterView<?> parent) {
   }
   /**
-   * @brief method for determining action of time_cond_btn
+   * @brief method for determining action of time_btn
    * @details If you click time_cond_btn, workentry.xml layout will appear.
    * @param v
    */
