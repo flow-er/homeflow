@@ -237,6 +237,15 @@ int sendCommandToBLuetoohDevice(char *addr, cmdset set) {
 
 		return 1;
 	} else {
+		if ((pid = fork())) {
+			wait(&curr);
+		} else {
+			if (execvp("sh", argv) == -1) {
+				printf("flow_executer : Failed to execute gatt tool\n");
+				exit(1);
+			}
+		}
+		
 		return curr;
 	}
 }
