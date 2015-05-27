@@ -12,6 +12,7 @@ enum virtual_devices {
 
 enum conn_t {
 	C_VIRTUAL = 0,
+	C_VMULTI,
 	C_BLUE
 };
 

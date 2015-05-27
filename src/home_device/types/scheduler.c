@@ -16,10 +16,7 @@ void scheduleEvents(struct scheduler *scheduler, int mode) {
 	if (mode == REDO) {
 		path = TEMP_DIR;
 
-		if (scheduler->head)
-			curr = scheduler->tail;
-		else
-			mode = INIT;
+		if (scheduler->head) curr = scheduler->tail;
 	}
 
 	if (!(dir = opendir(path))) return;
@@ -62,8 +59,15 @@ void scheduleEvents(struct scheduler *scheduler, int mode) {
 				if (old->flow->id == id) {
 					curr->pid = old->pid;
 
-					if (old->prev) old->prev->next = old->next;
-					if (old->next) old->next->prev = old->prev;
+					if (old->prev)
+						old->prev->next = old->next;
+					else
+						scheduler->head = old->next;
+
+					if (old->next)
+						old->next->prev = old->prev;
+					else
+						scheduler->tail = old->prev;
 
 					freeFlow(old->flow);
 					free(old);

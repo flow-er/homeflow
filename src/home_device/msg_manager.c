@@ -24,11 +24,9 @@ int main(int argc, const char *argv[]) {
 	fd[0] = atoi(argv[2]);
 
 	if ((id = msgget(MSG_KEY, MSG_PERM | IPC_CREAT)) < 0) {
-		printf("%s : can't get message queue.\n", procname);
+		printf("%s : Can't get message queue.\n", procname);
 		return 0;
 	}
-
-	printf("%s : Initialization completed.\n", procname);
 
 	while (1) {
 		long msglen;
@@ -36,10 +34,11 @@ int main(int argc, const char *argv[]) {
 
 		msglen = msgrcv(id, &msg, MSGSIZE, 0, 0);
 		if (msglen <= 0) {
-			printf("%s : can't receive message.\n", procname);
+			printf("%s : Can't receive message.\n", procname);
 			continue;
 		}
 
+		printf("%s : Send new message to flow_manager.\n", procname);
 		write(fd[1], &msg, sizeof(struct message));
 		read(fd[0], &ret, sizeof(int));
 	}

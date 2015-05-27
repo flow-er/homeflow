@@ -53,6 +53,8 @@ int main(int argc, const char *argv[]) {
 	apps = parseApplList(APPL_PATH);
 
 	flow = parseFlow(path);
+
+	msg.type = FROM_FLOW_EXECUTER;
 	msg.id = flow->id;
 
 	run(flow);
@@ -62,12 +64,12 @@ int main(int argc, const char *argv[]) {
 }
 
 void run(struct flow *flow) {
-	if (!flow->isAuto || usr_exec) sendMessage(0, FLOW_RUNNING);
+	if (usr_exec) sendMessage(0, FLOW_START);
 
 	runNode(flow->head);
 
 	printf("%s : flow %d is successfully completed.\n", procname, flow->id);
-	sendMessage(0, FLOW_COMPLETED);
+	sendMessage(0, FLOW_DONE);
 }
 
 void runNode(struct node *node) {
@@ -96,7 +98,9 @@ void runNode(struct node *node) {
 			set.type = O_NOTIFY;
 
 			sendMessage(node->num, NODE_RUNNING);
+
 			ret = app->runCommand(app->addr, set);
+			sleep(1000);
 
 			if (ret == -1) sendMessage(0, FLOW_FAILED);
 			sendMessage(node->num, NODE_COMPLETED);
@@ -111,7 +115,7 @@ void runNode(struct node *node) {
 				ret = app->runCommand(app->addr, set);
 
 				if (ret == -1) sendMessage(0, FLOW_FAILED);
-				if (ret) sendMessage(0, FLOW_RUNNING);
+				if (ret) sendMessage(0, FLOW_START);
 			}
 			break;
 
@@ -150,13 +154,13 @@ void runNodesAtOnce(struct node *head) {
 
 	pthread_t *thread;
 
-	for (temp = head; temp != NULL; temp = temp->next)
+	for (temp = head; temp != NULL; temp = temp->next) {
 		++num;
-	temp = head;
+	}
 
 	thread = (pthread_t *) malloc(sizeof(pthread_t) * num);
 
-	for (i = 0; i < num; i++) {
+	for (i = 0, temp = head; i < num; i++) {
 		pthread_create(&thread[i], NULL, runNodeByThread, temp);
 		temp = temp->next;
 	}

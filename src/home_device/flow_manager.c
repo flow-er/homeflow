@@ -6,6 +6,8 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
+#include <errno.h>
+
 #include "types/scheduler.h"
 #include "types/msg.h"
 
@@ -19,7 +21,7 @@ typedef int fd;
 
 pid_t executeMsgManager(int *fd);
 pid_t executeAppManager();
-void executeFlows();
+void executeFlows(int exec, int del);
 
 void signalHandler(int);
 
@@ -35,11 +37,14 @@ int main(int argc, const char *argv[]) {
 	int fd_max;
 	struct sockaddr_in addr;
 
-	int usr_exec = -1;
+	int usr_exec = -1, deletion = -1;
 
 	signal(SIGUSR1, signalHandler);
 
 	scheduleEvents(&scheduler, INIT);
+
+	pid_msgman = executeMsgManager(pipe);
+	//	pid_appman = executeAppManager();
 
 	// Initialize server socket.
 	server = socket(PF_INET, SOCK_STREAM, 0);
@@ -54,31 +59,32 @@ int main(int argc, const char *argv[]) {
 		exit(1);
 	}
 
-	pid_msgman = executeMsgManager(pipe);
-	pid_appman = executeAppManager();
-
-	FD_ZERO(&fds);
-
-	FD_SET(server, &fds);
-	FD_SET(pipe[RD], &fds);
-	FD_SET(pipe[WR], &fds);
-
-	fd_max = pipe[WR];
-
-	printf("%s : Initialization completed.\n", procname);
-
 	while (1) {
-		fd_set temp = fds;
+		fd_set temp;
 
-		executeFlows();
+		executeFlows(usr_exec, deletion);
+		usr_exec = -1;
+
+		set_fds:
+
+		FD_ZERO(&fds);
+
+		FD_SET(server, &fds);
+		FD_SET(pipe[RD], &fds);
+		FD_SET(pipe[WR], &fds);
+
+		fd_max = pipe[WR];
+
+		temp = fds;
 
 		if (select(fd_max + 1, &temp, 0, 0, 0) < 0) {
+			if (errno == EINTR) goto set_fds;
 			printf("%s : Failed to select.\n", procname);
 			exit(1);
 		}
 
 		if (FD_ISSET(pipe[RD], &temp)) {
-			static const char *status[5] = { "FLOW_RUNNING", "FLOW_COMPLETED",
+			static const char *status[5] = { "FLOW_START", "FLOW_DONE",
 					"FLOW_FAILED", "NODE_RUNNING", "NODE_COMPLETED" };
 
 			struct message msg;
@@ -86,26 +92,30 @@ int main(int argc, const char *argv[]) {
 			const int ok = 1;
 
 			read(pipe[RD], &msg, sizeof(struct message));
-			write(pipe[WR], &ok, sizeof(int));
 
 			if (msg.type == FROM_FLOW_EXECUTER) {
 				struct event *event = scheduler.head;
 
-				while (event && msg.id == event->flow->id) {
+				while (event && msg.id != event->flow->id) {
 					event = event->next;
 				}
 
-				if (msg.state == FLOW_COMPLETED || msg.state == FLOW_FAILED) {
+				if (msg.state == FLOW_DONE || msg.state == FLOW_FAILED) {
 					event->pid = 0;
 				}
 
 				sprintf(message, "FLOW_STATUS|%d|%d|%s", msg.id, msg.node,
-						status[msg.state]);
+						status[msg.state - 1]);
 			} else {
 				sprintf(message, "NEW_DEVICE|%d", msg.id);
 			}
 
-			write(server, message, strlen(message) + 1);
+			ssize_t a = write(server, message, strlen(message) + 1);
+
+			printf("%s : Message is sent to server.\n", procname);
+			printf("message : %ld, %s\n", a, message);
+
+			write(pipe[WR], &ok, sizeof(int));
 		}
 		if (FD_ISSET(server, &temp)) {
 			char buf[BUFSIZ];
@@ -123,6 +133,10 @@ int main(int argc, const char *argv[]) {
 				if (!strcmp(buf, "START")) {
 					usr_exec = atoi(data);
 					printf("%s : User executed flow %d.\n", procname, usr_exec);
+
+				} else if (!strcmp(buf, "DELETE")) {
+					deletion = atoi(data);
+					printf("%s : User erased flow %d.\n", procname, deletion);
 				} else if (!strcmp(buf, "FLOW")) {
 					char *xml = strpbrk(data, "|");
 
@@ -132,13 +146,15 @@ int main(int argc, const char *argv[]) {
 					sprintf(path, "%s%s", TEMP_DIR, data);
 
 					file = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-					printf("%s : New file \'%s\' received.\n", procname, data);
+					printf("%s : Receiving new file \'%s\'...\n", procname,
+							data);
 					write(file, xml, len);
 				} else {
 					write(file, buf, len);
 				}
 			}
 
+			printf("%s : Receiving done.\n", procname);
 			scheduleEvents(&scheduler, REDO);
 			if (file) close(file);
 		}
@@ -204,14 +220,31 @@ pid_t executeAppManager() {
 	return pid;
 }
 
-void executeFlows(int id) {
+void executeFlows(int exec, int del) {
 	struct event *event = NULL;
 
 	for (event = scheduler.head; event != NULL; event = event->next) {
 		char *argv[4];
 
+		if (event->flow->id == del) {
+			if (event->prev)
+				event->prev->next = event->next;
+			else
+				scheduler.head = event->next;
+
+			if (event->next)
+				event->next->prev = event->prev;
+			else
+				scheduler.tail = event->prev;
+
+			freeFlow(event->flow);
+			free(event);
+
+			continue;
+		}
+
 		if (event->pid != 0) continue;
-		if ((event->flow->id != id) && (!event->flow->isAuto)) continue;
+		if ((event->flow->id != exec) && (!event->flow->isAuto)) continue;
 
 		argv[0] = "flow_executer";
 		argv[1] = (char *) malloc(sizeof(char) * BUFSIZ);
@@ -219,7 +252,7 @@ void executeFlows(int id) {
 		argv[3] = NULL;
 
 		sprintf(argv[1], "%d", event->flow->id);
-		sprintf(argv[2], "%d", (event->flow->id == id ? 1 : 0));
+		sprintf(argv[2], "%d", (event->flow->id == exec ? 1 : 0));
 
 		if (!(event->pid = fork())) {
 			if (execv("./flow_executer", argv) == -1) {
