@@ -58,6 +58,27 @@
                     android:layout_marginTop="20dp"
                     android:drawSelectorOnTop="true"/>
         </LinearLayout>
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="| 반복 횟수 |"
+                    android:textColor="#FF404ED2"
+                    android:textStyle="bold"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+            <Spinner
+                    android:id="@+id/act_count_spin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:drawSelectorOnTop="true"/>
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout

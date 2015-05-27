@@ -24,7 +24,19 @@ import java.util.ArrayList;
  */
 public class Humidity extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
-  Spinner humid_spin, comp_spin;
+  Spinner humid_spin, comp_spin, act_count_spin;
+
+  static ArrayList<String> actCountList = new ArrayList<String>();
+
+  static {
+    actCountList.add("선택하세요.");
+    actCountList.add("루프 반복");
+    actCountList.add("1번");actCountList.add("2번");actCountList.add("3번");actCountList.add("4번");
+    actCountList.add("5번");actCountList.add("6번");actCountList.add("7번");actCountList.add("8번");
+    actCountList.add("9번");actCountList.add("10번");actCountList.add("11번");actCountList.add("12번");
+    actCountList.add("13번");actCountList.add("14번");actCountList.add("15번");actCountList.add("16번");
+    actCountList.add("17번");actCountList.add("18번");actCountList.add("19번");actCountList.add("20번");
+  }
 
   static ArrayList<String> humidList = new ArrayList<String>();
   static ArrayList<String> compList = new ArrayList<String>();
@@ -71,6 +83,13 @@ public class Humidity extends Fragment implements View.OnClickListener, AdapterV
 
     View rootView = inflater.inflate(R.layout.humidity, container, false);
 
+    act_count_spin = (Spinner) rootView.findViewById(R.id.act_count_spin);
+
+    ArrayAdapter<String> actCountAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, actCountList);
+    act_count_spin.setAdapter(actCountAdapter);
+
+    act_count_spin.setOnItemSelectedListener(this);
+
     Button humidity_btn = (Button) rootView.findViewById(R.id.humidity_btn);
     humidity_btn.setOnClickListener(this);
 
@@ -102,6 +121,11 @@ public class Humidity extends Fragment implements View.OnClickListener, AdapterV
   @Override
   public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
     ((TextView)parent.getChildAt(0)).setTextColor(Color.WHITE);
+
+    if(((TextView)parent.getChildAt(0)).getText().toString().equals("루프 반복")) {
+      LoopSelect loopSelect = new LoopSelect();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, loopSelect).commit();
+    }
   }
 
   /**

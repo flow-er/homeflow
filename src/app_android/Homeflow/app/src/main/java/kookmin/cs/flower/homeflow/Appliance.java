@@ -23,7 +23,19 @@ import java.util.ArrayList;
  */
 public class Appliance extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
-  Spinner appli_spin, func_spin;
+  Spinner appli_spin, func_spin, act_count_spin;
+
+  static ArrayList<String> actCountList = new ArrayList<String>();
+
+  static {
+    actCountList.add("선택하세요.");
+    actCountList.add("루프 반복");
+    actCountList.add("1번");actCountList.add("2번");actCountList.add("3번");actCountList.add("4번");
+    actCountList.add("5번");actCountList.add("6번");actCountList.add("7번");actCountList.add("8번");
+    actCountList.add("9번");actCountList.add("10번");actCountList.add("11번");actCountList.add("12번");
+    actCountList.add("13번");actCountList.add("14번");actCountList.add("15번");actCountList.add("16번");
+    actCountList.add("17번");actCountList.add("18번");actCountList.add("19번");actCountList.add("20번");
+  }
 
   static ArrayList<String> appliList = new ArrayList<String>();
   static ArrayList<String> funcList = new ArrayList<String>();
@@ -50,6 +62,13 @@ public class Appliance extends Fragment implements View.OnClickListener, Adapter
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.appliance, container, false);
+
+    act_count_spin = (Spinner) rootView.findViewById(R.id.act_count_spin);
+
+    ArrayAdapter<String> actCountAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, actCountList);
+    act_count_spin.setAdapter(actCountAdapter);
+
+    act_count_spin.setOnItemSelectedListener(this);
 
     Button appliance_btn = (Button) rootView.findViewById(R.id.appliance_btn);
     appliance_btn.setOnClickListener(this);
@@ -82,6 +101,11 @@ public class Appliance extends Fragment implements View.OnClickListener, Adapter
   @Override
   public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
     ((TextView)parent.getChildAt(0)).setTextColor(Color.WHITE);
+
+    if(((TextView)parent.getChildAt(0)).getText().toString().equals("루프 반복")) {
+      LoopSelect loopSelect = new LoopSelect();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, loopSelect).commit();
+    }
   }
 
   /**

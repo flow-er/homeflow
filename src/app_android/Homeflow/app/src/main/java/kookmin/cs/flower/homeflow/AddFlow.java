@@ -32,7 +32,7 @@ public class AddFlow extends Fragment implements OnItemClickListener, View.OnCli
   static int i = 0;
 
   static {
-    addFlowList.add("");
+    addFlowList.add("+");
   }
 
   /**

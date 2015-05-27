@@ -156,10 +156,6 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
         getFragmentManager().beginTransaction().replace(R.id.realtabcontent, loopSelect).commit();
         break;
       case R.id.appli_btn:
-        /*
-        AppliSelect appliSelect = new AppliSelect();
-        getFragmentManager().beginTransaction().replace(R.id.realtabcontent, appliSelect).commit();
-        */
         pager.setVisibility(View.VISIBLE);
         break;
       case R.id.work_entry_btn:
