@@ -85,41 +85,31 @@ void freeApplList(struct appl_list *apps) {
 }
 
 int sendCommandToBLuetoohDevice(char *addr, cmdset set) {
-	// NOTE : shell script has to be like ...
-	//        1. get parameters (addr, have return?)
-	//        2. if, have return : do char-read-hnd
-	//           if not : do not
-	//        3. have to return value and this process have to get it. (exit n)
-	//
-	// ABLE TO HAVE THIS PROBLEM!!!
-	// : connect can be failed if more than one processess try to connect with a
-	//   specific ble device.
-
-	pid_t pid;
-
-	// TODO : Have to be changed.
-	char *argv[9] = { "gatttool", "-b", addr, "--char-write-req", "-a",
-			"0x0010" /*change it to non-static one*/, "-n",
-			"02" /*change it to non-static one*/, NULL };
+	// NOTE : ABLE TO HAVE THIS PROBLEM!!!
+	//        connect can be failed if more than one processess try to connect
+	//        with a specific ble device.
 
 	enum cond_t cond = set.option >> 24;
 	uint value = (set.option << 8) >> 8;
 	int curr = -1;
 
+	pid_t pid;
+	char *argv[5] = { "sh", "gatt_conn.sh", addr, NULL, NULL };
+
+	argv[3] = (char *) malloc(sizeof(char) * BUFSIZ);
+	sprintf(argv[3], "%x", set.command);
+
 	if ((pid = fork())) {
 		wait(&curr);
 	} else {
-		if (execv("/usr/bin/gatttool", argv) == -1) {
-			printf("test : Failed to execute gatttool\n");
+		if (execvp("sh", argv) == -1) {
+			printf("flow_executer : Failed to execute gatt tool\n");
 			exit(1);
 		}
 	}
 
-	// TODO : Consider about the codes below into the shell.
 	if (set.type == O_NOWAIT) {
 		int result = 0;
-
-		// TODO : fork again.
 
 		if (curr == value) result += (1 << 0);
 		if (curr < value) result += (1 << 1);
@@ -127,20 +117,22 @@ int sendCommandToBLuetoohDevice(char *addr, cmdset set) {
 
 		return (result & cond);
 	} else if (set.type == O_WAIT) {
-		int result = 0;
+		int result;
 
 		do {
-			result = curr= 0;
-			
-			// fork again.
+			result = curr = 0;
+
+			// TODO : fork again.
 
 			if (curr == value) result += (1 << 0);
 			if (curr < value) result += (1 << 1);
 			if (curr > value) result += (1 << 2);
 		} while (!(result & cond));
-	}
 
-	return 1;
+		return 1;
+	} else {
+		return curr;
+	}
 }
 
 int sendCommandToVirtualDevice(char *addr, cmdset set) {

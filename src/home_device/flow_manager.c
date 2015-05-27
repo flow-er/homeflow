@@ -39,7 +39,7 @@ int main(int argc, const char *argv[]) {
 
 	signal(SIGUSR1, signalHandler);
 
-//	scheduleEvents(&scheduler, INIT);
+	scheduleEvents(&scheduler, INIT);
 
 	// Initialize server socket.
 	server = socket(PF_INET, SOCK_STREAM, 0);
@@ -55,7 +55,7 @@ int main(int argc, const char *argv[]) {
 	}
 
 	pid_msgman = executeMsgManager(pipe);
-//	pid_appman = executeAppManager();
+	pid_appman = executeAppManager();
 
 	FD_ZERO(&fds);
 
@@ -70,7 +70,7 @@ int main(int argc, const char *argv[]) {
 	while (1) {
 		fd_set temp = fds;
 
-//		executeFlows();
+		executeFlows();
 
 		if (select(fd_max + 1, &temp, 0, 0, 0) < 0) {
 			printf("%s : Failed to select.\n", procname);
@@ -99,12 +99,13 @@ int main(int argc, const char *argv[]) {
 					event->pid = 0;
 				}
 
-				sprintf(message, "FLOW_STATUS|%d|%d|%s", msg.id, msg.node, status[msg.state]);
+				sprintf(message, "FLOW_STATUS|%d|%d|%s", msg.id, msg.node,
+						status[msg.state]);
 			} else {
 				sprintf(message, "NEW_DEVICE|%d", msg.id);
 			}
 
-			write(server, message, strlen(message)+1);
+			write(server, message, strlen(message) + 1);
 		}
 		if (FD_ISSET(server, &temp)) {
 			char buf[BUFSIZ];
@@ -138,7 +139,7 @@ int main(int argc, const char *argv[]) {
 				}
 			}
 
-//			scheduleEvents(&scheduler, REDO);
+			scheduleEvents(&scheduler, REDO);
 			if (file) close(file);
 		}
 	}
