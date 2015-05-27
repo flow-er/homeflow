@@ -203,8 +203,8 @@ public class Time extends Fragment implements View.OnClickListener, AdapterView.
   @Override
   public void onClick(View v) {
     if (v.getId() == R.id.time_btn) {
-      WorkEntry workEntry = new WorkEntry();
-      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, workEntry).commit();
+      AddFlow addFlow = new AddFlow();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, addFlow).commit();
     }
   }
 }

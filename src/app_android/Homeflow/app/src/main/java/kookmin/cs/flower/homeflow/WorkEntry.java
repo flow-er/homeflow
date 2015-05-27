@@ -148,18 +148,32 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.cond_btn:
-        CondSelect condSelect = new CondSelect();
-        getFragmentManager().beginTransaction().replace(R.id.realtabcontent, condSelect).commit();
+        ArrayList<String> sArr = new ArrayList<String>();
+        sArr.add("if (              ?              )  {");
+        sArr.add("                     ?");
+        sArr.add("}");
+        AddFlow addFlow = new AddFlow();
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("result", sArr);
+        addFlow.setArguments(bundle);
+        getFragmentManager().beginTransaction().replace(R.id.realtabcontent, addFlow).commit();
         break;
       case R.id.loop_btn:
-        LoopSelect loopSelect = new LoopSelect();
-        getFragmentManager().beginTransaction().replace(R.id.realtabcontent, loopSelect).commit();
+        sArr = new ArrayList<String>();
+        sArr.add("while (            ?            )  {");
+        sArr.add("                     ?");
+        sArr.add("}");
+        addFlow = new AddFlow();
+        bundle = new Bundle();
+        bundle.putStringArrayList("result", sArr);
+        addFlow.setArguments(bundle);
+        getFragmentManager().beginTransaction().replace(R.id.realtabcontent, addFlow).commit();
         break;
       case R.id.appli_btn:
         pager.setVisibility(View.VISIBLE);
         break;
       case R.id.work_entry_btn:
-        AddFlow addFlow = new AddFlow();
+        addFlow = new AddFlow();
         addFlow.setArguments(getArguments());
         getFragmentManager().beginTransaction().replace(R.id.realtabcontent, addFlow).commit();
         break;

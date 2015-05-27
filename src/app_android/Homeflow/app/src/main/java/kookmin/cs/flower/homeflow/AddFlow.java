@@ -13,8 +13,6 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import kookmin.cs.flower.homeflow.Management.WorkflowManager;
-
 /**
  * @brief class for showing addflow.xml layout
  * @details This class includes add_flow_list listview and add_flow_btn button.
@@ -32,7 +30,7 @@ public class AddFlow extends Fragment implements OnItemClickListener, View.OnCli
   static int i = 0;
 
   static {
-    addFlowList.add("+");
+    addFlowList.add("                     ?");
   }
 
   /**
@@ -46,10 +44,16 @@ public class AddFlow extends Fragment implements OnItemClickListener, View.OnCli
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
+    //setRetainInstance(true);
 
-    if(getArguments() != null) {
-      addFlowList.add(i++, getArguments().getString("result"));
+    if (getArguments() != null) {
+      ArrayList<String> sArr = new ArrayList<String>();
+      sArr = getArguments().getStringArrayList("result");
+
+      while(i < sArr.size())
+        addFlowList.add(i, sArr.get(i++));
     }
+
     View rootView = inflater.inflate(R.layout.addflow, container, false);
 
     listView = (ListView) rootView.findViewById(R.id.add_flow_list);
@@ -74,8 +78,22 @@ public class AddFlow extends Fragment implements OnItemClickListener, View.OnCli
    */
   @Override
   public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-    WorkEntry workEntry = new WorkEntry();
-    getFragmentManager().beginTransaction().replace(R.id.realtabcontent, workEntry).commit();
+    String s = parent.getItemAtPosition(position).toString();
+    if(s.equals("if (              ?              )  {")) {
+      CondSelect condSelect = new CondSelect();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, condSelect).commit();
+    }
+    else if(s.equals("while (            ?            )  {")) {
+      LoopSelect loopSelect = new LoopSelect();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, loopSelect).commit();
+    }
+    else if(s.equals("}")) {
+      ;
+    }
+    else {
+      WorkEntry workEntry = new WorkEntry();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, workEntry).commit();
+    }
   }
 
   /**
@@ -85,14 +103,15 @@ public class AddFlow extends Fragment implements OnItemClickListener, View.OnCli
    */
   @Override
   public void onClick(View v) {
-    if (v.getId() == R.id.add_flow_btn) {
+    if (v.getId() == R.id.add_flow_btn) {/*
       addFlowList.remove(addFlowList.size()-1);
-      new WorkflowManager().addFlow(addFlowList);
+      new WorkflowManager().addFlow(addFlowList);*/
       FlowReg flowReg = new FlowReg();
       getFragmentManager().beginTransaction().replace(R.id.realtabcontent, flowReg).commit();
-      addFlowList.clear();
+      /*addFlowList.clear();
       addFlowList.add("");
       i = 0;
+      */
     }
   }
 }

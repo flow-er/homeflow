@@ -145,8 +145,8 @@ public class Humidity extends Fragment implements View.OnClickListener, AdapterV
   @Override
   public void onClick(View v) {
     if (v.getId() == R.id.humidity_btn) {
-      WorkEntry workEntry = new WorkEntry();
-      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, workEntry).commit();
+      AddFlow addFlow = new AddFlow();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, addFlow).commit();
     }
   }
 }
