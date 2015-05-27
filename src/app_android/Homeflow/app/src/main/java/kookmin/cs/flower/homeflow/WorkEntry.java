@@ -21,11 +21,12 @@ import java.util.ArrayList;
  *            If you click appli_btn, pager becomes visible.
  *            If you click work_entry_btn, addflow.xml layout will appear
  * @author Jinsung Choi, bugslife102401@nate.com
- * @version 0.0.4
- * @date 2015-05-27
+ * @version 0.0.6
+ * @date 2015-05-28
  */
 public class WorkEntry extends Fragment implements View.OnClickListener {
 
+  String string;
   ViewPager pager;
   /**
    * @brief method for showing workentry.xml layout
@@ -38,6 +39,11 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
+    //setRetainInstance(true);
+
+    if (getArguments() != null) {
+      string = getArguments().getString("result");
+    }
 
     View rootView = inflater.inflate(R.layout.workentry, container, false);
 
@@ -138,8 +144,8 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
 
   /**
    * @brief method for determining actions of cond_btn, loop_btn, appli_btn, and work_entry_btn
-   * @details If you click cond_btn, condselect.xml layout will appear.
-   *            If you click loop_btn, loopselect.xml layout will appear.
+   * @details If you click cond_btn, addflow.xml layout will appear.
+   *            If you click loop_btn, addflow.xml layout will appear.
    *            If you click appli_btn, pager becomes visible.
    *            If you click work_entry_btn, addflow.xml layout will appear.
    * @param v
@@ -152,6 +158,7 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
         sArr.add("if (              ?              )  {");
         sArr.add("                     ?");
         sArr.add("}");
+        sArr.add(string);
         AddFlow addFlow = new AddFlow();
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("result", sArr);
@@ -163,6 +170,7 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
         sArr.add("while (            ?            )  {");
         sArr.add("                     ?");
         sArr.add("}");
+        sArr.add(string);
         addFlow = new AddFlow();
         bundle = new Bundle();
         bundle.putStringArrayList("result", sArr);

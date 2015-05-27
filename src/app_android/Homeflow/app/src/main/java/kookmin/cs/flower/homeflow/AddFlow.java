@@ -19,15 +19,18 @@ import java.util.ArrayList;
  *            If you click add_flow_list, workentry.xml layout will appear.
  *            If you click add_flow_btn, flowreg.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
- * @version 0.0.2
- * @date 2015-04-06
+ * @version 0.0.4
+ * @date 2015-05-28
  */
 public class AddFlow extends Fragment implements OnItemClickListener, View.OnClickListener {
 
   ListView listView;
   static ArrayList<String> addFlowList = new ArrayList<String>();
 
+  String string;
+  int position;
   static int i = 0;
+  int j = 0, k = 0;
 
   static {
     addFlowList.add("                     ?");
@@ -44,14 +47,25 @@ public class AddFlow extends Fragment implements OnItemClickListener, View.OnCli
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    //setRetainInstance(true);
 
     if (getArguments() != null) {
       ArrayList<String> sArr = new ArrayList<String>();
       sArr = getArguments().getStringArrayList("result");
 
-      while(i < sArr.size())
-        addFlowList.add(i, sArr.get(i++));
+      string = sArr.get(sArr.size()-1);
+      position = Integer.valueOf(string);
+
+      i = 0;
+
+      addFlowList.add("");
+      addFlowList.add("");
+      k = addFlowList.size()-2;
+
+      for(j = position+1; j < k; j++)
+        addFlowList.set(j+2, addFlowList.get(j));
+
+      for(j = position; j < position+3; j++)
+        addFlowList.set(j, sArr.get(i++));
     }
 
     View rootView = inflater.inflate(R.layout.addflow, container, false);
@@ -92,6 +106,10 @@ public class AddFlow extends Fragment implements OnItemClickListener, View.OnCli
     }
     else {
       WorkEntry workEntry = new WorkEntry();
+      String ss = String.valueOf(position);
+      Bundle bundle = new Bundle();
+      bundle.putString("result", ss);
+      workEntry.setArguments(bundle);
       getFragmentManager().beginTransaction().replace(R.id.realtabcontent, workEntry).commit();
     }
   }
