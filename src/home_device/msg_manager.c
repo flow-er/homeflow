@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <unistd.h>
 #include <sys/errno.h>
 #include <sys/types.h>
@@ -38,7 +39,6 @@ int main(int argc, const char *argv[]) {
 			continue;
 		}
 
-		printf("%s : Send new message to flow_manager.\n", procname);
 		write(fd[1], &msg, sizeof(struct message));
 		read(fd[0], &ret, sizeof(int));
 	}

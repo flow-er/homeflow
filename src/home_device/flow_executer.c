@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 #include <pthread.h>
 #include <unistd.h>
 
@@ -37,7 +38,7 @@ int main(int argc, const char *argv[]) {
 	if (argc < 3) return 0;
 	usr_exec = atoi(argv[2]);
 
-	printf("%s : flow %s is executed ", procname, argv[1]);
+	printf("%s : %d: flow %s is executed ", procname, getpid(), argv[1]);
 	printf("by %s.\n", (usr_exec ? "user" : "scheduler"));
 
 	signal(SIGUSR1, signalHandler);
@@ -68,7 +69,7 @@ void run(struct flow *flow) {
 
 	runNode(flow->head);
 
-	printf("%s : flow %d is successfully completed.\n", procname, flow->id);
+	printf("%s : %d : flow is done.\n", procname, getpid());
 	sendMessage(0, FLOW_DONE);
 }
 
@@ -100,7 +101,6 @@ void runNode(struct node *node) {
 			sendMessage(node->num, NODE_RUNNING);
 
 			ret = app->runCommand(app->addr, set);
-			sleep(1000);
 
 			if (ret == -1) sendMessage(0, FLOW_FAILED);
 			sendMessage(node->num, NODE_COMPLETED);
@@ -180,7 +180,10 @@ void sendMessage(int node, enum state state) {
 	msg.node = node;
 	msgsnd(msg_id, &msg, MSGSIZE, 0);
 
-	if (state == FLOW_FAILED) exit(0);
+	if (state == FLOW_FAILED) {
+		printf("%s : %d : flow is failed on running.\n", procname, getpid());
+		exit(0);
+	}
 }
 
 void signalHandler(int signal) {

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <signal.h>
 
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>

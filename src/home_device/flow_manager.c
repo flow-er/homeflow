@@ -110,11 +110,9 @@ int main(int argc, const char *argv[]) {
 				sprintf(message, "NEW_DEVICE|%d", msg.id);
 			}
 
-			ssize_t a = write(server, message, strlen(message) + 1);
-
-			printf("%s : Message is sent to server.\n", procname);
-			printf("message : %ld, %s\n", a, message);
-
+			printf("%s : Send a message to server. : %s\n", procname, message);
+			write(server, message, strlen(message) + 1);
+			
 			write(pipe[WR], &ok, sizeof(int));
 		}
 		if (FD_ISSET(server, &temp)) {
@@ -146,8 +144,7 @@ int main(int argc, const char *argv[]) {
 					sprintf(path, "%s%s", TEMP_DIR, data);
 
 					file = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-					printf("%s : Receiving new file \'%s\'...\n", procname,
-							data);
+					printf("%s : User made a flow \'%s\'.\n", procname, data);
 					write(file, xml, len);
 				} else {
 					write(file, buf, len);

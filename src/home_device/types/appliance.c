@@ -184,10 +184,6 @@ int setCommandToVirtualMultiSensor(char *addr, cmdset set) {
 }
 
 int sendCommandToBLuetoohDevice(char *addr, cmdset set) {
-	// NOTE : ABLE TO HAVE THIS PROBLEM!!!
-	//        connect can be failed if more than one processess try to connect
-	//        with a specific ble device.
-
 	enum cond_t cond = set.option >> 24;
 	uint value = (set.option << 8) >> 8;
 	int curr = -1;
@@ -238,7 +234,7 @@ int sendCommandToBLuetoohDevice(char *addr, cmdset set) {
 		return 1;
 	} else {
 		if ((pid = fork())) {
-			wait(&curr);
+			waitpid(pid, &curr, 0);
 		} else {
 			if (execvp("sh", argv) == -1) {
 				printf("flow_executer : Failed to execute gatt tool\n");

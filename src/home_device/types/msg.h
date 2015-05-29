@@ -13,7 +13,7 @@ enum msgtype {
 
 enum state {
 	FLOW_START = 1,
-	FLOW_DONE = 1,
+	FLOW_DONE,
 	FLOW_FAILED,
 	NODE_RUNNING,
 	NODE_COMPLETED

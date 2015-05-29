@@ -22,4 +22,4 @@ gatt_conn :
 	cp gatt_conn.sh ../
 
 clean :
-	rm -rf flow_manager flow_executer msg_manager app_manager
+	rm -rf ../flow_manager ../flow_executer ../msg_manager ../app_manager ../gatt_conn.sh
