@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<flow id="1"
+      name="test2"
+      description=""
+      isAuto="false">
+
+	<action appid="10"
+	        num="1"
+	        command="1"
+	        option="0"/>
+</flow>
+
