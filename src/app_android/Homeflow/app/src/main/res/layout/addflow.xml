@@ -23,20 +23,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="11"/>
-                <ListView
+            <ListView
                     android:id="@+id/add_flow_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:dividerHeight="3px"
                     android:divider="#FF2C486D">
-                </ListView>
+            </ListView>
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="12"/>
-            </LinearLayout>
         </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
             android:orientation="vertical"

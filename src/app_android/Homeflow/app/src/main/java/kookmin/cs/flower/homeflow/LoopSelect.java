@@ -100,4 +100,8 @@ public class LoopSelect extends Fragment implements AdapterView.OnItemSelectedLi
   @Override
   public void onNothingSelected(AdapterView<?> parent) {
   }
+
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
+  }
 }

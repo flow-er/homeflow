@@ -2,6 +2,9 @@ package kookmin.cs.flower.homeflow;
 
 import java.util.ArrayList;
 
+import kookmin.cs.flower.homeflow.data.Flow;
+import kookmin.cs.flower.homeflow.data.Node;
+
 /**
  * @brief class for listview Customizing
  * @details This class implies construction of each row in listview.
@@ -10,26 +13,25 @@ import java.util.ArrayList;
  * @date 2015-05-17
  */
 public class MyCustomDTO {
-  String text;
+  Flow flow;
   int btn1, btn2, btn3;
-  ArrayList<String> childList;
+  ArrayList<Node> childList;
 
   /**
    * @brief constructor of MyCustomDTO class
    * @param btn1
-   * @param text
+   * @param flow
    * @param btn2
    * @param btn3
    * @param childList
    */
-  public MyCustomDTO(int btn1, String text, int btn2, int btn3, ArrayList<String> childList) {
+  public MyCustomDTO(int btn1, Flow flow, int btn2, int btn3, ArrayList<Node> childList) {
     this.btn1 = btn1;
-    this.text = text;
+    this.flow = flow;
     this.btn2 = btn2;
     this.btn3 = btn3;
     this.childList = childList;
   }
-
   /**
    * @brief method for getting btn1
    * @return
@@ -46,13 +48,13 @@ public class MyCustomDTO {
    * @brief method for getting text
    * @return
    */
-  public String getFlowText() { return text; }
+  public String getFlowText() { return flow.toString(); }
 
   /**
    * @brief method for setting text
    * @param text
    */
-  public void setFlowText(String text) { this.text = text; }
+  public void setFlowText(String text) { this.flow = flow; }
 
   /**
    * @brief method for getting btn2
@@ -88,5 +90,5 @@ public class MyCustomDTO {
    * @brief method for setting childlist
    * @param childList
    */
-  public void setChildList(ArrayList<String> childList) { this.childList = childList; }
+  public void setChildList(ArrayList<Node> childList) { this.childList = childList; }
 }

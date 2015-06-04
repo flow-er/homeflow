@@ -1,38 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="kookmin.cs.flower.homeflow" >
+          package="kookmin.cs.flower.homeflow">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- GCM requires a Google account. -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <!-- Keeps the processor from sleeping when a message is received. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <!--
+ Creates a custom permission so only this app can receive its messages.
+ NOTE: the permission *must* be called PACKAGE.permission.C2D_MESSAGE,
+       where PACKAGE is the application's package name.
+    -->
+    <uses-permission android:name="com.google.android.gcm.demo.app.permission.C2D_MESSAGE" />
+    <!-- This app has permission to register and receive data message. -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme">
+        <!-- Required for applications which use Google Play Services. -->
 
-                <category android:name="android.intent.category.LAUNCHER" />
+        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+        <activity
+                android:name=".MainActivity"
+                android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
         <activity
                 android:name=".Tabs"
-                android:label="HomeFlow"/>
+                android:label="@string/app_name"/>
 
         <activity
                 android:name=".Personal"
-                android:label="HomeFlow"/>
+                android:label="@string/app_name"/>
+
+        <activity
+                android:name=".Service.PushActivity"
+                android:label="@string/app_name"/>
+        <activity
+                android:name=".Service.setServerActivity"
+                android:label="@string/app_name"/>
+        <activity
+                android:name=".condActivity"
+                android:label="@string/app_name"/>
+        <activity
+                android:name=".drag3.DragActivity"
+                android:label="@string/app_name"/>
 
         <service android:name=".Service.SocketService">
-                 <intent-filter>
-                     <action android:name="kookmin.cs.flower.homeflow.Service.SocketService"/>
-                 </intent-filter>
+            <intent-filter>
+                <action android:name="kookmin.cs.flower.homeflow.Service.SocketService"/>
+            </intent-filter>
         </service>
+
+        <!--
+         WakefulBroadcastReceiver that will receive intents from GCM
+         services and hand them to the custom IntentService.
+         The com.google.android.c2dm.permission.SEND permission is necessary
+         so only GCM services can send data messages for the app.
+       -->
+        <receiver
+                android:name=".Service.ReadstateReceiver"
+                android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <!-- Receives the actual messages. -->
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="kookmin.cs.flower.homeflow.Service" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

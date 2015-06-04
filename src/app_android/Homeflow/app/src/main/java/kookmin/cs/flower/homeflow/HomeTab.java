@@ -12,9 +12,9 @@ import android.widget.ScrollView;
 import android.widget.TabHost;
 
 /**
- * @brief class for showing hometab.xml layout
  * @author Jinsung Choi, bugslife102401@nate.com
  * @version 0.0.4
+ * @brief class for showing hometab.xml layout
  * @date 2015-05-01
  */
 public class HomeTab extends Fragment implements TabHost.OnTabChangeListener {
@@ -24,17 +24,16 @@ public class HomeTab extends Fragment implements TabHost.OnTabChangeListener {
   /**
    * @brief method for showing hometab.xml layout
    * @details This method concatenates two tabs to tabhost.
-   * @param savedInstanceState
    */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View V = inflater.inflate(R.layout.hometab, container, false);
-    ImageView imageView = (ImageView)V.findViewById(R.id.hometabimage);
+    ImageView imageView = (ImageView) V.findViewById(R.id.hometabimage);
     imageView.setAdjustViewBounds(true);
 
-    tabHost = (TabHost)V.findViewById(R.id.tabhost);
+    tabHost = (TabHost) V.findViewById(R.id.tabhost);
     tabHost.setup();
 
     tabHost.getTabWidget().setDividerDrawable(null);
@@ -59,7 +58,7 @@ public class HomeTab extends Fragment implements TabHost.OnTabChangeListener {
 
     tabHost.setCurrentTab(0);
 
-    ScrollView mainScrollView = (ScrollView)V.findViewById(R.id.hometabscroll);
+    ScrollView mainScrollView = (ScrollView) V.findViewById(R.id.hometabscroll);
 
     mainScrollView.smoothScrollTo(0, 0);
 
@@ -68,15 +67,20 @@ public class HomeTab extends Fragment implements TabHost.OnTabChangeListener {
 
   /**
    * @brief method for determining actions of tab1 and tab2
-   * @details If you select tab1, introduction page will appear.
-   *            If you select Tab2, manual page will appear.
-   * @param tabId
+   * @details If you select tab1, introduction page will appear. If you select Tab2, manual page
+   * will appear.
    */
   @Override
   public void onTabChanged(String tabId) {
-    for(int i = 0; i < tabHost.getTabWidget().getChildCount(); i++)
+    for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
       tabHost.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#FF808ED2"));
+    }
 
-    tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundColor(Color.parseColor("#FFCA93E8"));
+    tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab())
+        .setBackgroundColor(Color.parseColor("#FFCA93E8"));
+  }
+
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
   }
 }

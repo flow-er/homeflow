@@ -8,24 +8,23 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import kookmin.cs.flower.homeflow.FileManagement.FileManager;
+
 /**
- * @brief class for showing edittab.xml layout
- * @method This class includes appli_reg_btn button and flow_reg_btn button.
- *          If you click appli_reg_btn, applireg.xml layout will appear.
- *          If you click flow_reg_btn, flowreg.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
  * @version 0.0.4
+ * @brief class for showing edittab.xml layout
+ * @method This class includes appli_reg_btn button and flow_reg_btn button. If you click
+ * appli_reg_btn, applireg.xml layout will appear. If you click flow_reg_btn, flowreg.xml layout
+ * will appear.
  * @date 2015-05-03
  */
 public class EditTab extends Fragment implements View.OnClickListener {
 
   /**
+   * @return rootView
    * @brief method for showing edittab.xml layout
    * @details This method sets clicked-events on appli_reg_btn and flow_reg_btn.
-   * @param inflater
-   * @param container
-   * @param savedInstanceState
-   * @return rootView
    */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,15 +32,14 @@ public class EditTab extends Fragment implements View.OnClickListener {
     // Inflate the layout for this fragment
     View rootView = inflater.inflate(R.layout.edittab, container, false);
 
-    ImageView imageView = (ImageView)rootView.findViewById(R.id.edittabimg);
+    ImageView imageView = (ImageView) rootView.findViewById(R.id.edittabimg);
     imageView.setAdjustViewBounds(true);
 
-    imageView = (ImageView)rootView.findViewById(R.id.edittab_appimg);
+    imageView = (ImageView) rootView.findViewById(R.id.edittab_appimg);
     imageView.setAdjustViewBounds(true);
 
-    imageView = (ImageView)rootView.findViewById(R.id.edittab_flowimg);
+    imageView = (ImageView) rootView.findViewById(R.id.edittab_flowimg);
     imageView.setAdjustViewBounds(true);
-
 
     Button appli_reg_btn = (Button) rootView.findViewById(R.id.appli_reg_btn);
     Button flow_reg_btn = (Button) rootView.findViewById(R.id.flow_reg_btn);
@@ -49,14 +47,14 @@ public class EditTab extends Fragment implements View.OnClickListener {
     appli_reg_btn.setOnClickListener(this);
     flow_reg_btn.setOnClickListener(this);
 
+    FileManager.updateAppliance();
     return rootView;
   }
 
   /**
    * @brief method for determining actions of appli_reg_btn and flow_reg_btn
-   * @details If you click appli_reg_btn, applireg.xml layout will appear.
-   *            If you click flow_reg_btn, flowreg.xml layout will appear.
-   * @param v
+   * @details If you click appli_reg_btn, applireg.xml layout will appear. If you click
+   * flow_reg_btn, flowreg.xml layout will appear.
    */
   @Override
   public void onClick(View v) {
@@ -70,5 +68,9 @@ public class EditTab extends Fragment implements View.OnClickListener {
         getFragmentManager().beginTransaction().replace(R.id.realtabcontent, flowReg).commit();
         break;
     }
+  }
+
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
   }
 }

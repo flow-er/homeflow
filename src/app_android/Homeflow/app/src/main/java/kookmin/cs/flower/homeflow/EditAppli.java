@@ -44,8 +44,12 @@ public class EditAppli extends Fragment implements View.OnClickListener {
   @Override
   public void onClick(View v) {
     if(v.getId() == R.id.edit_appli_btn) {
-        AppliReg appliReg = new AppliReg();
-        getFragmentManager().beginTransaction().replace(R.id.realtabcontent, appliReg).commit();
+      AppliReg appliReg = new AppliReg();
+      getFragmentManager().beginTransaction().replace(R.id.realtabcontent, appliReg).commit();
     }
+  }
+
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
   }
 }

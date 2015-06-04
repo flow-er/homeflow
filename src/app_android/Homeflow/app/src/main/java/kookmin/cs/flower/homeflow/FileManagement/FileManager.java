@@ -1,5 +1,6 @@
 package kookmin.cs.flower.homeflow.FileManagement;
 
+import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 
@@ -7,11 +8,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 
+import kookmin.cs.flower.homeflow.Management.ApplianceManager;
+import kookmin.cs.flower.homeflow.Management.WorkflowManager;
 import kookmin.cs.flower.homeflow.data.Appliance;
-import kookmin.cs.flower.homeflow.data.FileContent;
-import kookmin.cs.flower.homeflow.data.Workflow;
+import kookmin.cs.flower.homeflow.data.DataSheet;
+import kookmin.cs.flower.homeflow.data.Flow;
+import kookmin.cs.flower.homeflow.data.Node;
 
 /**
  * @author Jongho Lim, sloth@kookmin.ac.kr
@@ -19,46 +24,29 @@ import kookmin.cs.flower.homeflow.data.Workflow;
  * @date 2015-04-07
  */
 public class FileManager {
-
-  public final static String FLOW_NAME = "flowname";
-  public final static String WORK = "work";
-  public final static String APPLIANCE_NAME = "appname";
-  public final static String FUNCTION = "function";
-  public final static String NAME = "name";
-  public final static String ID = "id";
-  private static int i = 0;
+  public static String TARGET_SERVER_IP = "52.68.106.249";
+  public static String TARGET_SERVER_PORT = "52222";
 
   private static boolean existFlowDir = false;
   private static boolean existApplianceDir = false;
-
-  private static FileContent fileContent = new FileContent();
-
-  public static ArrayList<String> getFlowList() {
-    return fileContent.getFlowList();
-  }
-  public static ArrayList<String> getApplianceList() { return fileContent.getApplianceList(); }
-
-  public void addWorkflow(ArrayList<String> flowList) {
-    fileContent.addFlow("flow" + i++);
-    XMLwrite(flowList);
-  }
-  public void addApplianceflow(Appliance appliance) { fileContent.addAppliance(appliance.toString()); }
 
   static {
     updateFlow();
     updateAppliance();
   }
-  public void updateFlowdata() { updateFlow(); }
-  public void updateAppliancedata() { updateAppliance(); }
-  private static void updateFlow() {
-    if (fileContent.getFlowList().size() > 0) {
-      fileContent.getFlowList().clear();
+
+  public static void updateFlow() {
+    if (DataSheet.getFlowList().size() > 0) {
+      DataSheet.getFlowList().clear();
+    }
+
+    if (DataSheet.getHashFlow().size() > 0) {
+      DataSheet.getHashFlow().clear();
     }
 
     if (!existFlowDir) {
       mkFlowDir("workflow");
       existFlowDir = true;
-      Log.i("mytag", "mkdir");
     }
 
     File
@@ -66,21 +54,26 @@ public class FileManager {
         new File(Environment.getExternalStorageDirectory().getPath() + "/HomeFlow/workflow");
     String[] flowlist = file.list();
 
-    Log.i("mytag", file.getPath());
-
-    if(flowlist == null) {
+    if (flowlist == null) {
       return;
     }
-    Log.i("mytag", "flow list num : " + flowlist.length);
 
     for (int i = 0; i < flowlist.length; i++) {
-      fileContent.addFlow(flowlist[i].substring(0, flowlist[i].length() - 4));
+      try {
+        FileInputStream is = new FileInputStream(file + "/" + flowlist[i]);
+        WorkflowManager.parseFlow(is);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 
-  private static void updateAppliance() {
-    if (fileContent.getApplianceList().size() > 0) {
-      fileContent.getApplianceList().clear();
+  public static void updateAppliance() {
+    if (DataSheet.getApplianceList().size() > 0) {
+      for(int i=0; i<DataSheet.getApplianceList().size(); i++) {
+        DataSheet.getApplianceList().get(i).getFunctions().clear();
+      }
+      DataSheet.getApplianceList().clear();
     }
 
     if (!existApplianceDir) {
@@ -93,18 +86,17 @@ public class FileManager {
         new File(Environment.getExternalStorageDirectory().getPath() + "/HomeFlow/appliance/");
     String[] appliancelist = file.list();
 
-    Log.i("mytag", file.getPath());
-    if(appliancelist == null) {
-      return ;
+    if (appliancelist == null) {
+      return;
     }
 
-    Log.i("mytag", "appliance list num : " + appliancelist.length);
     for (int i = 0; i < appliancelist.length; i++) {
       try {
         Appliance app = new Appliance();
         FileInputStream is = new FileInputStream(file.getPath() + "/" + appliancelist[i]);
+        ApplianceManager.addAppliance(is);
 
-        fileContent.addAppliance(new XMLInput().parse(is, app).toString());
+        Log.i("mytag", file.getPath() + "/" + appliancelist[i]);
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -137,33 +129,44 @@ public class FileManager {
     }
   }
 
-  private void XMLwrite(ArrayList<String> flow) {
+  public static String writeFlow(Bundle args, ArrayList<Node> nodes) {
 
-    Workflow workflow = new Workflow();
+    Flow workflow = new Flow();
 
-    for (int i = 0; i < flow.size(); i++) {
-      String workname = flow.get(i).toString();
-      workflow.addWork(workname, fileContent.getApplianceId(workname));
+    workflow.setName(args.getString(WorkflowManager.FLOWNAME));
+    workflow.setDescription(args.getString(WorkflowManager.DESCRIPTION));
+    workflow.setAuto( args.getString(WorkflowManager.ISAUTO).equalsIgnoreCase("true") );
+
+    for (int i = 0; i < nodes.size(); i++) {
+      Log.i("mytag", "type : " + nodes.get(i).getType());
+      workflow.addnode(new Node(nodes.get(i).getType(), nodes.get(i).getAppId(), nodes.get(i).getCommand(), 0));
     }
 
-    File
-        file =
+    File file =
         new File(Environment.getExternalStorageDirectory().getPath() + "/HomeFlow/workflow/flow");
+
     int fileId = 1;
 
     while (new File(file.getPath() + fileId + ".xml").exists()) {
       fileId++;
     }
 
+    workflow.setId(fileId);
+
     file = new File(file.getPath() + fileId + ".xml");
-    workflow.setName("flow" + fileId);
+    workflow.setFilename(file.getName());
 
     try {
       FileOutputStream fos = new FileOutputStream(file);
-      new XMLOutput().writeXml(fos, workflow);
+      StringWriter writer = WorkflowManager.createFlow(workflow);
+
+      fos.write(writer.toString().getBytes());
+      fos.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
-  }
 
+    updateFlow();
+    return "flow" + fileId;
+  }
 }

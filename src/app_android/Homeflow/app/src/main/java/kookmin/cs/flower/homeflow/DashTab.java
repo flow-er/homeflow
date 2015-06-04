@@ -9,6 +9,9 @@ import android.widget.ExpandableListView;
 
 import java.util.ArrayList;
 
+import kookmin.cs.flower.homeflow.data.DataSheet;
+import kookmin.cs.flower.homeflow.data.Node;
+
 /**
  * @brief class for showing dashtab.xml layout
  * @details This class includes dash_tab_list listview
@@ -19,7 +22,6 @@ import java.util.ArrayList;
 public class DashTab extends Fragment {
 
   ExpandableListView listView;
-  private ArrayList<String> mChildList = null;
 
   /**
    * @brief method for showing dashtab.xml layout
@@ -35,22 +37,16 @@ public class DashTab extends Fragment {
     // Inflate the layout for this fragment
     View rootView = inflater.inflate(R.layout.dashtab, container, false);
 
-    mChildList = new ArrayList<String>();
-    mChildList.add("   전등");
-    mChildList.add("   커피포트");
-    mChildList.add("   블라인드");
+    ArrayList<MyCustomDTO> dashTabList = new ArrayList<>();
+    for (int i = 0; i < DataSheet.getFlowList().size(); i++) {
+      ArrayList<Node> mChildList = new ArrayList<>();
+      for( int j = 0; j < DataSheet.getFlowList().get(i).getNodeList().size(); ++j ) {
+        mChildList.add(DataSheet.getFlowList().get(i).getNodeList().get(j));
+      }
 
-    ArrayList<MyCustomDTO> dashTabList = new ArrayList<MyCustomDTO>();
-    dashTabList.add(new MyCustomDTO(R.id.state_btn, "Flow", R.id.enable_btn, R.id.unfold_btn, mChildList));
-    dashTabList.add(new MyCustomDTO(R.id.state_btn, "Flow", R.id.enable_btn, R.id.unfold_btn, mChildList));
-    dashTabList.add(new MyCustomDTO(R.id.state_btn, "Flow", R.id.enable_btn, R.id.unfold_btn, mChildList));
-    dashTabList.add(new MyCustomDTO(R.id.state_btn, "Flow", R.id.enable_btn, R.id.unfold_btn, mChildList));
-    dashTabList.add(new MyCustomDTO(R.id.state_btn, "Flow", R.id.enable_btn, R.id.unfold_btn, mChildList));
-    dashTabList.add(new MyCustomDTO(R.id.state_btn, "Flow", R.id.enable_btn, R.id.unfold_btn, mChildList));
-    dashTabList.add(new MyCustomDTO(R.id.state_btn, "Flow", R.id.enable_btn, R.id.unfold_btn, mChildList));
-    dashTabList.add(new MyCustomDTO(R.id.state_btn, "Flow", R.id.enable_btn, R.id.unfold_btn, mChildList));
-    dashTabList.add(new MyCustomDTO(R.id.state_btn, "Flow", R.id.enable_btn, R.id.unfold_btn, mChildList));
-    dashTabList.add(new MyCustomDTO(R.id.state_btn, "Flow", R.id.enable_btn, R.id.unfold_btn, mChildList));
+      dashTabList.add(new MyCustomDTO(R.id.state_btn, DataSheet.getFlowList().get(i),
+                               R.id.enable_btn, R.id.unfold_btn, mChildList));
+    }
 
     listView = (ExpandableListView)rootView.findViewById(R.id.dash_tab_list);
     MyCustomAdapter dashTabAdapter = new MyCustomAdapter(getActivity(), R.layout.dashlistrow, dashTabList);
@@ -82,5 +78,9 @@ public class DashTab extends Fragment {
     listView.setAdapter(dashTabAdapter);
 
     return rootView;
+  }
+
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
   }
 }

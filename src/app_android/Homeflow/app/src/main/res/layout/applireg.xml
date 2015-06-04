@@ -26,29 +26,29 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_weight="5">
-            <Button
+        <Button
                 android:id="@+id/appli_reg_to_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/applireg_back_btn"/>
-            <TextView
-                    android:id="@+id/appli_reg_to_edit_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginLeft="23dp"
-                    android:text="이전 화면"
-                    android:textColor="#FFFFFFFF"/>
-            <Button
+        <TextView
+                android:id="@+id/appli_reg_to_edit_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="23dp"
+                android:text="이전 화면"
+                android:textColor="#FFFFFFFF"/>
+        <Button
                 android:id="@+id/appli_reg_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/applireg_add_btn"/>
-            <TextView
+        <TextView
                 android:id="@+id/appli_reg_add_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -56,14 +56,14 @@
                 android:layout_marginLeft="35dp"
                 android:text="추가"
                 android:textColor="#FFFFFFFF"/>
-            <Button
+        <Button
                 android:id="@+id/appli_reg_del"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/applireg_del_btn"/>
-            <TextView
+        <TextView
                 android:id="@+id/appli_reg_del_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 public class Temperature extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
   Spinner temper_spin, comp_spin;
+  String temper;
 
   static ArrayList<String> temperList = new ArrayList<String>();
   static ArrayList<String> compList = new ArrayList<String>();
@@ -45,6 +46,7 @@ public class Temperature extends Fragment implements View.OnClickListener, Adapt
     compList.add(">");compList.add(">=");
     compList.add("==");
   }
+
   /**
    * @brief method for showing timecond.xml layout
    * @details This method sets a clicked-event on time_cond_btn
@@ -88,7 +90,10 @@ public class Temperature extends Fragment implements View.OnClickListener, Adapt
    */
   @Override
   public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-    ((TextView)parent.getChildAt(0)).setTextColor(Color.WHITE);
+    if (id == R.id.temper_spin) {
+      ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
+      temper = ((TextView) parent.getChildAt(0)).getText().toString();
+    }
   }
 
   /**
@@ -108,7 +113,11 @@ public class Temperature extends Fragment implements View.OnClickListener, Adapt
   @Override
   public void onClick(View v) {
     if (v.getId() == R.id.temperature_btn) {
+      Bundle args = new Bundle();
+      args.putString("temper", temper);
       WorkEntry workEntry = new WorkEntry();
+      workEntry.setArguments(args);
+
       getFragmentManager().beginTransaction().replace(R.id.realtabcontent, workEntry).commit();
     }
   }

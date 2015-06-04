@@ -2,6 +2,7 @@ package kookmin.cs.flower.homeflow;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,18 +10,16 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import java.util.ArrayList;
+import kookmin.cs.flower.homeflow.data.DataSheet;
 
 /**
- * @brief class for showing applireg.xml layout
- * @details This class includes appli_reg_to_edit button, appli_reg_add button,
- *            appli_reg_del button and appliRegAdapter.
- *            If you click appli_reg_to_edit, edittab.xml layout will appear.
- *            If you click appli_reg_add, addappli.xml layout will appear.
- *            If you click appli_reg_del, delappli.xml layout will appear.
- *            If you click appliRegAdapter, editappli.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
  * @version 0.0.6
+ * @brief class for showing applireg.xml layout
+ * @details This class includes appli_reg_to_edit button, appli_reg_add button, appli_reg_del button
+ * and appliRegAdapter. If you click appli_reg_to_edit, edittab.xml layout will appear. If you click
+ * appli_reg_add, addappli.xml layout will appear. If you click appli_reg_del, delappli.xml layout
+ * will appear. If you click appliRegAdapter, editappli.xml layout will appear.
  * @date 2015-05-07
  */
 public class AppliReg extends Fragment implements View.OnClickListener {
@@ -28,13 +27,10 @@ public class AppliReg extends Fragment implements View.OnClickListener {
   ListView listView;
 
   /**
-   * @brief method for showing applireg.xml layout
-   * @details This method sets clicked-events on appli_reg_to_edit, appli_reg_add,
-   *            appli_reg_del and appliRegAdapter.
-   * @param inflater
-   * @param container
-   * @param savedInstanceState
    * @return rootView
+   * @brief method for showing applireg.xml layout
+   * @details This method sets clicked-events on appli_reg_to_edit, appli_reg_add, appli_reg_del and
+   * appliRegAdapter.
    */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,26 +46,16 @@ public class AppliReg extends Fragment implements View.OnClickListener {
     appli_reg_add.setOnClickListener(this);
     appli_reg_del.setOnClickListener(this);
 
-    ArrayList<MyCustomDTO2> appliRegList = new ArrayList<MyCustomDTO2>();
-    appliRegList.add(new MyCustomDTO2("appliance"));
-    appliRegList.add(new MyCustomDTO2("appliance"));
-    appliRegList.add(new MyCustomDTO2("appliance"));
-    appliRegList.add(new MyCustomDTO2("appliance"));
-    appliRegList.add(new MyCustomDTO2("appliance"));
-    appliRegList.add(new MyCustomDTO2("appliance"));
-    appliRegList.add(new MyCustomDTO2("appliance"));
-    appliRegList.add(new MyCustomDTO2("appliance"));
-    appliRegList.add(new MyCustomDTO2("appliance"));
-    appliRegList.add(new MyCustomDTO2("appliance"));
-
     listView = (ListView) rootView.findViewById(R.id.appli_reg_list);/*
     ArrayAdapter appliRegAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1,
                                                     FileManager.getApplianceList());*/
 
-
-    MyCustomAdapter2 appliRegAdapter = new MyCustomAdapter2(getActivity(), R.layout.appliregrow, appliRegList);
+    MyCustomAdapter2
+        appliRegAdapter =
+        new MyCustomAdapter2(getActivity(), R.layout.appliregrow, DataSheet.getApplianceList());
     listView.setAdapter(appliRegAdapter);
 
+    Log.i("mytag", "appli size : " + DataSheet.getApplianceList().size());
     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -83,10 +69,9 @@ public class AppliReg extends Fragment implements View.OnClickListener {
 
   /**
    * @brief method for determining actions of appli_reg_to_edit, appli_reg_add, and appli_reg_del
-   * @details If you click appli_reg_to_edit, edittab.xml layout will appear.
-   *            If you click appli_reg_add, addappli.xml layout will appear.
-   *            If you click appli_reg_del, delappli.xml layout will appear.
-   * @param v
+   * @details If you click appli_reg_to_edit, edittab.xml layout will appear. If you click
+   * appli_reg_add, addappli.xml layout will appear. If you click appli_reg_del, delappli.xml layout
+   * will appear.
    */
   @Override
   public void onClick(View v) {
@@ -104,5 +89,9 @@ public class AppliReg extends Fragment implements View.OnClickListener {
         getFragmentManager().beginTransaction().replace(R.id.realtabcontent, delAppli).commit();
         break;
     }
+  }
+
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
   }
 }

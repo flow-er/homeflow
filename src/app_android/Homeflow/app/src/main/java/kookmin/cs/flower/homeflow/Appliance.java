@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import kookmin.cs.flower.homeflow.data.DataSheet;
+
 /**
  * @brief class for showing timecond
  * @details This class includes time_cond_btn. If you click time_cond_btn, workentry.xml layout will appear.
@@ -25,16 +27,9 @@ public class Appliance extends Fragment implements View.OnClickListener, Adapter
 
   Spinner appli_spin, func_spin;
 
-  static ArrayList<String> appliList = new ArrayList<String>();
   static ArrayList<String> funcList = new ArrayList<String>();
 
   static {
-    appliList.add("기기1");
-    appliList.add("기기2");
-    appliList.add("기기3");
-    appliList.add("기기4");
-    appliList.add("기기5");
-
     funcList.add("ON");
     funcList.add("OFF");
   }
@@ -58,8 +53,9 @@ public class Appliance extends Fragment implements View.OnClickListener, Adapter
     appli_spin = (Spinner) rootView.findViewById(R.id.appli_spin);
     func_spin = (Spinner) rootView.findViewById(R.id.func_spin);
 
-    ArrayAdapter<String>
-        appliAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, appliList);
+    ArrayAdapter<kookmin.cs.flower.homeflow.data.Appliance>
+        appliAdapter = new ArrayAdapter<>(rootView.getContext(), android.R.layout.simple_list_item_1,
+                                                DataSheet.getApplianceList());
     ArrayAdapter<String> funcAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1, funcList);
 
     appli_spin.setAdapter(appliAdapter);
@@ -102,7 +98,10 @@ public class Appliance extends Fragment implements View.OnClickListener, Adapter
   @Override
   public void onClick(View v) {
     if (v.getId() == R.id.appliance_btn) {
+      Bundle args = new Bundle();
+      args.putString("test", "0");
       WorkEntry workEntry = new WorkEntry();
+      workEntry.setArguments(args);
       getFragmentManager().beginTransaction().replace(R.id.realtabcontent, workEntry).commit();
     }
   }

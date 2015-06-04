@@ -1,3 +1,5 @@
+
+
 package kookmin.cs.flower.homeflow;
 
 import android.content.Context;
@@ -10,8 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import kookmin.cs.flower.homeflow.data.DataSheet;
 
 /**
  * @brief class for showing workentry.xml layout
@@ -23,9 +28,12 @@ import java.util.ArrayList;
  * @version 0.0.2
  * @date 2015-04-06
  */
-public class WorkEntry extends Fragment implements View.OnClickListener {
+public class WorkEntry extends Fragment implements View.OnClickListener,
+                                                   ViewPager.OnPageChangeListener {
 
   ViewPager pager;
+  String appSelect = "공기청정기";
+  ArrayList<String> list = new ArrayList<>();
   /**
    * @brief method for showing workentry.xml layout
    * @details This method sets clicked-events on cond_btn, appli_btn, and work_entry_btn
@@ -41,15 +49,13 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
     // Inflate the layout for this fragment
     View rootView = inflater.inflate(R.layout.workentry, container, false);
 
-    ArrayList<String> list = new ArrayList<String>();
-    list.add("가전기기1");
-    list.add("가전기기2");
-    list.add("가전기기3");
-    list.add("가전기기4");
-    list.add("가전기기5");
+    for (int i = 0; i < DataSheet.getApplianceList().size(); i++) {
+      list.add(i, DataSheet.getApplianceList().get(i).toString());
+    }
 
-    pager = (ViewPager)rootView.findViewById(R.id.pager);
-    pager.setAdapter(new CustomPagerAdapter(getActivity(), list, R.layout.pager));
+    pager = (ViewPager) rootView.findViewById(R.id.pager);
+    pager.setAdapter(
+        new CustomPagerAdapter(getActivity(), list, R.layout.pager));
 
     Button cond_btn = (Button) rootView.findViewById(R.id.cond_btn);
     Button loop_btn = (Button) rootView.findViewById(R.id.loop_btn);
@@ -58,10 +64,30 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
 
     if(getArguments() != null) {
       Log.i("mytag", "" + getArguments().toString());
-      Log.i("mytag", getArguments().getString("result"));
-    }
-    if (getArguments() != null && getArguments().containsKey("result")) {
-      appli_btn.setText(getArguments().getString("result"));
+
+      if(getArguments().containsKey("count")) {
+        TextView loopText = (TextView)rootView.findViewById(R.id.loop_txt);
+        loopText.setText(getArguments().getString("count") + "반복");
+      }
+      if(getArguments().containsKey("condition")) {
+        TextView condText = (TextView)rootView.findViewById(R.id.cond_txt);
+        condText.setText(getArguments().getString("condition"));
+      }
+      if(getArguments().containsKey("function")) {
+        TextView funcText= (TextView)rootView.findViewById(R.id.appli_txt);
+        String text = getArguments().getString("appli") + "\n" + getArguments().getString("function");
+        funcText.setText(text);
+      }
+      if(getArguments().containsKey("temper")) {
+        TextView condText = (TextView) rootView.findViewById(R.id.cond_txt);
+        String text = getArguments().getString("temper");
+        condText.setText(text);
+      }
+      /*
+      TextView testText = (TextView) rootView.findViewById(R.id.loop_txt);
+      String text = "알람이 작동하는 동안";
+      testText.setText(text);
+      */
     }
 
     cond_btn.setOnClickListener(this);
@@ -69,10 +95,27 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
     appli_btn.setOnClickListener(this);
     work_entry_btn.setOnClickListener(this);
 
+    pager.setOnPageChangeListener(this);
+
     return rootView;
   }
 
+  @Override
+  public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+  }
+
+  @Override
+  public void onPageSelected(int position) {
+    appSelect = list.get(position);
+  }
+
+  @Override
+  public void onPageScrollStateChanged(int state) {
+
+  }
+
   private class CustomPagerAdapter extends PagerAdapter {
+
     Context ctx;
     LayoutInflater inf;
     ArrayList<String> list;
@@ -86,14 +129,18 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public int getCount() { return list.size(); }
+    public int getCount() {
+      return list.size();
+    }
 
     @Override
-    public boolean isViewFromObject(View pager, Object obj) { return pager == obj; }
+    public boolean isViewFromObject(View pager, Object obj) {
+      return pager == obj;
+    }
 
     @Override
     public void destroyItem(View container, int position, Object object) {
-      ((ViewPager)pager).removeView((View)object);
+      ((ViewPager) pager).removeView((View) object);
     }
 
     @Override
@@ -109,17 +156,20 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
 
   private View.OnClickListener mButtonClick = new View.OnClickListener() {
     public void onClick(View v) {
+      Bundle arg = new Bundle();
+      arg.putString("appli", appSelect);
       AppliFunc appliFunc = new AppliFunc();
+      appliFunc.setArguments(arg);
+
       getFragmentManager().beginTransaction().replace(R.id.realtabcontent, appliFunc).commit();
     }
   };
 
   /**
    * @brief method for determining actions of cond_btn, appli_btn, and work_entry_btn
-   * @details If you click cond_btn, condselect.xml layout will appear.
-   *            If you click appli_btn, appliselect.xml layout will appear.
-   *            If you click work_entry_btn, addflow.xml layout will appear.
-   * @param v
+   * @details If you click cond_btn, condselect.xml layout will appear. If you click appli_btn,
+   * appliselect.xml layout will appear. If you click work_entry_btn, addflow.xml layout will
+   * appear.
    */
   @Override
   public void onClick(View v) {
@@ -133,10 +183,6 @@ public class WorkEntry extends Fragment implements View.OnClickListener {
         getFragmentManager().beginTransaction().replace(R.id.realtabcontent, loopSelect).commit();
         break;
       case R.id.appli_btn:
-        /*
-        AppliSelect appliSelect = new AppliSelect();
-        getFragmentManager().beginTransaction().replace(R.id.realtabcontent, appliSelect).commit();
-        */
         pager.setVisibility(View.VISIBLE);
         break;
       case R.id.work_entry_btn:

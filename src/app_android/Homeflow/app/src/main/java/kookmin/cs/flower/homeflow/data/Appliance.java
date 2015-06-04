@@ -16,66 +16,41 @@ import java.util.ArrayList;
  */
 public class Appliance {
 
+  public String serialNumber;
   public String name;
+  public int appid;
   public ArrayList<Function> listFunction;
 
   public Appliance() {
     listFunction = new ArrayList<>();
   }
 
-  public void addFunction(String funcName, int funcId) {
-    listFunction.add(Function.newInstance(funcName, funcId));
+  public Appliance(String SN) {
+    serialNumber = SN;
+  }
 
+  public void addFunction(String funcName, int funcId) {
+    listFunction.add(new Function(funcName, funcId));
   }
 
   public String toString() {
     return name;
   }
 
-  public ArrayList<Function> getDevice() {
+  public ArrayList<Function> getFunctions() {
     return listFunction;
   }
 
-  public String getFuncName(int index) {
-    return listFunction.get(index).functionName;
-  }
+  public int getAppid() { return appid;  }
 
-  public int getFuncId(int index) {
-    return listFunction.get(index).getId();
-  }
+  public String getName() { return name; }
 
   public void setName(String devName) {
     name = devName;
   }
 
-  /**
-   * @author Jongho Lim, sloth@kookmin.ac.kr
-   * @author Jinsung choi, bugslife102401@nate.com
-   * @version 0.0.1
-   * @brief an Class is inner class of Device class
-   * @details Device class 의 inner class이다. Device의 기능들을 담을 수 있다.
-   */
-  private static class Function {
-
-    private String functionName;
-    private int functionId;
-
-    public static Function newInstance(String funcName, int funcId) {
-      Function func = new Function(funcName, funcId);
-      return func;
-    }
-
-    public Function(String funcName, int funcId) {
-      functionName = funcName;
-      functionId = funcId;
-    }
-
-    public int getId() {
-      return functionId;
-    }
-
-    public String getName() {
-      return functionName;
-    }
+  public void setAppid(int appId) {
+    appid = appId;
   }
+
 }

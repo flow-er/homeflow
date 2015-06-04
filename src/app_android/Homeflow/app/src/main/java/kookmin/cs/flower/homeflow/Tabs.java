@@ -5,28 +5,32 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
+import kookmin.cs.flower.homeflow.Service.setServerActivity;
+
 /**
- * @brief class for showing tabs.xml layout
- * @details This class includes tabhost fragmenttabhost which contains three tabs.
- * It also includes login_btn button. If you click login_btn, Login.xml layout will appear.
  * @author Jinsung Choi, bugslife102401@nate.com
  * @version 0.0.8
+ * @brief class for showing tabs.xml layout
+ * @details This class includes tabhost fragmenttabhost which contains three tabs. It also includes
+ * login_btn button. If you click login_btn, Login.xml layout will appear.
  * @date 2015-05-01
  */
-public class Tabs extends FragmentActivity implements TabHost.OnTabChangeListener, View.OnClickListener {
+public class Tabs extends FragmentActivity
+    implements TabHost.OnTabChangeListener, View.OnClickListener {
 
   FragmentTabHost tabHost;
 
   /**
    * @brief method for showing tabs.xml layout
    * @details This method concatenates three tabs to tabhost.
-   * @param savedInstanceState
    */
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -54,9 +58,11 @@ public class Tabs extends FragmentActivity implements TabHost.OnTabChangeListene
     tabHost.setCurrentTab(0);
     tabHost.setOnTabChangedListener(this);
 
-    for(int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
+    for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
       tabHost.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#FFFFFFFF"));
-      TextView tv = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+      TextView
+          tv =
+          (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
       tv.setTextColor(Color.parseColor("#FF2A3F13"));
     }
 
@@ -65,14 +71,13 @@ public class Tabs extends FragmentActivity implements TabHost.OnTabChangeListene
     TextView tv = (TextView) tabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title);
     tv.setTextColor(Color.parseColor("#FFFFFFFF"));
 
-    Button login_btn = (Button)findViewById(R.id.login_btn);
+    Button login_btn = (Button) findViewById(R.id.login_btn);
     login_btn.setOnClickListener(this);
   }
 
   /**
    * @brief method for determining action of login_btn
    * @details If you click login_btn, login.xml layout will appear.
-   * @param v
    */
   @Override
   public void onClick(View v) {
@@ -84,36 +89,69 @@ public class Tabs extends FragmentActivity implements TabHost.OnTabChangeListene
 
   /**
    * @brief method for determining action of Tab1, Tab2, and Tab3
-   * @details If you select Tab1, hometab.xml layout will appear.
-   *            If you select Tab2, edittab.xml layout will appear.
-   *            If you select Tab3, dashtab.xml layout will appear.
-   * @param tabId
+   * @details If you select Tab1, hometab.xml layout will appear. If you select Tab2, edittab.xml
+   * layout will appear. If you select Tab3, dashtab.xml layout will appear.
    */
   @Override
   public void onTabChanged(String tabId) {
-    switch(tabId) {
+    switch (tabId) {
       case "Tab1":
         HomeTab homeTab = new HomeTab();
-        getSupportFragmentManager().beginTransaction().replace(R.id.realtabcontent, homeTab).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.realtabcontent, homeTab)
+            .commit();
         break;
       case "Tab2":
         EditTab editTab = new EditTab();
-        getSupportFragmentManager().beginTransaction().replace(R.id.realtabcontent, editTab).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.realtabcontent, editTab)
+            .commit();
         break;
       case "Tab3":
         DashTab dashTab = new DashTab();
-        getSupportFragmentManager().beginTransaction().replace(R.id.realtabcontent, dashTab).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.realtabcontent, dashTab)
+            .commit();
         break;
     }
 
-    for(int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
+    for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
       tabHost.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#FFFFFFFF"));
-      TextView tv = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+      TextView
+          tv =
+          (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
       tv.setTextColor(Color.parseColor("#FF2A3F13"));
     }
 
-    tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundColor(Color.parseColor("#FF2A3F13"));
-    TextView tv = (TextView) tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).findViewById(android.R.id.title);
+    tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab())
+        .setBackgroundColor(Color.parseColor("#FF2A3F13"));
+    TextView
+        tv =
+        (TextView) tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab())
+            .findViewById(android.R.id.title);
     tv.setTextColor(Color.parseColor("#FFFFFFFF"));
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    // Inflate the menu; this adds items to the action bar if it is present.
+    getMenuInflater().inflate(R.menu.menu_main, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    // Handle action bar item clicks here. The action bar will
+    // automatically handle clicks on the Home/Up button, so long
+    // as you specify a parent activity in AndroidManifest.xml.
+    int id = item.getItemId();
+
+    //noinspection SimplifiableIfStatement
+    if (id == R.id.action_settings) {
+      startActivity(new Intent(this, setServerActivity.class));
+      return true;
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
   }
 }

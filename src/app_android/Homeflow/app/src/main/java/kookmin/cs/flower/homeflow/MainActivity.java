@@ -7,11 +7,13 @@ import android.support.v4.app.FragmentActivity;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import kookmin.cs.flower.homeflow.FileManagement.FileManager;
+
 /**
- * @brief class for showing activity_main.xml layout
- * @details This class includes timer-related task.
  * @author Jinsung Choi, bugslife102401@nate.com
  * @version 0.0.4
+ * @brief class for showing activity_main.xml layout
+ * @details This class includes timer-related task.
  * @date 2015-04-14
  */
 public class MainActivity extends FragmentActivity {
@@ -19,7 +21,6 @@ public class MainActivity extends FragmentActivity {
   /**
    * @brief method for showing activity_main.xml layout
    * @details This method changes the layout into tabs.xml after 3 secs.
-   * @param savedInstanceState
    */
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -31,11 +32,18 @@ public class MainActivity extends FragmentActivity {
       @Override
       public void run() {
         Intent intent = new Intent(getApplicationContext(), Tabs.class);
+        FileManager.updateFlow();
+        FileManager.updateAppliance();
         startActivity(intent);
+        finish();
       }
     };
 
     Timer timer = new Timer();
     timer.schedule(task, 3000);
+  }
+
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
   }
 }

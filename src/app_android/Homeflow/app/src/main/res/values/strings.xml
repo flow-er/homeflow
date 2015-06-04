@@ -3,4 +3,12 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string name="instructions">Add an image. Then press on image to drag it. Drop it on the grid.</string>
+    <string name="hello">Add an image. Then drag it onto the grid.</string>
+    <string name="demo_uri">http://double-star.appspot.com/blahti/ds-download.html</string>
+    <string name="demo_toast">DoubleStar: space war game on Google Play</string>
+
+    <integer name="num_images">27</integer>
+    <integer name="num_columns">3</integer>
 </resources>

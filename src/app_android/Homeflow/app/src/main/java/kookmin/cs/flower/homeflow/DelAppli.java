@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import java.util.ArrayList;
+import kookmin.cs.flower.homeflow.data.DataSheet;
 
 /**
  * @brief class for showing delappli.xml layout
@@ -41,24 +41,13 @@ public class DelAppli extends Fragment implements View.OnClickListener {
 
     del_appli_btn.setOnClickListener(this);
 
-    ArrayList<MyCustomDTO2> delAppliList = new ArrayList<MyCustomDTO2>();
-    delAppliList.add(new MyCustomDTO2("appliance"));
-    delAppliList.add(new MyCustomDTO2("appliance"));
-    delAppliList.add(new MyCustomDTO2("appliance"));
-    delAppliList.add(new MyCustomDTO2("appliance"));
-    delAppliList.add(new MyCustomDTO2("appliance"));
-    delAppliList.add(new MyCustomDTO2("appliance"));
-    delAppliList.add(new MyCustomDTO2("appliance"));
-    delAppliList.add(new MyCustomDTO2("appliance"));
-    delAppliList.add(new MyCustomDTO2("appliance"));
-    delAppliList.add(new MyCustomDTO2("appliance"));
-
     listView = (ListView) rootView.findViewById(R.id.del_appli_list);
     /*ArrayAdapter delAppliAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_list_item_1,
                                                     FileManager.getApplianceList());
                                                     */
 
-    final MyCustomAdapter2 delAppliAdapter = new MyCustomAdapter2(getActivity(), R.layout.appliregrow, delAppliList);
+    final MyCustomAdapter2 delAppliAdapter = new MyCustomAdapter2(getActivity(), R.layout.appliregrow,
+                                                                  DataSheet.getApplianceList());
     listView.setAdapter(delAppliAdapter);
 
     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -82,5 +71,9 @@ public class DelAppli extends Fragment implements View.OnClickListener {
       AppliReg appliReg = new AppliReg();
       getFragmentManager().beginTransaction().replace(R.id.realtabcontent, appliReg).commit();
     }
+  }
+
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
   }
 }
